@@ -52,7 +52,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('home')->with('success', 'Bienvenido!');
+            return redirect()->route('home')->with('success', 'Bienvenido!');
         }
 
         return back()->withErrors([
