@@ -15,7 +15,7 @@
                 <a href="#" class="nav-link active">Home</a>
                 <a href="#" class="nav-link">Shop</a>
                 <a href="#" class="nav-link">Categories</a>
-                <a href="#" class="nav-link">Contact</a>
+                <a href="{{ url('/contact') }}" class="nav-link">Contact</a>
             </nav>
 
             <div class="header-actions">

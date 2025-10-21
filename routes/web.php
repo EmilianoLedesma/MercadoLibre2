@@ -27,3 +27,8 @@ Route::get('/cart', function () {
 Route::get('/categories', function () {
     return view('categories');
 })->name('categories');
+
+// Contacto
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
