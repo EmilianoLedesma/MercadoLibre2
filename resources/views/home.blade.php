@@ -8,7 +8,7 @@
     <div class="container">
         <div class="header-content">
             <div class="logo">
-                <h1>STORE</h1>
+                <h1>SEALS</h1>
             </div>
 
             <nav class="nav">
@@ -123,7 +123,7 @@
 <!-- Footer -->
 <footer class="footer">
     <div class="container">
-        <p>&copy; 2025 STORE. Todos los derechos reservados.</p>
+        <p>&copy; 2025 SEALS. Todos los derechos reservados.</p>
     </div>
 </footer>
 @endsection

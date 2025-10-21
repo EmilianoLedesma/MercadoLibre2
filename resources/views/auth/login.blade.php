@@ -6,7 +6,7 @@
 <div class="login-container">
     <div class="login-box">
         <div class="logo">
-            <h1>STORE</h1>
+            <h1>SEALS</h1>
         </div>
 
         <h2>Iniciar Sesión</h2>
@@ -33,7 +33,7 @@
         </form>
 
         <div class="signup-link">
-            ¿No tienes cuenta? <a href="#">Regístrate</a>
+            ¿No tienes cuenta? <a href="{{ route('register') }}">Regístrate</a>
         </div>
     </div>
 </div>
