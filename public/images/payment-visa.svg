@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60" height="20" viewBox="0 0 60 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="20" rx="2" fill="#1A1F71"/>
+  <path d="M30 4L35 16H33L32 14H28L27 16H25L30 4ZM31.2 12L30 8.4L28.8 12H31.2Z" fill="white"/>
+  <text x="12" y="15" fill="white" font-family="Arial" font-weight="bold" font-size="12">VISA</text>
+</svg>
