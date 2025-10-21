@@ -14,7 +14,7 @@
             <nav class="nav">
                 <a href="#" class="nav-link active">Inicio</a>
                 <a href="#" class="nav-link">Tienda</a>
-                <a href="#" class="nav-link">Categorias</a>
+                <a href="#" class="nav-link">Categorías</a>
                 <a href="#" class="nav-link">Contacto</a>
             </nav>
 
@@ -136,9 +136,5 @@
 </section>
 
 <!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <p>&copy; 2025 SEALS. Todos los derechos reservados.</p>
-    </div>
-</footer>
+@include('layouts.footer')
 @endsection
