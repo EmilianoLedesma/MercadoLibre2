@@ -1,33 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 // Página de inicio
 Route::get('/', function () {
     return view('home');
 })->name('home');
 
-// Login
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+// Rutas de autenticación
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Login POST (para cuando hagas el controlador)
-Route::post('/login', function () {
-    // Aquí irá la lógica de autenticación
-    return redirect()->route('home');
-})->name('login.post');
-
-// Register
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
-
-// Register POST
-Route::post('/register', function () {
-    // Aquí irá la lógica de registro
-    return redirect()->route('home');
-})->name('register.post');
+// Ruta de clientes (solo para usuarios autenticados)
+Route::get('/clientes', [AuthController::class, 'showClientes'])->middleware('auth')->name('clientes');
 
 // Carrito
 Route::get('/cart', function () {
