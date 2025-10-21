@@ -12,10 +12,10 @@
             </div>
 
             <nav class="nav">
-                <a href="#" class="nav-link active">Home</a>
-                <a href="#" class="nav-link">Shop</a>
-                <a href="#" class="nav-link">Categories</a>
-                <a href="#" class="nav-link">Contact</a>
+                <a href="#" class="nav-link active">Inicio</a>
+                <a href="#" class="nav-link">Tienda</a>
+                <a href="#" class="nav-link">Categorias</a>
+                <a href="#" class="nav-link">Contacto</a>
             </nav>
 
             <div class="header-actions">
