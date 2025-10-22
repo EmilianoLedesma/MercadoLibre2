@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
 
 // Página de inicio
 Route::get('/', function () {
@@ -38,3 +39,6 @@ Route::get('/cart', function () {
 Route::get('/categories', function () {
     return view('categories');
 })->name('categories');
+
+// Rutas de productos - CRUD completo
+Route::resource('products', ProductController::class);
