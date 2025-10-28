@@ -150,7 +150,7 @@
         </div>
 
         <div class="pagination-container">
-            {{ $products->links() }}
+            {{ $products->links('vendor.pagination.custom') }}
         </div>
     </div>
 </main>
@@ -229,9 +229,27 @@
     }
     
     .products-table td.product-image {
-        padding: 8px;
-        width: 100px;
+        padding: 12px;
+        width: 120px;
         text-align: center;
+        vertical-align: middle;
+    }
+    
+    .product-image img:hover {
+        transform: scale(1.1);
+    }
+    
+    .no-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 6px;
+        background-color: #f1f1f1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 12px;
+        margin: 0 auto;
     }
 
     .products-table th {
@@ -244,10 +262,14 @@
     }
 
     .product-image img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        border-radius: 4px;
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+        border-radius: 6px;
+        background-color: #f8f9fa;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        padding: 8px;
+        transition: transform 0.2s ease;
         transition: transform 0.3s ease;
     }
     
@@ -355,22 +377,70 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 4px;
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
         text-decoration: none;
         color: #64748b;
         background-color: #f8fafc;
         transition: all 0.2s ease;
+        font-weight: 500;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        margin: 0 2px;
     }
 
     .pagination li.active span {
         background-color: #667eea;
         color: white;
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
     }
 
     .pagination li a:hover {
         background-color: #e2e8f0;
+        transform: translateY(-2px);
+    }
+    
+    /* Estilos para las flechas de paginación */
+    .pagination svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2px;
+    }
+    
+    .pagination li:first-child a,
+    .pagination li:last-child a {
+        background-color: #667eea;
+        color: white;
+    }
+    
+    .pagination li:first-child a:hover,
+    .pagination li:last-child a:hover {
+        background-color: #5a6acf;
+    }
+    
+    /* Estilos para elementos deshabilitados */
+    .pagination li.disabled span {
+        background-color: #f1f5f9;
+        color: #cbd5e1;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+    
+    /* Mejorar la apariencia general de la tabla */
+    .products-table {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .products-table th {
+        background-color: #f1f5f9;
+        color: #475569;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 12px;
     }
 </style>
 @endsection

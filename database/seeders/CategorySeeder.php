@@ -40,13 +40,30 @@ class CategorySeeder extends Seeder
             ],
         ];
 
-        foreach ($categories as $categoryData) {
-            Category::create([
-                'name' => $categoryData['name'],
-                'slug' => Str::slug($categoryData['name']),
-                'description' => $categoryData['description'],
-                'is_active' => true,
-            ]);
+        // Si ya hay suficientes categorías creadas, generar categorías adicionales
+        $existingCount = Category::count();
+        
+        if ($existingCount >= count($categories)) {
+            // Si ya existen las categorías básicas, crear algunas categorías adicionales
+            Category::factory(15)->create();
+            return;
         }
+        
+        // Si no hay suficientes categorías, crear las básicas
+        foreach ($categories as $categoryData) {
+            // Verificar si ya existe esta categoría
+            $slug = Str::slug($categoryData['name']);
+            if (!Category::where('slug', $slug)->exists()) {
+                Category::create([
+                    'name' => $categoryData['name'],
+                    'slug' => $slug,
+                    'description' => $categoryData['description'],
+                    'is_active' => true,
+                ]);
+            }
+        }
+        
+        // Agregar algunas categorías adicionales
+        Category::factory(15)->create();
     }
 }
