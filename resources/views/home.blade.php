@@ -12,10 +12,10 @@
             </div>
 
             <nav class="nav">
-                <a href="#" class="nav-link active">Home</a>
-                <a href="#" class="nav-link">Shop</a>
-                <a href="#" class="nav-link">Categories</a>
-                <a href="#" class="nav-link">Contact</a>
+                <a href="#" class="nav-link active">Inicio</a>
+                <a href="#" class="nav-link">Tienda</a>
+                <a href="#" class="nav-link">Categorías</a>
+                <a href="#" class="nav-link">Contacto</a>
             </nav>
 
             <div class="header-actions">
@@ -25,12 +25,27 @@
                         <path d="m21 21-4.35-4.35"></path>
                     </svg>
                 </button>
-                <button class="icon-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                </button>
+
+                @auth
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="color: #333; font-weight: 500;">Hola, {{ Auth::user()->name }}</span>
+                        <a href="{{ route('clientes') }}" class="nav-link" style="margin: 0;">Clientes</a>
+                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="icon-btn" style="background: none; border: none; cursor: pointer;">
+                                Cerrar Sesión
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="icon-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+                @endauth
+
                 <button class="icon-btn cart">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
@@ -121,9 +136,5 @@
 </section>
 
 <!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <p>&copy; 2025 SEALS. Todos los derechos reservados.</p>
-    </div>
-</footer>
+@include('layouts.footer')
 @endsection

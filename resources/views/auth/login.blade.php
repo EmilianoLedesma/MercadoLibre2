@@ -11,11 +11,27 @@
 
         <h2>Iniciar Sesión</h2>
 
-        <form action="{{ route('login') }}" method="POST" class="login-form">
+        @if (session('success'))
+            <div style="color: green; margin-bottom: 15px;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div style="color: red; margin-bottom: 15px;">
+                <ul style="margin: 0; padding-left: 20px;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('login.post') }}" method="POST" class="login-form">
             @csrf
 
             <div class="form-group">
-                <input type="email" name="email" id="email" placeholder="Correo electrónico" required>
+                <input type="email" name="email" id="email" placeholder="Correo electrónico" value="{{ old('email') }}" required>
             </div>
 
             <div class="form-group">
