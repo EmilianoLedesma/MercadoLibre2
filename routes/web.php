@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShopController;
 
 // Página de inicio
 Route::get('/', function () {
@@ -32,3 +34,11 @@ Route::get('/categories', function () {
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
+
+// Tienda - Vistas públicas para clientes
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop.show');
+Route::get('/category/{slug}', [ShopController::class, 'category'])->name('shop.category');
+
+// Rutas de productos - CRUD completo (Admin/Management)
+Route::resource('products', ProductController::class);
