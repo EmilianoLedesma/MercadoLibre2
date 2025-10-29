@@ -2,127 +2,372 @@
 
 @section('title', 'Categorías')
 
+@push('styles')
+<style>
+    .categories-hero {
+        background: linear-gradient(135deg, #EE403D 0%, #E32020 100%);
+        padding: 80px 20px;
+        text-align: center;
+        color: white;
+        font-family: 'Jost', sans-serif;
+    }
+
+    .categories-hero h1 {
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
+    .categories-hero p {
+        font-size: 18px;
+        opacity: 0.95;
+    }
+
+    .categories-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 80px 20px;
+    }
+
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 32px;
+    }
+
+    .category-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .category-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+
+    .category-image {
+        width: 100%;
+        padding-top: 75%;
+        position: relative;
+        background: linear-gradient(135deg, #F5F6F2 0%, #E5E5E5 100%);
+        overflow: hidden;
+    }
+
+    .category-image img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .category-card:hover .category-image img {
+        transform: scale(1.1);
+    }
+
+    .category-badge {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background-color: #EE403D;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: 'Jost', sans-serif;
+    }
+
+    .category-content {
+        padding: 24px;
+        text-align: center;
+    }
+
+    .category-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 8px;
+        font-family: 'Jost', sans-serif;
+    }
+
+    .category-description {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 16px;
+        font-family: 'Jost', sans-serif;
+        line-height: 1.5;
+    }
+
+    .category-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #EE403D;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 15px;
+        font-family: 'Jost', sans-serif;
+        transition: gap 0.3s;
+    }
+
+    .category-link:hover {
+        gap: 12px;
+    }
+
+    .stats-section {
+        background-color: #F5F6F2;
+        padding: 60px 20px;
+        margin-top: 80px;
+    }
+
+    .stats-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 48px;
+        font-weight: 700;
+        color: #EE403D;
+        margin-bottom: 8px;
+        font-family: 'Jost', sans-serif;
+    }
+
+    .stat-label {
+        font-size: 16px;
+        color: #666;
+        font-family: 'Jost', sans-serif;
+    }
+
+    @media (max-width: 768px) {
+        .categories-hero h1 {
+            font-size: 32px;
+        }
+
+        .categories-grid {
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
-<!-- Header -->
-<header class="header">
-    <div class="container">
-        <div class="header-content">
-            <div class="logo">
-                <a href="{{ route('home') }}"><h1>SEALS</h1></a>
-            </div>
+<!-- TOP BANNER -->
+<div style="background-color: #EE403D; color: white; text-align: center; padding: 12px 0; font-family: 'Jost', sans-serif;">
+    <p style="margin: 0;">Envío gratis en compras mayores a $100</p>
+</div>
 
-            <nav class="nav">
-                <a href="{{ route('home') }}" class="nav-link">Home</a>
-                <a href="#" class="nav-link">Shop</a>
-                <a href="{{ route('categories') }}" class="nav-link active">Categories</a>
-                <a href="#" class="nav-link">Contact</a>
-            </nav>
+<!-- SECONDARY HEADER -->
+<div style="background-color: #F5F6F2; padding: 12px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+        <nav style="display: flex; gap: 24px;">
+            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Nosotros</a>
+            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Mi Cuenta</a>
+            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Wishlist</a>
+        </nav>
+        <div>
+            <span style="font-size: 14px; color: #666; font-family: 'Jost', sans-serif;">Necesitas ayuda? <strong>+0020 500</strong></span>
+        </div>
+    </div>
+</div>
 
-            <div class="header-actions">
-                <button class="icon-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                </button>
-                <a href="{{ route('login') }}" class="icon-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+<!-- MAIN HEADER -->
+<header style="background-color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 20px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+        <div>
+            <a href="{{ route('home') }}" style="font-size: 32px; font-weight: 700; color: #212529; text-decoration: none; font-family: 'Jost', sans-serif;">SEALS</a>
+        </div>
+
+        <nav style="display: flex; gap: 32px; align-items: center;">
+            <a href="{{ route('home') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Inicio</a>
+            <a href="{{ route('shop.index') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Shop</a>
+            <a href="{{ route('categories') }}" style="color: #EE403D; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Categorías</a>
+            <a href="{{ route('contact') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Contacto</a>
+        </nav>
+
+        <div style="display: flex; gap: 16px; align-items: center;">
+            <button style="background: none; border: none; cursor: pointer;">
+                <i class="fas fa-search"></i>
+            </button>
+            @auth
+                <span style="color: #666; font-family: 'Jost', sans-serif;">{{ Auth::user()->name }}</span>
+            @else
+                <a href="{{ route('login') }}" style="color: #666; text-decoration: none;">
+                    <i class="fas fa-user"></i>
                 </a>
-                <a href="{{ route('cart') }}" class="icon-btn cart">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                    <span class="badge">3</span>
-                </a>
-            </div>
+            @endauth
+            <a href="{{ route('cart') }}" style="color: #212529; text-decoration: none; position: relative;">
+                <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
+                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px;">3</span>
+            </a>
         </div>
     </div>
 </header>
 
-<!-- Page Header -->
-<section class="page-header">
-    <div class="container">
-        <h1>Todas las Categorías</h1>
-        <p>Explora nuestras categorías y encuentra lo que buscas</p>
-    </div>
-</section>
+<!-- HERO SECTION -->
+<div class="categories-hero">
+    <h1>Explora Nuestras Categorías</h1>
+    <p>Encuentra exactamente lo que buscas en nuestra amplia selección</p>
+</div>
 
-<!-- Categories Section -->
-<section class="categories-page">
-    <div class="container">
-        <div class="categories-grid-large">
-            <!-- Hombre -->
-            <div class="category-card-large">
-                <div class="category-image-large men"></div>
-                <div class="category-info">
-                    <h3>Hombre</h3>
-                    <p>Ropa y accesorios para hombre</p>
-                    <a href="#" class="btn-secondary">Ver Productos</a>
-                </div>
+<!-- CATEGORIES GRID -->
+<div class="categories-container">
+    <div class="categories-grid">
+        <!-- Women's Category -->
+        <div class="category-card" onclick="window.location.href='#'">
+            <div class="category-image">
+                <span class="category-badge">20 productos</span>
+                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=MUJER" alt="Para Mujer">
             </div>
-
-            <!-- Mujer -->
-            <div class="category-card-large">
-                <div class="category-image-large women"></div>
-                <div class="category-info">
-                    <h3>Mujer</h3>
-                    <p>Moda femenina y accesorios</p>
-                    <a href="#" class="btn-secondary">Ver Productos</a>
-                </div>
+            <div class="category-content">
+                <h3 class="category-title">Para Mujer</h3>
+                <p class="category-description">Moda femenina y accesorios exclusivos</p>
+                <a href="#" class="category-link">
+                    Ver Productos
+                    <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
+        </div>
 
-            <!-- Niños -->
-            <div class="category-card-large">
-                <div class="category-image-large kids"></div>
-                <div class="category-info">
-                    <h3>Niños</h3>
-                    <p>Ropa y juguetes para niños</p>
-                    <a href="#" class="btn-secondary">Ver Productos</a>
-                </div>
+        <!-- Men's Category -->
+        <div class="category-card" onclick="window.location.href='#'">
+            <div class="category-image">
+                <span class="category-badge">33 productos</span>
+                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=HOMBRE" alt="Para Hombre">
             </div>
-
-            <!-- Accesorios -->
-            <div class="category-card-large">
-                <div class="category-image-large accessories"></div>
-                <div class="category-info">
-                    <h3>Accesorios</h3>
-                    <p>Complementos y accesorios</p>
-                    <a href="#" class="btn-secondary">Ver Productos</a>
-                </div>
+            <div class="category-content">
+                <h3 class="category-title">Para Hombre</h3>
+                <p class="category-description">Ropa y accesorios masculinos</p>
+                <a href="#" class="category-link">
+                    Ver Productos
+                    <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
+        </div>
 
-            <!-- Calzado -->
-            <div class="category-card-large">
-                <div class="category-image-large shoes"></div>
-                <div class="category-info">
-                    <h3>Calzado</h3>
-                    <p>Zapatos y zapatillas para todos</p>
-                    <a href="#" class="btn-secondary">Ver Productos</a>
-                </div>
+        <!-- Kids Category -->
+        <div class="category-card" onclick="window.location.href='#'">
+            <div class="category-image">
+                <span class="category-badge">25 productos</span>
+                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=NIÑOS" alt="Para Niños">
             </div>
+            <div class="category-content">
+                <h3 class="category-title">Para Niños</h3>
+                <p class="category-description">Ropa y juguetes para los más pequeños</p>
+                <a href="#" class="category-link">
+                    Ver Productos
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
 
-            <!-- Deportes -->
-            <div class="category-card-large">
-                <div class="category-image-large sports"></div>
-                <div class="category-info">
-                    <h3>Deportes</h3>
-                    <p>Ropa y equipamiento deportivo</p>
-                    <a href="#" class="btn-secondary">Ver Productos</a>
-                </div>
+        <!-- Accessories Category -->
+        <div class="category-card" onclick="window.location.href='#'">
+            <div class="category-image">
+                <span class="category-badge">33 productos</span>
+                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=ACCESORIOS" alt="Accesorios">
+            </div>
+            <div class="category-content">
+                <h3 class="category-title">Accesorios</h3>
+                <p class="category-description">Complementos para tu estilo</p>
+                <a href="#" class="category-link">
+                    Ver Productos
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Shoes Category -->
+        <div class="category-card" onclick="window.location.href='#'">
+            <div class="category-image">
+                <span class="category-badge">28 productos</span>
+                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=CALZADO" alt="Calzado">
+            </div>
+            <div class="category-content">
+                <h3 class="category-title">Calzado</h3>
+                <p class="category-description">Zapatos para toda ocasión</p>
+                <a href="#" class="category-link">
+                    Ver Productos
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sports Category -->
+        <div class="category-card" onclick="window.location.href='#'">
+            <div class="category-image">
+                <span class="category-badge">45 productos</span>
+                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=DEPORTES" alt="Deportes">
+            </div>
+            <div class="category-content">
+                <h3 class="category-title">Deportes</h3>
+                <p class="category-description">Equipamiento deportivo y ropa fitness</p>
+                <a href="#" class="category-link">
+                    Ver Productos
+                    <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
         </div>
     </div>
-</section>
+</div>
 
-<!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <p>&copy; 2025 SEALS. Todos los derechos reservados.</p>
+<!-- STATS SECTION -->
+<div class="stats-section">
+    <div class="stats-container">
+        <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Productos</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">6</div>
+            <div class="stat-label">Categorías</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Clientes Felices</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Soporte</div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer style="background-color: #212529; color: white; padding: 60px 20px 20px; margin-top: 0;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px;">
+            <div>
+                <h3 style="font-family: 'Jost', sans-serif; font-size: 24px; margin-bottom: 16px;">SEALS</h3>
+                <p style="color: #999; font-family: 'Jost', sans-serif; line-height: 1.6;">Tu tienda de moda en línea con los mejores productos y precios.</p>
+            </div>
+            <div>
+                <h4 style="font-family: 'Jost', sans-serif; font-size: 16px; margin-bottom: 16px;">Enlaces</h4>
+                <nav style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="{{ route('home') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Inicio</a>
+                    <a href="{{ route('shop.index') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Shop</a>
+                    <a href="{{ route('categories') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Categorías</a>
+                </nav>
+            </div>
+        </div>
+        <div style="border-top: 1px solid #333; padding-top: 20px; text-align: center; color: #666; font-family: 'Jost', sans-serif;">
+            <p>&copy; 2025 SEALS. Todos los derechos reservados.</p>
+        </div>
     </div>
 </footer>
 @endsection

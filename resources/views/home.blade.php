@@ -236,4 +236,7 @@
 
 <!-- ========== FOOTER ========== -->
 @include('layouts.footer')
+
+<!-- Newsletter Popup -->
+@include('components.newsletter-popup')
 @endsection

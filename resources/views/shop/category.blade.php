@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Shop')
+@section('title', $category->name)
 
 @push('styles')
 <style>
+    /* Reutilizamos los estilos del shop/index.blade.php */
     .shop-container {
         max-width: 1200px;
         margin: 0 auto;
@@ -13,7 +14,6 @@
         gap: 40px;
     }
 
-    /* Sidebar Filters */
     .shop-sidebar {
         position: sticky;
         top: 120px;
@@ -24,10 +24,6 @@
         margin-bottom: 32px;
         padding-bottom: 32px;
         border-bottom: 1px solid #E5E5E5;
-    }
-
-    .filter-section:last-child {
-        border-bottom: none;
     }
 
     .filter-title {
@@ -44,7 +40,6 @@
         margin-bottom: 12px;
     }
 
-    .filter-option input[type="checkbox"],
     .filter-option input[type="radio"] {
         margin-right: 10px;
         cursor: pointer;
@@ -55,20 +50,6 @@
         font-size: 15px;
         color: #666;
         cursor: pointer;
-    }
-
-    .price-inputs {
-        display: flex;
-        gap: 12px;
-        margin-top: 12px;
-    }
-
-    .price-inputs input {
-        width: 100%;
-        padding: 8px 12px;
-        border: 1px solid #E5E5E5;
-        border-radius: 4px;
-        font-family: 'Jost', sans-serif;
     }
 
     .filter-button {
@@ -253,9 +234,29 @@
         line-height: 1.3;
     }
 
-    /* Product Grid */
     .shop-main {
         min-width: 0;
+    }
+
+    .category-banner {
+        background: linear-gradient(135deg, #EE403D 0%, #E32020 100%);
+        padding: 40px;
+        border-radius: 12px;
+        color: white;
+        margin-bottom: 40px;
+    }
+
+    .category-banner h1 {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        font-family: 'Jost', sans-serif;
+    }
+
+    .category-banner p {
+        font-size: 16px;
+        opacity: 0.95;
+        font-family: 'Jost', sans-serif;
     }
 
     .shop-header {
@@ -348,40 +349,6 @@
     .badge-hot { background-color: #EE403D; }
     .badge-sale { background-color: #E32020; }
 
-    .product-actions {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-
-    .product-card:hover .product-actions {
-        opacity: 1;
-    }
-
-    .action-btn {
-        width: 40px;
-        height: 40px;
-        background-color: white;
-        border: none;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        transition: all 0.3s;
-    }
-
-    .action-btn:hover {
-        background-color: #EE403D;
-        color: white;
-    }
-
     .product-info {
         padding: 20px;
     }
@@ -431,54 +398,7 @@
         text-decoration: line-through;
     }
 
-    .product-rating {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        margin-bottom: 12px;
-    }
-
-    .star {
-        color: #FFC107;
-        font-size: 14px;
-    }
-
-    .star.empty {
-        color: #E5E5E5;
-    }
-
-    /* Pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        margin-top: 48px;
-    }
-
-    .pagination a,
-    .pagination span {
-        padding: 8px 16px;
-        border: 1px solid #E5E5E5;
-        border-radius: 4px;
-        color: #212529;
-        text-decoration: none;
-        font-family: 'Jost', sans-serif;
-        transition: all 0.3s;
-    }
-
-    .pagination a:hover {
-        background-color: #EE403D;
-        color: white;
-        border-color: #EE403D;
-    }
-
-    .pagination .active {
-        background-color: #EE403D;
-        color: white;
-        border-color: #EE403D;
-    }
-
-    @media (max-width: 768px) {
+    @media (max-width: 968px) {
         .shop-container {
             grid-template-columns: 1fr;
         }
@@ -508,9 +428,8 @@
             <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Nosotros</a>
             <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Mi Cuenta</a>
             <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Wishlist</a>
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Rastreo</a>
         </nav>
-        <div style="display: flex; gap: 16px; align-items: center;">
+        <div>
             <span style="font-size: 14px; color: #666; font-family: 'Jost', sans-serif;">Necesitas ayuda? <strong>+0020 500</strong></span>
         </div>
     </div>
@@ -519,27 +438,20 @@
 <!-- MAIN HEADER -->
 <header style="background-color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 20px 0;">
     <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
-        <div style="flex-shrink: 0;">
+        <div>
             <a href="{{ route('home') }}" style="font-size: 32px; font-weight: 700; color: #212529; text-decoration: none; font-family: 'Jost', sans-serif;">SEALS</a>
         </div>
 
         <nav style="display: flex; gap: 32px; align-items: center;">
-            <a href="{{ route('home') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Inicio</a>
-            <a href="{{ route('shop.index') }}" style="color: #EE403D; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Shop</a>
-            <a href="{{ route('categories') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Categorías</a>
-            <a href="{{ route('contact') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Contacto</a>
+            <a href="{{ route('home') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Inicio</a>
+            <a href="{{ route('shop.index') }}" style="color: #EE403D; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Shop</a>
+            <a href="{{ route('categories') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Categorías</a>
+            <a href="{{ route('contact') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Contacto</a>
         </nav>
 
         <div style="display: flex; gap: 16px; align-items: center;">
-            <button style="background: none; border: none; cursor: pointer; color: #212529; font-size: 20px;">
-                <i class="fas fa-search"></i>
-            </button>
             @auth
-                <span style="color: #666; font-family: 'Jost', sans-serif;">Hola, {{ Auth::user()->name }}</span>
-                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                    @csrf
-                    <button type="submit" style="background: none; border: none; color: #666; cursor: pointer; font-family: 'Jost', sans-serif;">Salir</button>
-                </form>
+                <span style="color: #666; font-family: 'Jost', sans-serif;">{{ Auth::user()->name }}</span>
             @else
                 <a href="{{ route('login') }}" style="color: #666; text-decoration: none;">
                     <i class="fas fa-user"></i>
@@ -547,7 +459,7 @@
             @endauth
             <a href="{{ route('cart') }}" style="color: #212529; text-decoration: none; position: relative;">
                 <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: 'Jost', sans-serif;">3</span>
+                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px;">3</span>
             </a>
         </div>
     </div>
@@ -559,7 +471,9 @@
         <nav style="font-family: 'Jost', sans-serif; font-size: 14px; color: #666;">
             <a href="{{ route('home') }}" style="color: #666; text-decoration: none;">Inicio</a>
             <span style="margin: 0 8px;">/</span>
-            <span style="color: #212529; font-weight: 500;">Shop</span>
+            <a href="{{ route('shop.index') }}" style="color: #666; text-decoration: none;">Shop</a>
+            <span style="margin: 0 8px;">/</span>
+            <span style="color: #212529; font-weight: 500;">{{ $category->name }}</span>
         </nav>
     </div>
 </div>
@@ -568,171 +482,166 @@
 <div class="shop-container">
     <!-- SIDEBAR FILTERS -->
     <aside class="shop-sidebar">
-        <form action="{{ route('shop.index') }}" method="GET" id="filterForm">
-            <!-- PRODUCT CATEGORY - Collapsible -->
-            <div class="filter-section">
-                <h3 class="filter-title">CATEGORÍAS</h3>
+        <!-- PRODUCT CATEGORY - Collapsible -->
+        <div class="filter-section">
+            <h3 class="filter-title">CATEGORÍAS</h3>
 
-                @foreach($categories as $category)
-                <div>
-                    <div class="category-toggle" onclick="toggleCategory('cat_{{ $category->id }}')">
-                        <span>{{ $category->name }} ({{ $category->products_count ?? 0 }})</span>
-                        <span class="toggle-icon">▶</span>
+            @foreach($categories as $cat)
+            <div>
+                <div class="category-toggle" onclick="toggleCategory('cat_{{ $cat->id }}')">
+                    <span>{{ $cat->name }} ({{ $cat->products_count ?? 0 }})</span>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="category-submenu" id="submenu_cat_{{ $cat->id }}" class="{{ $cat->id == $category->id ? 'active' : '' }}">
+                    <div class="filter-option">
+                        <input type="radio" name="category" value="{{ $cat->id }}" id="radio_cat_{{ $cat->id }}"
+                            {{ $cat->id == $category->id ? 'checked' : '' }}
+                            onchange="window.location.href='{{ route('shop.category', $cat->slug) }}'">
+                        <label for="radio_cat_{{ $cat->id }}">Todos</label>
                     </div>
-                    <div class="category-submenu" id="submenu_cat_{{ $category->id }}">
+                    @if($cat->name == 'Mujer')
                         <div class="filter-option">
-                            <input type="radio" name="category" value="{{ $category->id }}" id="radio_cat_{{ $category->id }}"
-                                {{ request('category') == $category->id ? 'checked' : '' }}
-                                onchange="document.getElementById('filterForm').submit()">
-                            <label for="radio_cat_{{ $category->id }}">Todos</label>
+                            <a href="#">Ropa</a>
                         </div>
-                        @if($category->name == 'Mujer')
-                            <div class="filter-option">
-                                <a href="#">Ropa</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Zapatos</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Gafas</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Maquillaje</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Accesorios</a>
-                            </div>
-                        @elseif($category->name == 'Hombre')
-                            <div class="filter-option">
-                                <a href="#">Ropa</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Zapatos</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Gafas</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Relojes</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Accesorios</a>
-                            </div>
-                        @else
-                            <div class="filter-option">
-                                <a href="#">Ropa</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Zapatos</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Juguetes</a>
-                            </div>
-                        @endif
-                    </div>
+                        <div class="filter-option">
+                            <a href="#">Zapatos</a>
+                        </div>
+                        <div class="filter-option">
+                            <a href="#">Gafas</a>
+                        </div>
+                        <div class="filter-option">
+                            <a href="#">Maquillaje</a>
+                        </div>
+                        <div class="filter-option">
+                            <a href="#">Accesorios</a>
+                        </div>
+                    @elseif($cat->name == 'Hombre')
+                        <div class="filter-option">
+                            <a href="#">Ropa</a>
+                        </div>
+                        <div class="filter-option">
+                            <a href="#">Zapatos</a>
+                        </div>
+                        <div class="filter-option">
+                            <a href="#">Gafas</a>
+                        </div>
+                        <div class="filter-option">
+                            <a href="#">Relojes</a>
+                        </div>
+                        <div class="filter-option">
+                            <a href="#">Accesorios</a>
+                        </div>
+                    @else
+                        <div class="filter-option">
+                            <a href="#">Ropa</a>
+                        </div>
+                        <div class="filter-option">
+                            <a href="#">Zapatos</a>
+                        </div>
+                        <div class="filter-option">
+                            <a href="#">Juguetes</a>
+                        </div>
+                    @endif
+                </div>
+            </div>
+            @endforeach
+
+            <div class="filter-option" style="margin-top: 12px;">
+                <input type="radio" name="category" value="" id="cat_all"
+                    onchange="window.location.href='{{ route('shop.index') }}'">
+                <label for="cat_all">Todas las Categorías</label>
+            </div>
+        </div>
+
+        <!-- FILTER BY PRICE -->
+        <div class="filter-section">
+            <h3 class="filter-title">FILTRAR POR PRECIO</h3>
+            <div style="display: flex; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 4px;">
+                    <span style="color: #666; font-size: 14px;">Min: $</span>
+                    <input type="number" placeholder="50" style="width: 70px; padding: 8px; border: 1px solid #E5E5E5; border-radius: 4px;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                    <span style="color: #666; font-size: 14px;">Max: $</span>
+                    <input type="number" placeholder="10000" style="width: 70px; padding: 8px; border: 1px solid #E5E5E5; border-radius: 4px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTER BY COLOR -->
+        <div class="filter-section">
+            <h3 class="filter-title">FILTRAR POR COLOR</h3>
+            <div class="color-options">
+                <label class="color-option">
+                    <input type="checkbox" name="color[]" value="black">
+                    <span class="color-label">
+                        <span class="color-circle black"></span>
+                        <span>Negro</span>
+                    </span>
+                </label>
+
+                <label class="color-option">
+                    <input type="checkbox" name="color[]" value="blue">
+                    <span class="color-label">
+                        <span class="color-circle blue"></span>
+                        <span>Azul</span>
+                    </span>
+                </label>
+
+                <label class="color-option">
+                    <input type="checkbox" name="color[]" value="gray">
+                    <span class="color-label">
+                        <span class="color-circle gray"></span>
+                        <span>Gris</span>
+                    </span>
+                </label>
+
+                <label class="color-option">
+                    <input type="checkbox" name="color[]" value="green">
+                    <span class="color-label">
+                        <span class="color-circle green"></span>
+                        <span>Verde</span>
+                    </span>
+                </label>
+
+                <label class="color-option">
+                    <input type="checkbox" name="color[]" value="red">
+                    <span class="color-label">
+                        <span class="color-circle red"></span>
+                        <span>Rojo</span>
+                    </span>
+                </label>
+
+                <label class="color-option">
+                    <input type="checkbox" name="color[]" value="yellow">
+                    <span class="color-label">
+                        <span class="color-circle yellow"></span>
+                        <span>Amarillo</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <!-- FILTER BY BRAND -->
+        <div class="filter-section">
+            <h3 class="filter-title">FILTRAR POR MARCA</h3>
+            <div class="brand-list">
+                @php
+                $brands = [
+                    'Alexander McQueen', 'Adidas', 'Balenciaga', 'Balmain', 'Burberry',
+                    'Chloé', 'Dsquared2', 'Givenchy', 'Kenzo', 'Leo',
+                    'Maison Margiela', 'Moschino', 'Nike', 'Versace', 'Gucci',
+                    'Prada', 'Dior', 'Armani', 'Calvin Klein', 'Tommy Hilfiger'
+                ];
+                @endphp
+
+                @foreach($brands as $brand)
+                <div class="brand-option">
+                    <a href="#">{{ $brand }}</a>
                 </div>
                 @endforeach
-
-                <div class="filter-option" style="margin-top: 12px;">
-                    <input type="radio" name="category" value="" id="cat_all"
-                        {{ !request('category') ? 'checked' : '' }}
-                        onchange="document.getElementById('filterForm').submit()">
-                    <label for="cat_all">Todas las Categorías</label>
-                </div>
             </div>
-
-            <!-- FILTER BY PRICE -->
-            <div class="filter-section">
-                <h3 class="filter-title">FILTRAR POR PRECIO</h3>
-                <div class="price-inputs">
-                    <div style="display: flex; align-items: center; gap: 4px;">
-                        <span style="color: #666; font-size: 14px;">Min: $</span>
-                        <input type="number" name="min_price" placeholder="50" value="{{ request('min_price', 50) }}" style="width: 70px;">
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 4px;">
-                        <span style="color: #666; font-size: 14px;">Max: $</span>
-                        <input type="number" name="max_price" placeholder="10000" value="{{ request('max_price', 10000) }}" style="width: 70px;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- FILTER BY COLOR -->
-            <div class="filter-section">
-                <h3 class="filter-title">FILTRAR POR COLOR</h3>
-                <div class="color-options">
-                    <label class="color-option">
-                        <input type="checkbox" name="color[]" value="black" id="color_black">
-                        <span class="color-label">
-                            <span class="color-circle black"></span>
-                            <span>Negro</span>
-                        </span>
-                    </label>
-
-                    <label class="color-option">
-                        <input type="checkbox" name="color[]" value="blue" id="color_blue">
-                        <span class="color-label">
-                            <span class="color-circle blue"></span>
-                            <span>Azul</span>
-                        </span>
-                    </label>
-
-                    <label class="color-option">
-                        <input type="checkbox" name="color[]" value="gray" id="color_gray">
-                        <span class="color-label">
-                            <span class="color-circle gray"></span>
-                            <span>Gris</span>
-                        </span>
-                    </label>
-
-                    <label class="color-option">
-                        <input type="checkbox" name="color[]" value="green" id="color_green">
-                        <span class="color-label">
-                            <span class="color-circle green"></span>
-                            <span>Verde</span>
-                        </span>
-                    </label>
-
-                    <label class="color-option">
-                        <input type="checkbox" name="color[]" value="red" id="color_red">
-                        <span class="color-label">
-                            <span class="color-circle red"></span>
-                            <span>Rojo</span>
-                        </span>
-                    </label>
-
-                    <label class="color-option">
-                        <input type="checkbox" name="color[]" value="yellow" id="color_yellow">
-                        <span class="color-label">
-                            <span class="color-circle yellow"></span>
-                            <span>Amarillo</span>
-                        </span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- FILTER BY BRAND -->
-            <div class="filter-section">
-                <h3 class="filter-title">FILTRAR POR MARCA</h3>
-                <div class="brand-list">
-                    @php
-                    $brands = [
-                        'Alexander McQueen', 'Adidas', 'Balenciaga', 'Balmain', 'Burberry',
-                        'Chloé', 'Dsquared2', 'Givenchy', 'Kenzo', 'Leo',
-                        'Maison Margiela', 'Moschino', 'Nike', 'Versace', 'Gucci',
-                        'Prada', 'Dior', 'Armani', 'Calvin Klein', 'Tommy Hilfiger'
-                    ];
-                    @endphp
-
-                    @foreach($brands as $brand)
-                    <div class="brand-option">
-                        <a href="{{ route('shop.index', ['brand' => strtolower(str_replace(' ', '-', $brand))]) }}">{{ $brand }}</a>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-
-            <button type="submit" class="filter-button">Aplicar Filtros</button>
-        </form>
+        </div>
 
         <!-- PROMOTIONAL BANNER -->
         <a href="{{ route('shop.index') }}" style="text-decoration: none;">
@@ -745,16 +654,22 @@
 
     <!-- MAIN CONTENT -->
     <main class="shop-main">
+        <!-- Category Banner -->
+        <div class="category-banner">
+            <h1>{{ $category->name }}</h1>
+            <p>{{ $category->description ?? 'Explora nuestra selección de ' . strtolower($category->name) }}</p>
+        </div>
+
         <!-- Shop Header -->
         <div class="shop-header">
             <p class="shop-results">Mostrando {{ $products->count() }} de {{ $products->total() }} productos</p>
             <div class="shop-sort">
                 <label for="sort">Ordenar por:</label>
-                <select name="sort" id="sort" onchange="document.getElementById('filterForm').submit()">
-                    <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Más recientes</option>
-                    <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
-                    <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
-                    <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Nombre A-Z</option>
+                <select name="sort" id="sort" onchange="sortProducts(this.value)">
+                    <option value="latest">Más recientes</option>
+                    <option value="price_low">Precio: Menor a Mayor</option>
+                    <option value="price_high">Precio: Mayor a Menor</option>
+                    <option value="name">Nombre A-Z</option>
                 </select>
             </div>
         </div>
@@ -779,32 +694,13 @@
                         <span class="badge badge-hot">HOT</span>
                     </div>
                     @endif
-
-                    <div class="product-actions">
-                        <button class="action-btn" title="Wishlist">
-                            <i class="far fa-heart"></i>
-                        </button>
-                        <button class="action-btn" title="Vista rápida">
-                            <i class="far fa-eye"></i>
-                        </button>
-                    </div>
                 </div>
 
                 <div class="product-info">
-                    <p class="product-category">{{ $product->category->name ?? 'Sin categoría' }}</p>
-
-                    <div class="product-rating">
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                        <span class="star empty">★</span>
-                    </div>
-
+                    <p class="product-category">{{ $category->name }}</p>
                     <h3 class="product-title">
                         <a href="{{ route('shop.show', $product->slug) }}">{{ $product->name }}</a>
                     </h3>
-
                     <div class="product-price">
                         @if($product->sale_price)
                             <span class="price-current">${{ number_format($product->sale_price, 2) }}</span>
@@ -818,15 +714,18 @@
             @empty
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #666; font-family: 'Jost', sans-serif;">
                 <i class="fas fa-inbox" style="font-size: 48px; color: #E5E5E5; margin-bottom: 16px;"></i>
-                <p style="font-size: 18px;">No se encontraron productos</p>
+                <p style="font-size: 18px;">No hay productos en esta categoría</p>
+                <a href="{{ route('shop.index') }}" style="color: #EE403D; text-decoration: none; font-weight: 600; margin-top: 16px; display: inline-block;">Ver todos los productos</a>
             </div>
             @endforelse
         </div>
 
         <!-- Pagination -->
-        <div class="pagination">
+        @if($products->hasPages())
+        <div style="display: flex; justify-content: center; margin-top: 48px;">
             {{ $products->links() }}
         </div>
+        @endif
     </main>
 </div>
 
@@ -838,14 +737,6 @@
                 <h3 style="font-family: 'Jost', sans-serif; font-size: 24px; margin-bottom: 16px;">SEALS</h3>
                 <p style="color: #999; font-family: 'Jost', sans-serif; line-height: 1.6;">Tu tienda de moda en línea con los mejores productos y precios.</p>
             </div>
-            <div>
-                <h4 style="font-family: 'Jost', sans-serif; font-size: 16px; margin-bottom: 16px;">Enlaces</h4>
-                <nav style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="{{ route('home') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Inicio</a>
-                    <a href="{{ route('shop.index') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Shop</a>
-                    <a href="{{ route('categories') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Categorías</a>
-                </nav>
-            </div>
         </div>
         <div style="border-top: 1px solid #333; padding-top: 20px; text-align: center; color: #666; font-family: 'Jost', sans-serif;">
             <p>&copy; 2025 SEALS. Todos los derechos reservados.</p>
@@ -854,16 +745,11 @@
 </footer>
 
 <script>
-// Auto-submit form when sort changes
-document.getElementById('sort').addEventListener('change', function() {
-    const form = document.getElementById('filterForm');
-    const sortInput = document.createElement('input');
-    sortInput.type = 'hidden';
-    sortInput.name = 'sort';
-    sortInput.value = this.value;
-    form.appendChild(sortInput);
-    form.submit();
-});
+function sortProducts(sortBy) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', sortBy);
+    window.location.href = url.toString();
+}
 
 // Toggle category submenu
 function toggleCategory(categoryId) {
@@ -875,16 +761,14 @@ function toggleCategory(categoryId) {
     submenu.classList.toggle('active');
 }
 
-// Initialize - collapse all categories by default
+// Initialize - expand the active category
 document.addEventListener('DOMContentLoaded', function() {
-    // Optionally expand the first category or the selected one
-    const selectedCategory = document.querySelector('.category-submenu input[type="radio"]:checked');
-    if (selectedCategory) {
-        const submenu = selectedCategory.closest('.category-submenu');
-        const toggle = submenu.previousElementSibling;
-        if (submenu && toggle) {
+    // Find and expand the active category
+    const activeSubmenu = document.querySelector('.category-submenu.active');
+    if (activeSubmenu) {
+        const toggle = activeSubmenu.previousElementSibling;
+        if (toggle) {
             toggle.classList.add('active');
-            submenu.classList.add('active');
         }
     }
 });
