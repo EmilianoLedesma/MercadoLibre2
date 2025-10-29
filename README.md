@@ -1,61 +1,220 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Seals — Ecommerce B2C (Proyecto estudiantil)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?logo=php&logoColor=white)](https://www.php.net/)
+[![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)](https://laravel.com/)
+[![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-## About Laravel
+Storefront B2C en Laravel con CRUD de productos, categorías, autenticación, vistas públicas y pipeline de assets con Vite/Tailwind.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Pagos y badges disponibles:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+![Visa](public/images/payment-visa.svg) ![Mastercard](public/images/payment-mastercard.svg) ![Mercado Pago](public/images/payment-mercadopago.svg)  
+![Google Play](public/images/play-store-badge.svg) ![App Store](public/images/app-store-badge.svg)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tabla de contenido
 
-## Learning Laravel
+- Introducción
+- Arquitectura
+- Estructura del proyecto
+- Características
+- Rutas principales
+- Requisitos
+- Instalación (Windows)
+- Desarrollo y build
+- Testing y calidad
+- Variables de entorno
+- Notas de imágenes y assets
+- Licencia
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Introducción
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Seals es un ecommerce B2C educativo. Está construido en Laravel 12 (PHP 8.2) con Vite 7 y Tailwind CSS 4 para el frontend. Incluye autenticación básica, vistas públicas y CRUD completo de productos con categorías e imágenes guardadas en el disco `public`.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Arquitectura
 
-## Laravel Sponsors
+```mermaid
+flowchart LR
+  A[Cliente Web] -->|HTTP| B[Laravel Router]
+  B --> C[ProductController]
+  C --> D[Models: Product, Category, User]
+  D --> E[(Base de datos)]
+  C --> F[Storage public/]
+  C --> G[Views Blade]
+  G --> H[Vite/Tailwind]
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Relaciones de dominio:
 
-### Premium Partners
+```mermaid
+erDiagram
+  USER ||--o{ PRODUCT : "crea"
+  CATEGORY ||--o{ PRODUCT : "contiene"
+  PRODUCT {
+    int id PK
+    string name
+    string slug
+    string sku
+    decimal price
+    decimal sale_price
+    int stock_quantity
+    json images
+    bool is_active
+    bool is_featured
+    int category_id FK
+    int user_id FK
+  }
+  CATEGORY {
+    int id PK
+    string name
+    string slug
+    string description
+    bool is_active
+  }
+  USER {
+    int id PK
+    string name
+    string email
+  }
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Estructura del proyecto
 
-## Contributing
+```
+MercadoLibre2/
+├─ app/
+│  ├─ Http/Controllers/ProductController.php
+│  └─ Models/{Product.php, Category.php, User.php}
+├─ config/
+├─ database/
+│  ├─ migrations/
+│  └─ seeders/
+├─ public/
+│  ├─ index.php
+│  ├─ images/
+│  └─ storage/            # symlink (storage:link)
+├─ resources/
+│  ├─ views/
+│  │  ├─ layouts/
+│  │  ├─ products/{index,create,edit,show}.blade.php
+│  │  ├─ home.blade.php, cart.blade.php, categories.blade.php, contact.blade.php
+│  │  └─ auth/
+│  ├─ css/
+│  └─ js/
+├─ routes/web.php
+├─ composer.json          # PHP 8.2, Laravel 12
+├─ package.json           # Vite 7, Tailwind 4
+└─ README.md
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Características
 
-## Code of Conduct
+- Inicio, categorías, contacto y carrito visibles sin autenticación.
+- Autenticación: login, registro y logout.
+- CRUD de productos con imágenes múltiples (almacenadas en `public/storage`).
+- Categorías con semilla automática básica desde el controlador si no existen.
+- Vistas Blade con assets gestionados por Vite + Tailwind CSS.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Rutas principales
 
-## Security Vulnerabilities
+- `GET /` → `home`
+- `GET /login`, `POST /login`, `GET /register`, `POST /register`, `POST /logout`
+- `GET /cart`, `GET /categories`, `GET /contact`
+- `Route::resource('products', ProductController::class)` →
+  - `GET /products` (index)
+  - `GET /products/create` (create)
+  - `POST /products` (store)
+  - `GET /products/{product}` (show)
+  - `GET /products/{product}/edit` (edit)
+  - `PUT/PATCH /products/{product}` (update)
+  - `DELETE /products/{product}` (destroy)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Sugerencia: proteger rutas de creación/edición con middleware `auth` si el flujo lo requiere.
 
-## License
+## Requisitos
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- PHP 8.2+
+- Composer 2+
+- Node.js 18+ y npm
+- SQLite/MySQL/PostgreSQL (el proyecto puede funcionar con SQLite por defecto)
+
+## Instalación (Windows)
+
+Configura el entorno local desde PowerShell.
+
+```powershell
+# 1) Instalar dependencias PHP
+composer install
+
+# 2) Copiar variables de entorno y generar clave
+Copy-Item .env.example .env
+php artisan key:generate
+
+# 3) Elegir base de datos (opcional)
+#   - Para SQLite (rápido):
+#     New-Item -ItemType File -Path database/database.sqlite -Force | Out-Null
+#     Ajusta DB_CONNECTION=sqlite en .env
+#   - O configura MySQL/PostgreSQL en .env
+
+# 4) Migraciones
+php artisan migrate
+
+# 5) Enlaces de storage para imágenes públicas
+php artisan storage:link
+
+# 6) Instalar dependencias de frontend y levantar Vite
+npm install
+npm run dev
+
+# 7) Levantar el servidor de Laravel
+php artisan serve
+```
+
+Atajo opcional (incluye build):
+
+```powershell
+composer run setup
+```
+
+## Desarrollo y build
+
+- Desarrollo frontend: `npm run dev`
+- Build de producción: `npm run build`
+- Servidor Laravel: `php artisan serve`
+
+También puedes usar el script de desarrollo concurrente definido en Composer:
+
+```powershell
+composer run dev
+```
+
+Esto intenta ejecutar en paralelo: servidor, cola, logs interactivos y Vite.
+
+## Testing y calidad
+
+- Tests: `php artisan test`
+- Linter/format: `vendor/bin/pint`
+
+```powershell
+php artisan test
+vendor/bin/pint
+```
+
+## Variables de entorno
+
+Revisa `.env` para:
+
+- `APP_NAME`, `APP_URL`
+- `DB_CONNECTION` y credenciales
+- `FILESYSTEM_DISK=public` para servir imágenes desde `public/storage`
+
+## Notas de imágenes y assets
+
+- Las imágenes de productos se guardan en el disco `public` (ruta visible `public/storage`). Asegúrate de correr `php artisan storage:link`.
+- Logos disponibles en `public/images/` (Visa, Mastercard, Mercado Pago) y badges de tiendas.
+- Si agregas capturas, colócalas en `public/images/screenshots/` y enlázalas aquí.
+
+## Licencia
+
+MIT. Consulta el archivo `LICENSE` si aplica.
