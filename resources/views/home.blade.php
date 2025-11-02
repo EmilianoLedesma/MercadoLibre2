@@ -125,7 +125,7 @@
 
             <!-- Category Card 2 -->
             <div style="position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.25s;">
-                <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('https://via.placeholder.com/300x400/87CEEB/FFFFFF?text=MEN') center/cover;"></div>
+                <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('{{ asset('images/mens_clothes.jpg') }}') center/cover;"></div>
                 <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; color: white;">
                     <p style="margin: 0 0 5px 0; font-size: 14px;"><span style="font-weight: 600;">33</span> <span style="opacity: 0.8;">items</span></p>
                     <h4 style="margin: 0; font-size: 20px; font-weight: 700; text-transform: uppercase;">FOR MAN'S</h4>
