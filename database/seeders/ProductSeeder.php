@@ -26,6 +26,28 @@ class ProductSeeder extends Seeder
         }
         
         // Crear 30 productos
-        Product::factory(30)->create();
+        $products = Product::factory(30)->create();
+
+        // Asegurarse de que cada producto tenga al menos un path de imagen válido.
+        // Si no existe el fichero en storage o en public, asignamos un placeholder público.
+        foreach ($products as $product) {
+            $images = is_string($product->images) ? json_decode($product->images, true) : ($product->images ?? []);
+            $images = $images ?? [];
+
+            $validImages = [];
+            foreach ($images as $img) {
+                $storagePath = storage_path('app/public/' . $img);
+                $publicPath = public_path($img);
+                if ($img && (file_exists($storagePath) || file_exists($publicPath))) {
+                    $validImages[] = $img;
+                }
+            }
+
+            if (empty($validImages)) {
+                // usar placeholder público almacenado en public/images
+                $product->images = json_encode(['images/placeholder-product.svg']);
+                $product->save();
+            }
+        }
     }
 }

@@ -97,10 +97,16 @@
                                     $images = $images ?? [];
                                     $imagePath = !empty($images) ? $images[0] : null;
                                 @endphp
-                                @if($imagePath)
+                                @php
+                                    $storageFile = $imagePath ? public_path('storage/' . $imagePath) : null;
+                                    $publicFile = $imagePath ? public_path($imagePath) : null;
+                                @endphp
+                                @if($imagePath && $storageFile && file_exists($storageFile))
                                     <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $product->name }}">
+                                @elseif($imagePath && $publicFile && file_exists($publicFile))
+                                    <img src="{{ asset($imagePath) }}" alt="{{ $product->name }}">
                                 @else
-                                    <div class="no-image">Sin imagen</div>
+                                    <img src="{{ asset('images/placeholder-product.svg') }}" alt="Sin imagen">
                                 @endif
                             </td>
                             <td>{{ $product->name }}</td>
@@ -229,10 +235,13 @@
     }
     
     .products-table td.product-image {
-        padding: 12px;
+        padding: 8px;
         width: 120px;
         text-align: center;
         vertical-align: middle;
+        background: none; /* evitar franjas o fondos inesperados */
+        position: relative;
+        overflow: visible;
     }
     
     .product-image img:hover {
@@ -262,22 +271,23 @@
     }
 
     .product-image img {
-        width: 100px;
-        height: 100px;
-        object-fit: contain;
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
         border-radius: 6px;
         background-color: #f8f9fa;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        padding: 8px;
-        transition: transform 0.2s ease;
-        transition: transform 0.3s ease;
-    }
-    
-    .product-image img:hover {
-        transform: scale(1.5);
-        box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        z-index: 10;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        padding: 6px;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        display: block;
+        margin: 0 auto;
         position: relative;
+        z-index: 1;
+    }
+
+    .product-image img:hover {
+        transform: scale(1.06);
+        box-shadow: 0 6px 14px rgba(0,0,0,0.12);
     }
 
     .no-image {
@@ -287,9 +297,10 @@
         align-items: center;
         justify-content: center;
         background-color: #e2e8f0;
-        border-radius: 4px;
+        border-radius: 6px;
         font-size: 12px;
         color: #64748b;
+        margin: 0 auto;
     }
 
     .status {
