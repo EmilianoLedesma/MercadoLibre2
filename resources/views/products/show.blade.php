@@ -77,15 +77,38 @@
                 @endphp
                 
                 @if(count($images) > 0)
+                    @php
+                        $mainImage = $images[0] ?? null;
+                        $mainStorage = $mainImage ? public_path('storage/' . $mainImage) : null;
+                        $mainPublic = $mainImage ? public_path($mainImage) : null;
+                        if ($mainImage && $mainStorage && file_exists($mainStorage)) {
+                            $mainUrl = asset('storage/' . $mainImage);
+                        } elseif ($mainImage && $mainPublic && file_exists($mainPublic)) {
+                            $mainUrl = asset($mainImage);
+                        } else {
+                            $mainUrl = asset('images/placeholder-product.svg');
+                        }
+                    @endphp
                     <div class="product-main-image">
-                        <img src="{{ asset('storage/' . $images[0]) }}" alt="{{ $product->name }}" id="mainImage">
+                        <img src="{{ $mainUrl }}" alt="{{ $product->name }}" id="mainImage">
                     </div>
                     
                     @if(count($images) > 1)
                         <div class="product-thumbnails">
                             @foreach($images as $index => $image)
-                                <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" data-image="{{ asset('storage/' . $image) }}">
-                                    <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }} - imagen {{ $index + 1 }}">
+                                @php
+                                    $storagePath = public_path('storage/' . $image);
+                                    $publicPath = public_path($image);
+                                    if ($image && file_exists($storagePath)) {
+                                        $thumbUrl = asset('storage/' . $image);
+                                    } elseif ($image && file_exists($publicPath)) {
+                                        $thumbUrl = asset($image);
+                                    } else {
+                                        $thumbUrl = asset('images/placeholder-product.svg');
+                                    }
+                                @endphp
+                                <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" data-image="{{ $thumbUrl }}">
+                                    <img src="{{ $thumbUrl }}" alt="{{ $product->name }} - imagen {{ $index + 1 }}">
                                 </div>
                             @endforeach
                         </div>

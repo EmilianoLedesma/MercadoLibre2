@@ -97,10 +97,16 @@
                                     $images = $images ?? [];
                                     $imagePath = !empty($images) ? $images[0] : null;
                                 @endphp
-                                @if($imagePath)
+                                @php
+                                    $storageFile = $imagePath ? public_path('storage/' . $imagePath) : null;
+                                    $publicFile = $imagePath ? public_path($imagePath) : null;
+                                @endphp
+                                @if($imagePath && $storageFile && file_exists($storageFile))
                                     <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $product->name }}">
+                                @elseif($imagePath && $publicFile && file_exists($publicFile))
+                                    <img src="{{ asset($imagePath) }}" alt="{{ $product->name }}">
                                 @else
-                                    <div class="no-image">Sin imagen</div>
+                                    <img src="{{ asset('images/placeholder-product.svg') }}" alt="Sin imagen">
                                 @endif
                             </td>
                             <td>{{ $product->name }}</td>
