@@ -199,15 +199,30 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        // Eliminar imágenes asociadas
-        $images = json_decode($product->images, true) ?? [];
-        foreach ($images as $image) {
-            Storage::disk('public')->delete($image);
+        try {
+            // Comprobar si el producto tiene pedidos asociados
+            if ($product->orderItems()->exists()) {
+                $product->is_active = false;
+                $product->save();
+                $product->delete(); // Soft delete
+                return redirect()->route('products.index')
+                    ->with('success', 'Producto desactivado y archivado correctamente.');
+            }
+
+            // Si no tiene pedidos, eliminar imágenes y el producto
+            $images = json_decode($product->images, true) ?? [];
+            foreach ($images as $image) {
+                if ($image !== 'images/placeholder-product.svg') {
+                    Storage::disk('public')->delete($image);
+                }
+            }
+
+            $product->delete();
+            return redirect()->route('products.index')
+                ->with('success', 'Producto eliminado correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->route('products.index')
+                ->with('error', 'No se pudo eliminar el producto. Error: ' . $e->getMessage());
         }
-
-        $product->delete();
-
-        return redirect()->route('products.index')
-            ->with('success', 'Producto eliminado correctamente.');
     }
 }

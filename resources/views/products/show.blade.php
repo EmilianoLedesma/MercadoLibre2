@@ -3,74 +3,113 @@
 @section('title', 'Detalle de Producto')
 
 @section('content')
-<!-- Header -->
-<header class="header">
-    <div class="container">
-        <div class="header-content">
-            <div class="logo">
-                <h1>SEALS</h1>
-            </div>
+<!-- TOP BANNER -->
+<div style="background-color: #EE403D; color: white; text-align: center; padding: 12px 0; font-size: 14px;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <p style="margin: 0;">
+            Envío gratis en compras mayores a $100
+            <a href="#" style="color: white; text-decoration: underline; margin-left: 8px;">Descubre Ahora</a>
+        </p>
+    </div>
+</div>
 
-            <nav class="nav">
-                <a href="{{ route('home') }}" class="nav-link">Inicio</a>
-                <a href="{{ route('products.index') }}" class="nav-link active">Productos</a>
-                <a href="{{ route('categories') }}" class="nav-link">Categorías</a>
-                <a href="#" class="nav-link">Contacto</a>
-            </nav>
+<!-- SECONDARY HEADER -->
+<div style="background-color: #F5F6F2; padding: 12px 0; font-size: 14px;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
+        <nav style="display: flex; gap: 20px;">
+            <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Nosotros</a>
+            <a href="{{ route('account') }}" style="color: #212529; text-decoration: none; transition: color 0.25s;">Mi Cuenta</a>
+            <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Favoritos</a>
+            <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Rastrear Pedido</a>
+        </nav>
 
-            <div class="header-actions">
-                <button class="icon-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="color: #212529;">
+                ¿Necesitas ayuda?
+                <strong>Llámanos: <a href="tel:+1234567890" style="color: #EE403D; text-decoration: none;">+ 0020 500</a></strong>
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN HEADER -->
+<header style="background-color: white; padding: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
+        <!-- Logo -->
+        <div style="flex-shrink: 0;">
+            <a href="{{ route('home') }}" style="font-size: 32px; font-weight: 800; color: #212529; text-decoration: none; letter-spacing: 2px;">SEALS</a>
+        </div>
+
+        <!-- Main Navigation -->
+        <nav style="display: flex; gap: 32px; flex: 1; justify-content: center;">
+            <a href="{{ route('home') }}" style="color: #212529; font-weight: 500; text-decoration: none; transition: color 0.25s;">Inicio</a>
+            <a href="{{ route('products.index') }}" style="color: #EE403D; font-weight: 500; text-decoration: none; transition: color 0.25s;">Productos</a>
+            <a href="{{ route('categories') }}" style="color: #212529; font-weight: 500; text-decoration: none; transition: color 0.25s;">Categorías</a>
+            <a href="{{ route('contact') }}" style="color: #212529; font-weight: 500; text-decoration: none; transition: color 0.25s;">Contacto</a>
+        </nav>
+
+        <!-- Header Actions -->
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <!-- Search -->
+            <button style="background: none; border: none; cursor: pointer; padding: 8px;" aria-label="Buscar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+            </button>
+
+            <!-- User -->
+            @auth
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="color: #212529; font-weight: 500;">Hola, {{ Auth::user()->name }}</span>
+                    <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                        @csrf
+                        <button type="submit" style="background: #EE403D; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 500;">
+                            Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            @else
+                <a href="{{ route('login') }}" style="background: none; border: none; cursor: pointer; padding: 8px;" aria-label="Cuenta">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                </button>
-
-                @auth
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="color: #333; font-weight: 500;">Hola, {{ Auth::user()->name }}</span>
-                        <a href="{{ route('account') }}" class="nav-link" style="margin: 0;">Mi cuenta</a>
-                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                            @csrf
-                            <button type="submit" class="icon-btn" style="background: none; border: none; cursor: pointer;">
-                                Cerrar Sesión
-                            </button>
-                        </form>
-                    </div>
-                @else
-                    <a href="{{ route('login') }}" class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </a>
-                @endauth
-
-                <a href="{{ route('cart') }}" class="icon-btn cart">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                    </svg>
-                    <span class="cart-count">0</span>
                 </a>
-            </div>
+            @endauth
+
+            <!-- Cart -->
+            <a href="{{ route('cart') }}" style="position: relative; background: none; border: none; cursor: pointer; padding: 8px; text-decoration: none; color: inherit;" aria-label="Carrito">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span style="position: absolute; top: 0; right: 0; background-color: #EE403D; color: white; font-size: 10px; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">3</span>
+            </a>
         </div>
     </div>
 </header>
 
-<main class="product-detail-page">
-    <div class="container">
-        <div class="page-header">
-            <h1>Detalles del Producto</h1>
-            <div class="header-actions">
-                <a href="{{ route('products.edit', $product) }}" class="btn btn-primary">Editar</a>
-                <a href="{{ route('products.index') }}" class="btn btn-secondary">Volver a Lista</a>
+<main class="product-detail-page" style="background: linear-gradient(135deg, #F5F6F2 0%, #E7E8E0 100%); padding: 40px 0;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+            <div>
+                <span style="display: inline-block; background-color: #EE403D; color: white; padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 12px;">Detalle de Producto</span>
+                <h1 style="font-size: 32px; font-weight: 700; color: #212529; margin: 0; line-height: 1.2;">{{ $product->name }}</h1>
+            </div>
+            <div class="header-actions" style="display: flex; gap: 12px;">
+                <a href="{{ route('products.edit', $product) }}" style="background: #EE403D; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: background-color 0.3s;">
+                    <i class="fas fa-edit" style="margin-right: 8px;"></i>Editar
+                </a>
+                <a href="{{ route('products.index') }}" style="background: #F5F6F2; color: #666; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.3s; border: 2px solid #E5E6E2;">
+                    <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>Volver
+                </a>
             </div>
         </div>
 
-        <div class="product-detail-container">
-            <div class="product-gallery">
+        <div class="product-detail-container" style="background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <div class="product-gallery" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
                 @php
                     $images = is_string($product->images) ? json_decode($product->images, true) : $product->images;
                     $images = $images ?? [];
@@ -108,107 +147,150 @@
                                     }
                                 @endphp
                                 <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" data-image="{{ $thumbUrl }}">
-                                    <img src="{{ $thumbUrl }}" alt="{{ $product->name }} - imagen {{ $index + 1 }}">
-                                </div>
-                            @endforeach
+                    @if(!empty($images))
+                        <div style="width: 100%; aspect-ratio: 1; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                            <img src="{{ asset('storage/' . $mainImage) }}" alt="{{ $product->name }}" 
+                                style="width: 100%; height: 100%; object-fit: cover;" id="mainImage">
+                        </div>
+
+                        @if(count($images) > 1)
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                @foreach($images as $index => $image)
+                                    <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}"
+                                        style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: transform 0.3s;"
+                                        onmouseover="this.style.transform='scale(1.05)'" 
+                                        onmouseout="this.style.transform='scale(1)'"
+                                        onclick="updateMainImage(this.src)">
+                                @endforeach
+                            </div>
+                        @endif
+                    @else
+                        <div style="width: 100%; aspect-ratio: 1; border-radius: 16px; background: #F5F6F2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span style="color: #666; font-size: 14px;">Sin imágenes disponibles</span>
                         </div>
                     @endif
-                @else
-                    <div class="no-image">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                            <polyline points="21 15 16 10 5 21"></polyline>
-                        </svg>
-                        <span>Sin imágenes disponibles</span>
-                    </div>
-                @endif
-            </div>
-            
-            <div class="product-info">
-                <div class="product-badges">
-                    @if($product->is_featured)
-                        <span class="badge featured">Destacado</span>
-                    @endif
-                    
-                    @if(!$product->is_active)
-                        <span class="badge inactive">Inactivo</span>
-                    @endif
-                    
-                    @if($product->stock_quantity <= 0)
-                        <span class="badge out-of-stock">Agotado</span>
-                    @elseif($product->stock_quantity < 10)
-                        <span class="badge low-stock">Pocas unidades</span>
-                    @endif
                 </div>
-                
-                <h2 class="product-title">{{ $product->name }}</h2>
-                
-                <div class="product-meta">
-                    <div class="meta-item">
-                        <span class="meta-label">SKU:</span>
-                        <span class="meta-value">{{ $product->sku }}</span>
+
+                <!-- Product Info -->
+                <div style="display: flex; flex-direction: column; gap: 32px;">
+                    <!-- Status Badges -->
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        @if($product->is_featured)
+                            <span style="background: #FEF3C7; color: #D97706; padding: 6px 12px; border-radius: 20px; font-size: 14px;">
+                                <i class="fas fa-star" style="margin-right: 4px;"></i>Destacado
+                            </span>
+                        @endif
+                        
+                        @if(!$product->is_active)
+                            <span style="background: #FEE2E2; color: #DC2626; padding: 6px 12px; border-radius: 20px; font-size: 14px;">
+                                <i class="fas fa-times-circle" style="margin-right: 4px;"></i>Inactivo
+                            </span>
+                        @endif
+                        
+                        @if($product->stock_quantity <= 0)
+                            <span style="background: #FEE2E2; color: #DC2626; padding: 6px 12px; border-radius: 20px; font-size: 14px;">
+                                <i class="fas fa-exclamation-circle" style="margin-right: 4px;"></i>Agotado
+                            </span>
+                        @elseif($product->stock_quantity < 10)
+                            <span style="background: #FEF3C7; color: #D97706; padding: 6px 12px; border-radius: 20px; font-size: 14px;">
+                                <i class="fas fa-exclamation-triangle" style="margin-right: 4px;"></i>Pocas unidades
+                            </span>
+                        @endif
                     </div>
-                    
-                    <div class="meta-item">
-                        <span class="meta-label">Categoría:</span>
-                        <span class="meta-value">{{ $product->category->name ?? 'Sin categoría' }}</span>
+
+                    <!-- Basic Info -->
+                    <div>
+                        <div style="display: flex; gap: 16px; margin-bottom: 24px;">
+                            <span style="display: inline-block; background: #F5F6F2; color: #666; padding: 6px 12px; border-radius: 12px; font-size: 14px;">
+                                SKU: {{ $product->sku }}
+                            </span>
+                            <span style="display: inline-block; background: #F5F6F2; color: #666; padding: 6px 12px; border-radius: 12px; font-size: 14px;">
+                                Stock: {{ $product->stock_quantity }} unidades
+                            </span>
+                        </div>
+
+                        <!-- Pricing -->
+                        <div style="margin-bottom: 24px;">
+                            @if($product->sale_price)
+                                <div style="font-size: 20px; color: #666; text-decoration: line-through;">
+                                    ${{ number_format((float)$product->regular_price, 2) }}
+                                </div>
+                                <div style="font-size: 32px; font-weight: 700; color: #EE403D;">
+                                    ${{ number_format((float)$product->sale_price, 2) }}
+                                </div>
+                                @php
+                                    $discount = (($product->regular_price - $product->sale_price) / $product->regular_price) * 100;
+                                @endphp
+                                <div style="display: inline-block; background: #FEE2E2; color: #DC2626; padding: 4px 8px; border-radius: 20px; font-size: 14px; margin-top: 8px;">
+                                    {{ round($discount) }}% OFF
+                                </div>
+                            @else
+                                <div style="font-size: 32px; font-weight: 700; color: #EE403D;">
+                                    ${{ number_format((float)$product->regular_price, 2) }}
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                    
-                    <div class="meta-item">
-                        <span class="meta-label">Stock:</span>
-                        <span class="meta-value">{{ $product->stock_quantity }} unidades</span>
-                    </div>
-                </div>
-                
-                <div class="product-pricing">
-                    @if($product->sale_price)
-                        <div class="original-price">${{ number_format($product->price, 2) }}</div>
-                        <div class="sale-price">${{ number_format($product->sale_price, 2) }}</div>
-                        @php
-                            $discount = (($product->price - $product->sale_price) / $product->price) * 100;
-                        @endphp
-                        <div class="discount-tag">{{ round($discount) }}% OFF</div>
-                    @else
-                        <div class="current-price">${{ number_format($product->price, 2) }}</div>
+
+                    @if($product->short_description)
+                        <div style="background: #F5F6F2; border-radius: 12px; padding: 16px;">
+                            <p style="color: #666; line-height: 1.6; margin: 0;">{{ $product->short_description }}</p>
+                        </div>
                     @endif
-                </div>
                 
-                <div class="product-short-description">
-                    <p>{{ $product->short_description ?? 'Sin descripción corta disponible.' }}</p>
-                </div>
-                
-                <div class="product-actions">
-                    <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Eliminar Producto</button>
-                    </form>
+                    <!-- Actions -->
+                    <div style="display: flex; gap: 12px; margin-top: 16px;">
+                        <form action="{{ route('products.destroy', $product) }}" method="POST" style="width: 100%;" id="deleteForm">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" onclick="confirmDelete()" 
+                                style="width: 100%; background: #FEE2E2; color: #DC2626; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class="fas fa-trash-alt"></i>
+                                Eliminar Producto
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div class="product-tabs">
-            <div class="tabs-header">
-                <button class="tab-btn active" data-tab="description">Descripción Completa</button>
-                <button class="tab-btn" data-tab="details">Detalles Adicionales</button>
-            </div>
-            
-            <div class="tabs-content">
-                <div class="tab-panel active" id="description">
-                    <div class="product-description">
-                        {!! nl2br(e($product->description)) !!}
-                    </div>
+
+        <!-- Tabs Section -->
+        <div style="margin-top: 40px;">
+            <div style="border-bottom: 2px solid #F5F6F2; margin-bottom: 24px;">
+                <div style="display: flex; gap: 32px;">
+                    <button onclick="switchTab('description')" id="descriptionTab" 
+                        style="padding: 16px 24px; font-weight: 500; color: #EE403D; border: none; background: none; cursor: pointer; position: relative;">
+                        Descripción Completa
+                        <span style="position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background: #EE403D;"></span>
+                    </button>
+                    <button onclick="switchTab('details')" id="detailsTab"
+                        style="padding: 16px 24px; font-weight: 500; color: #666; border: none; background: none; cursor: pointer; position: relative;">
+                        Detalles Adicionales
+                    </button>
                 </div>
-                
-                <div class="tab-panel" id="details">
-                    <div class="product-details">
-                        <table class="details-table">
-                            <tbody>
-                                <tr>
-                                    <th>ID del Producto</th>
-                                    <td>{{ $product->id }}</td>
-                                </tr>
+            </div>
+
+            <div id="descriptionPanel" style="display: block;">
+                <div style="background: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                    {!! nl2br(e($product->description)) !!}
+                </div>
+            </div>
+
+            <div id="detailsPanel" style="display: none;">
+                <div style="background: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+                        <div style="display: flex; gap: 12px; align-items: start;">
+                            <i class="fas fa-hashtag" style="color: #EE403D; margin-top: 3px;"></i>
+                            <div>
+                                <span style="display: block; color: #666; font-size: 12px;">ID del Producto</span>
+                                <span style="color: #212529; font-weight: 500;">{{ $product->id }}</span>
+                            </div>
+                        </div>
                                 <tr>
                                     <th>Slug</th>
                                     <td>{{ $product->slug }}</td>
@@ -643,4 +725,30 @@
         });
     });
 </script>
+<script>
+function updateMainImage(src) {
+    document.getElementById('mainImage').src = src;
+}
+
+function switchTab(tabName) {
+    // Update tabs
+    document.getElementById('descriptionTab').style.color = tabName === 'description' ? '#EE403D' : '#666';
+    document.getElementById('detailsTab').style.color = tabName === 'details' ? '#EE403D' : '#666';
+    
+    // Update panels
+    document.getElementById('descriptionPanel').style.display = tabName === 'description' ? 'block' : 'none';
+    document.getElementById('detailsPanel').style.display = tabName === 'details' ? 'block' : 'none';
+    
+    // Update indicators
+    document.getElementById('descriptionTab').innerHTML = 'Descripción Completa' + (tabName === 'description' ? '<span style="position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background: #EE403D;"></span>' : '');
+    document.getElementById('detailsTab').innerHTML = 'Detalles Adicionales' + (tabName === 'details' ? '<span style="position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background: #EE403D;"></span>' : '');
+}
+
+function confirmDelete() {
+    if (confirm('¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.')) {
+        document.getElementById('deleteForm').submit();
+    }
+}
+</script>
+
 @endsection

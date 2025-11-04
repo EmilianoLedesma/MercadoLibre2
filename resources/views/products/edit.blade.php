@@ -2,179 +2,325 @@
 
 @section('title', 'Editar Producto')
 
+@push('styles')
+<style>
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #EE403D;
+    box-shadow: 0 0 0 3px rgba(238, 64, 61, 0.1);
+}
+
+input[type="checkbox"]:checked {
+    background-color: #EE403D;
+    border-color: #EE403D;
+}
+
+button[type="submit"]:hover {
+    background-color: #DC2626;
+}
+</style>
+@endpush
+</style>
+@endsection
+
 @section('content')
-<!-- Header -->
-<header class="header">
-    <div class="container">
-        <div class="header-content">
-            <div class="logo">
-                <h1>SEALS</h1>
-            </div>
+<!-- TOP BANNER -->
+<div style="background-color: #EE403D; color: white; text-align: center; padding: 12px 0; font-size: 14px;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <p style="margin: 0;">
+            Panel de Administración de Productos
+            <a href="{{ route('home') }}" style="color: white; text-decoration: underline; margin-left: 8px;">Volver a la Tienda</a>
+        </p>
+    </div>
+</div>
 
-            <nav class="nav">
-                <a href="{{ route('home') }}" class="nav-link">Inicio</a>
-                <a href="{{ route('products.index') }}" class="nav-link active">Productos</a>
-                <a href="{{ route('categories') }}" class="nav-link">Categorías</a>
-                <a href="#" class="nav-link">Contacto</a>
-            </nav>
+<!-- MAIN HEADER -->
+<header style="background-color: white; padding: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
+        <!-- Logo -->
+        <div style="flex-shrink: 0;">
+            <a href="{{ route('home') }}" style="font-size: 32px; font-weight: 800; color: #212529; text-decoration: none; letter-spacing: 2px;">SEALS</a>
+        </div>
 
-            <div class="header-actions">
-                @auth
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="color: #333; font-weight: 500;">Hola, {{ Auth::user()->name }}</span>
-                        <a href="{{ route('account') }}" class="nav-link" style="margin: 0;">Mi cuenta</a>
-                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                            @csrf
-                            <button type="submit" class="icon-btn" style="background: none; border: none; cursor: pointer;">
-                                Cerrar Sesión
-                            </button>
-                        </form>
-                    </div>
-                @else
-                    <a href="{{ route('login') }}" class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </a>
-                @endauth
+        <!-- Main Navigation -->
+        <nav style="display: flex; gap: 32px; flex: 1; justify-content: center;">
+            <a href="{{ route('home') }}" style="color: #212529; font-weight: 500; text-decoration: none; transition: color 0.25s;">Inicio</a>
+            <a href="{{ route('products.index') }}" style="color: #EE403D; font-weight: 500; text-decoration: none; transition: color 0.25s;">Productos</a>
+            <a href="{{ route('categories') }}" style="color: #212529; font-weight: 500; text-decoration: none; transition: color 0.25s;">Categorías</a>
+            <a href="{{ route('contact') }}" style="color: #212529; font-weight: 500; text-decoration: none; transition: color 0.25s;">Contacto</a>
+        </nav>
 
-                <a href="{{ route('cart') }}" class="icon-btn cart">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                    </svg>
-                    <span class="cart-count">0</span>
-                </a>
-            </div>
+        <!-- Header Actions -->
+        <div style="display: flex; align-items: center; gap: 20px;">
+            @auth
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <span style="color: #212529; font-weight: 500;">{{ Auth::user()->name }}</span>
+                    <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                        @csrf
+                        <button type="submit" style="background: #EE403D; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; transition: background-color 0.3s;">
+                            Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            @endauth
         </div>
     </div>
 </header>
 
-<main class="product-form-page">
-    <div class="container">
-        <div class="page-header">
-            <h1>Editar Producto</h1>
-            <div class="header-actions">
-                <a href="{{ route('products.show', $product) }}" class="btn btn-secondary">Ver Detalles</a>
-                <a href="{{ route('products.index') }}" class="btn btn-outline">Volver a Lista</a>
+<main style="background: linear-gradient(135deg, #F5F6F2 0%, #E7E8E0 100%); min-height: calc(100vh - 180px); padding: 40px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <!-- Page Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+            <div>
+                <span style="display: inline-block; background-color: #EE403D; color: white; padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 12px;">
+                    Editando Producto
+                </span>
+                <h1 style="font-size: 32px; font-weight: 700; color: #212529; margin: 0;">{{ $product->name }}</h1>
+            </div>
+            <div style="display: flex; gap: 16px;">
+                <a href="{{ route('products.show', $product) }}" style="background: #F3F4F6; color: #374151; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: background-color 0.3s; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-eye"></i>
+                    Ver Detalles
+                </a>
+                <a href="{{ route('products.index') }}" style="background: #EE403D; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: background-color 0.3s; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver a Lista
+                </a>
             </div>
         </div>
 
         @if($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+            <div style="background: #FDE8E8; color: #9B1C1C; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <ul style="list-style: none; margin: 0; padding: 0;">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         @endif
 
-        <div class="form-container">
-            <form action="{{ route('products.update', $product) }}" method="POST" enctype="multipart/form-data" class="product-form">
+        <div style="background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <form action="{{ route('products.update', $product) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 
-                <div class="form-grid">
-                    <div class="form-section">
-                        <h3>Información Básica</h3>
-                        
-                        <div class="form-group">
-                            <label for="name">Nombre del Producto<span class="required">*</span></label>
-                            <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}" required class="form-control">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="sku">SKU (Código)<span class="required">*</span></label>
-                            <input type="text" id="sku" name="sku" value="{{ old('sku', $product->sku) }}" required class="form-control">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="category_id">Categoría<span class="required">*</span></label>
-                            <select id="category_id" name="category_id" required class="form-control">
-                                <option value="">Seleccionar categoría</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
+                    <div>
+                        <div style="margin-bottom: 32px;">
+                            <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 20px;">
+                                <i class="fas fa-info-circle" style="margin-right: 8px; color: #EE403D;"></i>
+                                Información Básica
+                            </h3>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 20px;">
+                                <div>
+                                    <label for="name" style="display: block; font-weight: 500; color: #374151; margin-bottom: 8px;">
+                                        Nombre del Producto<span style="color: #EE403D;">*</span>
+                                    </label>
+                                    <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}" required 
+                                           style="width: 100%; padding: 10px 16px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px; transition: border-color 0.3s;">
+                                </div>
+                                
+                                <div>
+                                    <label for="sku" style="display: block; font-weight: 500; color: #374151; margin-bottom: 8px;">
+                                        SKU (Código)<span style="color: #EE403D;">*</span>
+                                    </label>
+                                    <input type="text" id="sku" name="sku" value="{{ old('sku', $product->sku) }}" required 
+                                           style="width: 100%; padding: 10px 16px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px;">
+                                </div>
+                                
+                                <div>
+                                    <label for="category_id" style="display: block; font-weight: 500; color: #374151; margin-bottom: 8px;">
+                                        Categoría<span style="color: #EE403D;">*</span>
+                                    </label>
+                                    <select id="category_id" name="category_id" required 
+                                            style="width: 100%; padding: 10px 16px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px; background-color: white;">
+                                        <option value="">Seleccionar categoría</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group half">
-                                <label for="price">Precio<span class="required">*</span></label>
-                                <input type="number" id="price" name="price" value="{{ old('price', $product->price) }}" step="0.01" min="0" required class="form-control">
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <label for="price" style="display: block; font-weight: 500; color: #374151; margin-bottom: 8px;">
+                                    Precio<span style="color: #EE403D;">*</span>
+                                </label>
+                                <input type="number" id="price" name="price" value="{{ old('price', $product->price) }}" step="0.01" min="0" required 
+                                       style="width: 100%; padding: 10px 16px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px;">
                             </div>
                             
-                            <div class="form-group half">
-                                <label for="sale_price">Precio de Oferta</label>
-                                <input type="number" id="sale_price" name="sale_price" value="{{ old('sale_price', $product->sale_price) }}" step="0.01" min="0" class="form-control">
+                            <div>
+                                <label for="sale_price" style="display: block; font-weight: 500; color: #374151; margin-bottom: 8px;">
+                                    Precio de Oferta
+                                </label>
+                                <input type="number" id="sale_price" name="sale_price" value="{{ old('sale_price', $product->sale_price) }}" step="0.01" min="0" 
+                                       style="width: 100%; padding: 10px 16px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px;">
                             </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="stock_quantity">Cantidad en Stock<span class="required">*</span></label>
-                            <input type="number" id="stock_quantity" name="stock_quantity" value="{{ old('stock_quantity', $product->stock_quantity) }}" min="0" required class="form-control">
+
+                        <div style="margin-top: 20px;">
+                            <label for="stock_quantity" style="display: block; font-weight: 500; color: #374151; margin-bottom: 8px;">
+                                Cantidad en Stock<span style="color: #EE403D;">*</span>
+                            </label>
+                            <input type="number" id="stock_quantity" name="stock_quantity" value="{{ old('stock_quantity', $product->stock_quantity) }}" min="0" required 
+                                   style="width: 100%; padding: 10px 16px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px;">
                         </div>
                     </div>
-                    
-                    <div class="form-section">
-                        <h3>Descripción</h3>
+
+                    <div style="margin-top: 32px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 20px;">
+                            <i class="fas fa-align-left" style="margin-right: 8px; color: #EE403D;"></i>
+                            Descripción
+                        </h3>
                         
-                        <div class="form-group">
-                            <label for="short_description">Descripción Corta</label>
-                            <textarea id="short_description" name="short_description" rows="3" class="form-control">{{ old('short_description', $product->short_description) }}</textarea>
-                            <small>Breve resumen del producto (máximo 500 caracteres)</small>
+                        <div style="margin-bottom: 20px;">
+                            <label for="short_description" style="display: block; font-weight: 500; color: #374151; margin-bottom: 8px;">
+                                Descripción Corta
+                            </label>
+                            <textarea id="short_description" name="short_description" rows="3" 
+                                    style="width: 100%; padding: 10px 16px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px; resize: vertical;">{{ old('short_description', $product->short_description) }}</textarea>
+                            <small style="display: block; color: #6B7280; margin-top: 4px;">Breve resumen del producto (máximo 500 caracteres)</small>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="description">Descripción Completa<span class="required">*</span></label>
-                            <textarea id="description" name="description" rows="6" required class="form-control">{{ old('description', $product->description) }}</textarea>
+                        <div>
+                            <label for="description" style="display: block; font-weight: 500; color: #374151; margin-bottom: 8px;">
+                                Descripción Completa<span style="color: #EE403D;">*</span>
+                            </label>
+                            <textarea id="description" name="description" rows="6" required 
+                                    style="width: 100%; padding: 10px 16px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px; resize: vertical;">{{ old('description', $product->description) }}</textarea>
                         </div>
                     </div>
-                    
-                    <div class="form-section">
-                        <h3>Imágenes</h3>
-                        
-                        <div class="form-group">
-                            <label>Imágenes Actuales</label>
-                            <div class="current-images">
+
+                    <!-- Imágenes Section -->
+                    <div style="margin-top: 32px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 20px;">
+                            <i class="fas fa-images" style="margin-right: 8px; color: #EE403D;"></i>
+                            Imágenes
+                        </h3>
+
+                        <div>
+                            <label style="display: block; font-weight: 500; color: #374151; margin-bottom: 12px;">Imágenes Actuales</label>
+                            <div style="background-color: #F9FAFB; border-radius: 8px; padding: 16px;">
                                 @php
-                                    $images = is_string($product->images) ? json_decode($product->images, true) : $product->images;
-                                    $images = $images ?? [];
+                                    $images = [];
+                                    if (!is_null($product->images)) {
+                                        $images = is_string($product->images) ? json_decode($product->images, true) : $product->images;
+                                        $images = is_array($images) ? $images : [];
+                                    }
                                 @endphp
-                                
-                                @if(count($images) > 0)
-                                    <div class="image-grid">
+
+                                @if(!empty($images))
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px;">
                                         @foreach($images as $index => $image)
-                                            <div class="image-item">
-                                                <div class="image-preview">
-                                                    <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}">
+                                            <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                                <div style="position: relative; padding-top: 100%;">
+                                                    <img src="{{ asset('storage/' . $image) }}" 
+                                                         alt="{{ $product->name }}"
+                                                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
                                                 </div>
-                                                <div class="image-actions">
-                                                    <label class="checkbox-container">
-                                                        <input type="checkbox" name="delete_images[]" value="{{ $index }}">
-                                                        <span class="checkmark"></span>
-                                                        Eliminar
+                                                <div style="padding: 8px; border-top: 1px solid #E5E7EB;">
+                                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                                        <input type="checkbox" name="delete_images[]" value="{{ $index }}"
+                                                               style="width: 16px; height: 16px; border-radius: 4px; border: 2px solid #D1D5DB;">
+                                                        <span style="font-size: 14px; color: #EF4444;">Eliminar</span>
                                                     </label>
                                                 </div>
                                             </div>
                                         @endforeach
                                     </div>
                                 @else
-                                    <p class="no-images-message">No hay imágenes disponibles para este producto.</p>
+                                    <p style="text-align: center; color: #6B7280; padding: 24px;">
+                                        No hay imágenes disponibles para este producto.
+                                    </p>
                                 @endif
                             </div>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="images">Añadir Nuevas Imágenes</label>
-                            <div class="image-upload-container">
-                                <input type="file" id="images" name="images[]" multiple accept="image/*" class="image-upload">
-                                <div class="upload-placeholder">
+                        <div style="margin-top: 24px;">
+                            <label for="images" style="display: block; font-weight: 500; color: #374151; margin-bottom: 12px;">
+                                Añadir Nuevas Imágenes
+                            </label>
+                            <div style="border: 2px dashed #D1D5DB; border-radius: 8px; padding: 24px; text-align: center;">
+                                <input type="file" id="images" name="images[]" multiple accept="image/*" 
+                                       style="display: none;">
+                                <label for="images" style="cursor: pointer;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                                        <i class="fas fa-cloud-upload-alt" style="font-size: 32px; color: #EE403D;"></i>
+                                        <span style="font-weight: 500; color: #374151;">Arrastra imágenes aquí o haz clic para seleccionar</span>
+                                        <span style="font-size: 14px; color: #6B7280;">Formatos permitidos: JPG, PNG, GIF</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div>
+                    <div style="background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); position: sticky; top: 100px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 20px;">
+                            <i class="fas fa-cog" style="margin-right: 8px; color: #EE403D;"></i>
+                            Configuración
+                        </h3>
+
+                        <div style="margin-bottom: 20px;">
+                            <label for="is_active" style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked' : '' }}
+                                       style="width: 20px; height: 20px; border-radius: 6px; border: 2px solid #D1D5DB; accent-color: #EE403D;">
+                                <span style="font-weight: 500; color: #374151;">Producto Activo</span>
+                            </label>
+                            <p style="margin-top: 4px; font-size: 14px; color: #6B7280;">
+                                Los productos inactivos no serán visibles en la tienda
+                            </p>
+                        </div>
+
+                        <div style="margin-bottom: 32px;">
+                            <label for="featured" style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                <input type="checkbox" id="featured" name="featured" value="1" {{ old('featured', $product->featured) ? 'checked' : '' }}
+                                       style="width: 20px; height: 20px; border-radius: 6px; border: 2px solid #D1D5DB; accent-color: #EE403D;">
+                                <span style="font-weight: 500; color: #374151;">Destacar Producto</span>
+                            </label>
+                            <p style="margin-top: 4px; font-size: 14px; color: #6B7280;">
+                                Los productos destacados aparecen en la página principal
+                            </p>
+                        </div>
+
+                        <button type="submit" style="width: 100%; background: #EE403D; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; cursor: pointer; transition: background-color 0.3s; display: flex; justify-content: center; align-items: center; gap: 8px;">
+                            <i class="fas fa-save"></i>
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<style>
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #EE403D;
+    box-shadow: 0 0 0 3px rgba(238, 64, 61, 0.1);
+}
+
+input[type="checkbox"]:checked {
+    background-color: #EE403D;
+    border-color: #EE403D;
+}
+
+button[type="submit"]:hover {
+    background-color: #DC2626;
+}
+</style>
+
+@endsection
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                                         <circle cx="8.5" cy="8.5" r="1.5"></circle>
@@ -562,5 +708,39 @@
             }
         });
     });
-</script>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Previsualización de imágenes
+        const input = document.getElementById('images');
+        const preview = document.querySelector('.image-upload-container');
+
+        if (input && preview) {
+            input.addEventListener('change', function() {
+                Array.from(this.files).forEach(file => {
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const div = document.createElement('div');
+                            div.style.cssText = 'position: relative; width: 100px; height: 100px; margin: 5px; display: inline-block;';
+                            
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; border-radius: 8px;';
+                            
+                            div.appendChild(img);
+                            preview.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+        }
+    });
+</script>
+@endpush
+</script>
+@endpush
