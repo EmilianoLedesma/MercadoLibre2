@@ -22,7 +22,7 @@
                 @auth
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span style="color: #333; font-weight: 500;">Hola, {{ Auth::user()->name }}</span>
-                        <a href="{{ route('clientes') }}" class="nav-link" style="margin: 0;">Clientes</a>
+                        <a href="{{ route('account') }}" class="nav-link" style="margin: 0;">Mi cuenta</a>
                         <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                             @csrf
                             <button type="submit" class="icon-btn" style="background: none; border: none; cursor: pointer;">
