@@ -18,7 +18,7 @@
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
         <nav style="display: flex; gap: 20px;">
             <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Nosotros</a>
-            <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Mi Cuenta</a>
+            <a href="{{ route('account') }}" style="color: #212529; text-decoration: none; transition: color 0.25s;">Mi Cuenta</a>
             <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Favoritos</a>
             <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Rastrear Pedido</a>
         </nav>
@@ -59,10 +59,9 @@
             </button>
 
             <!-- User -->
-            @auth
+                    @auth
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <span style="color: #212529; font-weight: 500;">Hola, {{ Auth::user()->name }}</span>
-                    <a href="{{ route('clientes') }}" style="color: #212529; text-decoration: none;">Clientes</a>
                     <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                         @csrf
                         <button type="submit" style="background: #EE403D; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 500;">

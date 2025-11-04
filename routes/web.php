@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\MiCuentaController;
 
 // Página de inicio
 Route::get('/', function () {
@@ -18,7 +20,15 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Ruta de clientes (solo para usuarios autenticados)
-Route::get('/clientes', [AuthController::class, 'showClientes'])->middleware('auth')->name('clientes');
+Route::get('/clientes', [ClienteController::class, 'index'])->middleware('auth')->name('clientes');
+Route::put('/clientes', [ClienteController::class, 'update'])->middleware('auth')->name('clientes.update');
+Route::post('/clientes/addresses', [ClienteController::class, 'saveAddresses'])->middleware('auth')->name('clientes.addresses.save');
+
+// Rutas para 'Mi cuenta' (misma funcionalidad, ruta amigable)
+Route::get('/account', [MiCuentaController::class, 'index'])->middleware('auth')->name('account');
+Route::put('/account', [MiCuentaController::class, 'update'])->middleware('auth')->name('account.update');
+Route::post('/account/addresses', [MiCuentaController::class, 'saveAddresses'])->middleware('auth')->name('account.addresses.save');
+Route::delete('/account', [MiCuentaController::class, 'destroy'])->middleware('auth')->name('account.destroy');
 
 // Carrito
 Route::get('/cart', function () {
