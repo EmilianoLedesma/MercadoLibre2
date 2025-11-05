@@ -579,55 +579,12 @@
                     </div>
                     <div class="category-submenu" id="submenu_cat_<?php echo e($category->id); ?>">
                         <div class="filter-option">
-                            <input type="radio" name="category" value="<?php echo e($category->id); ?>" id="radio_cat_<?php echo e($category->id); ?>"
-                                <?php echo e(request('category') == $category->id ? 'checked' : ''); ?>
+                            <a href="<?php echo e(route('shop.category', $category->slug)); ?>" 
+                               style="color: <?php echo e(request()->route('slug') == $category->slug ? '#EE403D' : '#666'); ?>; text-decoration: none; font-weight: <?php echo e(request()->route('slug') == $category->slug ? '600' : '400'); ?>;">
+                                Ver todos en <?php echo e($category->name); ?>
 
-                                onchange="document.getElementById('filterForm').submit()">
-                            <label for="radio_cat_<?php echo e($category->id); ?>">Todos</label>
+                            </a>
                         </div>
-                        <?php if($category->name == 'Mujer'): ?>
-                            <div class="filter-option">
-                                <a href="#">Ropa</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Zapatos</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Gafas</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Maquillaje</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Accesorios</a>
-                            </div>
-                        <?php elseif($category->name == 'Hombre'): ?>
-                            <div class="filter-option">
-                                <a href="#">Ropa</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Zapatos</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Gafas</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Relojes</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Accesorios</a>
-                            </div>
-                        <?php else: ?>
-                            <div class="filter-option">
-                                <a href="#">Ropa</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Zapatos</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Juguetes</a>
-                            </div>
-                        <?php endif; ?>
                     </div>
                 </div>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

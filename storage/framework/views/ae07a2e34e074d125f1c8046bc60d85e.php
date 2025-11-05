@@ -20,7 +20,7 @@
                 <?php if(auth()->guard()->check()): ?>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span style="color: #333; font-weight: 500;">Hola, <?php echo e(Auth::user()->name); ?></span>
-                        <a href="<?php echo e(route('clientes')); ?>" class="nav-link" style="margin: 0;">Clientes</a>
+                        <a href="<?php echo e(route('account')); ?>" class="nav-link" style="margin: 0;">Mi cuenta</a>
                         <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;">
                             <?php echo csrf_field(); ?>
                             <button type="submit" class="icon-btn" style="background: none; border: none; cursor: pointer;">
