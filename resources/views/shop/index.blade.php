@@ -581,54 +581,11 @@
                     </div>
                     <div class="category-submenu" id="submenu_cat_{{ $category->id }}">
                         <div class="filter-option">
-                            <input type="radio" name="category" value="{{ $category->id }}" id="radio_cat_{{ $category->id }}"
-                                {{ request('category') == $category->id ? 'checked' : '' }}
-                                onchange="document.getElementById('filterForm').submit()">
-                            <label for="radio_cat_{{ $category->id }}">Todos</label>
+                            <a href="{{ route('shop.category', $category->slug) }}" 
+                               style="color: {{ request()->route('slug') == $category->slug ? '#EE403D' : '#666' }}; text-decoration: none; font-weight: {{ request()->route('slug') == $category->slug ? '600' : '400' }};">
+                                Ver todos en {{ $category->name }}
+                            </a>
                         </div>
-                        @if($category->name == 'Mujer')
-                            <div class="filter-option">
-                                <a href="#">Ropa</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Zapatos</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Gafas</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Maquillaje</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Accesorios</a>
-                            </div>
-                        @elseif($category->name == 'Hombre')
-                            <div class="filter-option">
-                                <a href="#">Ropa</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Zapatos</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Gafas</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Relojes</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Accesorios</a>
-                            </div>
-                        @else
-                            <div class="filter-option">
-                                <a href="#">Ropa</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Zapatos</a>
-                            </div>
-                            <div class="filter-option">
-                                <a href="#">Juguetes</a>
-                            </div>
-                        @endif
                     </div>
                 </div>
                 @endforeach

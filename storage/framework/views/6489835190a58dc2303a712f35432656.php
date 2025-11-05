@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Gestión de Productos'); ?>
 
-@section('title', 'Gestión de Productos')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     /* Header */
     .header {
@@ -408,9 +406,9 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <!-- Top Bar -->
 <div class="top-bar">
     Envío gratis en compras mayores a $100
@@ -426,10 +424,10 @@
                 </div>
 
                 <nav class="nav">
-                    <a href="{{ route('home') }}" class="nav-link">Inicio</a>
-                    <a href="{{ route('shop.index') }}" class="nav-link">Shop</a>
-                    <a href="{{ route('categories') }}" class="nav-link">Categorías</a>
-                    <a href="{{ route('products.index') }}" class="nav-link active">Productos</a>
+                    <a href="<?php echo e(route('home')); ?>" class="nav-link">Inicio</a>
+                    <a href="<?php echo e(route('shop.index')); ?>" class="nav-link">Shop</a>
+                    <a href="<?php echo e(route('categories')); ?>" class="nav-link">Categorías</a>
+                    <a href="<?php echo e(route('products.index')); ?>" class="nav-link active">Productos</a>
                 </nav>
 
                 <div class="header-actions">
@@ -440,11 +438,11 @@
                         </svg>
                     </button>
 
-                    @auth
+                    <?php if(auth()->guard()->check()): ?>
                         <div style="display: flex; align-items: center; gap: 16px;">
-                            <span style="color: #666; font-weight: 500; font-size: 14px;">Hola, {{ Auth::user()->name }}</span>
-                            <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                                @csrf
+                            <span style="color: #666; font-weight: 500; font-size: 14px;">Hola, <?php echo e(Auth::user()->name); ?></span>
+                            <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;">
+                                <?php echo csrf_field(); ?>
                                 <button type="submit" class="icon-btn" title="Cerrar Sesión">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -454,16 +452,16 @@
                                 </button>
                             </form>
                         </div>
-                    @else
-                        <a href="{{ route('login') }}" class="icon-btn">
+                    <?php else: ?>
+                        <a href="<?php echo e(route('login')); ?>" class="icon-btn">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M20 21v-2a4 4 0 0 1-4-4H8a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
                         </a>
-                    @endauth
+                    <?php endif; ?>
 
-                    <a href="{{ route('cart') }}" class="icon-btn cart">
+                    <a href="<?php echo e(route('cart')); ?>" class="icon-btn cart">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                             <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -481,7 +479,7 @@
 <div class="breadcrumb">
     <div class="container">
         <div class="breadcrumb-nav">
-            <a href="{{ route('home') }}">Inicio</a>
+            <a href="<?php echo e(route('home')); ?>">Inicio</a>
             <span>/</span>
             <span>Productos</span>
         </div>
@@ -493,7 +491,7 @@
     <div class="container">
         <div class="page-header">
             <h1>Gestión de Productos</h1>
-            <a href="{{ route('products.create') }}" class="btn-new-product">
+            <a href="<?php echo e(route('products.create')); ?>" class="btn-new-product">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -501,11 +499,12 @@
                 Nuevo Producto
             </a>
         </div>
-    @if(session('success'))
+    <?php if(session('success')): ?>
         <div class="alert alert-success">
-            ✓ {{ session('success') }}
+            ✓ <?php echo e(session('success')); ?>
+
         </div>
-    @endif
+    <?php endif; ?>
 
     <div class="table-card">
         <table class="products-table">
@@ -523,12 +522,12 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($products as $product)
+                <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
-                        <td>{{ $product->id }}</td>
+                        <td><?php echo e($product->id); ?></td>
                         <td>
                             <div class="product-image">
-                                @php
+                                <?php
                                     $images = is_string($product->images) ? json_decode($product->images, true) : $product->images;
                                     $images = $images ?? [];
                                     $imagePath = !empty($images) ? $images[0] : null;
@@ -547,37 +546,38 @@
                                     } else {
                                         $imageUrl = asset('images/placeholder-product.svg');
                                     }
-                                @endphp
-                                <img src="{{ $imageUrl }}" alt="{{ $product->name }}">
+                                ?>
+                                <img src="<?php echo e($imageUrl); ?>" alt="<?php echo e($product->name); ?>">
                             </div>
                         </td>
-                        <td class="product-name">{{ $product->name }}</td>
-                        <td>{{ $product->sku }}</td>
-                        <td class="product-price">${{ number_format($product->price, 2) }}</td>
-                        <td class="product-stock">{{ $product->stock_quantity }}</td>
-                        <td>{{ $product->category->name ?? 'N/A' }}</td>
+                        <td class="product-name"><?php echo e($product->name); ?></td>
+                        <td><?php echo e($product->sku); ?></td>
+                        <td class="product-price">$<?php echo e(number_format($product->price, 2)); ?></td>
+                        <td class="product-stock"><?php echo e($product->stock_quantity); ?></td>
+                        <td><?php echo e($product->category->name ?? 'N/A'); ?></td>
                         <td>
-                            <span class="status-badge {{ $product->is_active ? 'active' : 'inactive' }}">
-                                {{ $product->is_active ? 'Activo' : 'Inactivo' }}
+                            <span class="status-badge <?php echo e($product->is_active ? 'active' : 'inactive'); ?>">
+                                <?php echo e($product->is_active ? 'Activo' : 'Inactivo'); ?>
+
                             </span>
                         </td>
                         <td>
                             <div class="actions-cell">
-                                <a href="{{ route('products.show', $product) }}" class="btn-action view" title="Ver">
+                                <a href="<?php echo e(route('products.show', $product)); ?>" class="btn-action view" title="Ver">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                         <circle cx="12" cy="12" r="3"></circle>
                                     </svg>
                                 </a>
-                                <a href="{{ route('products.edit', $product) }}" class="btn-action edit" title="Editar">
+                                <a href="<?php echo e(route('products.edit', $product)); ?>" class="btn-action edit" title="Editar">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
                                 </a>
-                                <form action="{{ route('products.destroy', $product) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
-                                    @csrf
-                                    @method('DELETE')
+                                <form action="<?php echo e(route('products.destroy', $product)); ?>" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
                                     <button type="submit" class="btn-action delete" title="Eliminar">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <polyline points="3 6 5 6 21 6"></polyline>
@@ -590,7 +590,7 @@
                             </div>
                         </td>
                     </tr>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="9" class="empty-state">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -600,20 +600,21 @@
                             </svg>
                             <h3>No hay productos</h3>
                             <p>Comienza agregando tu primer producto</p>
-                            <a href="{{ route('products.create') }}" class="btn-new-product">
+                            <a href="<?php echo e(route('products.create')); ?>" class="btn-new-product">
                                 Crear Producto
                             </a>
                         </td>
                     </tr>
-                @endforelse
+                <?php endif; ?>
             </tbody>
         </table>
 
-        @if($products->hasPages())
+        <?php if($products->hasPages()): ?>
         <div class="pagination-container">
-            {{ $products->links() }}
+            <?php echo e($products->links()); ?>
+
         </div>
-        @endif
+        <?php endif; ?>
     </div>
     </div>
 </main>
@@ -635,13 +636,13 @@
                 <h4 style="font-family: 'Jost', sans-serif; font-size: 16px; font-weight: 600; margin-bottom: 16px;">Enlaces Rápidos</h4>
                 <ul style="list-style: none; padding: 0; margin: 0;">
                     <li style="margin-bottom: 12px;">
-                        <a href="{{ route('home') }}" style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; text-decoration: none; transition: color 0.3s;">Inicio</a>
+                        <a href="<?php echo e(route('home')); ?>" style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; text-decoration: none; transition: color 0.3s;">Inicio</a>
                     </li>
                     <li style="margin-bottom: 12px;">
-                        <a href="{{ route('shop.index') }}" style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; text-decoration: none; transition: color 0.3s;">Shop</a>
+                        <a href="<?php echo e(route('shop.index')); ?>" style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; text-decoration: none; transition: color 0.3s;">Shop</a>
                     </li>
                     <li style="margin-bottom: 12px;">
-                        <a href="{{ route('categories') }}" style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; text-decoration: none; transition: color 0.3s;">Categorías</a>
+                        <a href="<?php echo e(route('categories')); ?>" style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; text-decoration: none; transition: color 0.3s;">Categorías</a>
                     </li>
                 </ul>
             </div>
@@ -684,9 +685,10 @@
 
         <div style="border-top: 1px solid #495057; padding-top: 20px; text-align: center;">
             <p style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; margin: 0;">
-                &copy; {{ date('Y') }} SEALS. Todos los derechos reservados.
+                &copy; <?php echo e(date('Y')); ?> SEALS. Todos los derechos reservados.
             </p>
         </div>
     </div>
 </footer>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\Lenguajes Automatas\MercadoLibre2\resources\views/products/index.blade.php ENDPATH**/ ?>

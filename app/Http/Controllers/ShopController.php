@@ -50,7 +50,9 @@ class ShopController extends Controller
         }
 
         $products = $query->paginate(12);
-        $categories = Category::where('is_active', true)->get();
+        $categories = Category::where('is_active', true)
+            ->withCount('products')
+            ->get();
 
         return view('shop.index', compact('products', 'categories'));
     }
@@ -88,7 +90,9 @@ class ShopController extends Controller
             ->where('is_active', true)
             ->paginate(12);
 
-        $categories = Category::where('is_active', true)->get();
+        $categories = Category::where('is_active', true)
+            ->withCount('products')
+            ->get();
 
         return view('shop.category', compact('category', 'products', 'categories'));
     }

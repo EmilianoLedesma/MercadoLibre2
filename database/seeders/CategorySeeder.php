@@ -15,41 +15,56 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'name' => 'Hombre',
-                'description' => 'Ropa y accesorios para hombre',
+                'name' => 'Tecnología',
+                'description' => 'Celulares, computadoras, tablets y accesorios tecnológicos',
             ],
             [
-                'name' => 'Mujer',
-                'description' => 'Moda femenina y accesorios',
+                'name' => 'Electrodomésticos',
+                'description' => 'Heladeras, lavarropas, microondas y más para el hogar',
             ],
             [
-                'name' => 'Niños',
-                'description' => 'Ropa y juguetes para niños',
+                'name' => 'Hogar y Muebles',
+                'description' => 'Muebles, decoración y artículos para el hogar',
             ],
             [
-                'name' => 'Accesorios',
-                'description' => 'Complementos y accesorios',
+                'name' => 'Moda',
+                'description' => 'Ropa, calzado y accesorios para hombre, mujer y niños',
             ],
             [
-                'name' => 'Calzado',
-                'description' => 'Zapatos y zapatillas para todos',
+                'name' => 'Deportes y Fitness',
+                'description' => 'Equipamiento deportivo, ropa deportiva y fitness',
             ],
             [
-                'name' => 'Deportes',
-                'description' => 'Ropa y equipamiento deportivo',
+                'name' => 'Juguetes y Bebés',
+                'description' => 'Juguetes, artículos para bebés y niños',
+            ],
+            [
+                'name' => 'Belleza y Cuidado Personal',
+                'description' => 'Perfumes, maquillaje, cuidado de la piel y cabello',
+            ],
+            [
+                'name' => 'Herramientas',
+                'description' => 'Herramientas manuales, eléctricas y equipamiento',
+            ],
+            [
+                'name' => 'Libros y Entretenimiento',
+                'description' => 'Libros, música, películas y videojuegos',
+            ],
+            [
+                'name' => 'Automotriz',
+                'description' => 'Repuestos, accesorios y productos para vehículos',
+            ],
+            [
+                'name' => 'Jardín y Exterior',
+                'description' => 'Plantas, herramientas de jardinería y decoración exterior',
+            ],
+            [
+                'name' => 'Alimentos y Bebidas',
+                'description' => 'Alimentos, bebidas y productos gourmet',
             ],
         ];
 
-        // Si ya hay suficientes categorías creadas, generar categorías adicionales
-        $existingCount = Category::count();
-        
-        if ($existingCount >= count($categories)) {
-            // Si ya existen las categorías básicas, crear algunas categorías adicionales
-            Category::factory(15)->create();
-            return;
-        }
-        
-        // Si no hay suficientes categorías, crear las básicas
+        // Crear solo las categorías básicas de Mercado Libre
         foreach ($categories as $categoryData) {
             // Verificar si ya existe esta categoría
             $slug = Str::slug($categoryData['name']);
@@ -62,8 +77,5 @@ class CategorySeeder extends Seeder
                 ]);
             }
         }
-        
-        // Agregar algunas categorías adicionales
-        Category::factory(15)->create();
     }
 }

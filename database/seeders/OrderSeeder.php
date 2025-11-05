@@ -56,7 +56,7 @@ class OrderSeeder extends Seeder
             // Actualizar el subtotal de la orden basado en los items
             $items = $order->items;
             $subtotal = $items->sum('subtotal');
-            $tax = $subtotal * 0.16; // IVA del 16%
+            $tax = $subtotal * 0.21; // IVA argentino del 21%
             $total = $subtotal + $tax + $order->shipping_cost;
             
             $order->update([

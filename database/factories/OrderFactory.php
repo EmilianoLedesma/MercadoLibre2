@@ -18,17 +18,17 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
-        $subtotal = $this->faker->randomFloat(2, 100, 10000);
-        $tax = $subtotal * 0.16; // IVA del 16%
-        $shippingCost = $this->faker->randomFloat(2, 0, 200);
+        $subtotal = $this->faker->randomFloat(2, 5000, 500000); // Precios en pesos argentinos
+        $tax = $subtotal * 0.21; // IVA argentino del 21%
+        $shippingCost = $this->faker->randomFloat(2, 0, 15000); // Costos de envío en ARS
         $total = $subtotal + $tax + $shippingCost;
         
         $statuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
         $paymentStatuses = ['pending', 'paid', 'failed'];
-        $paymentMethods = ['credit_card', 'debit_card', 'paypal', 'mercado_pago', 'cash_on_delivery'];
+        $paymentMethods = ['mercado_pago', 'credit_card', 'debit_card', 'cash_on_delivery', 'bank_transfer'];
         
-        // Generar un número de orden único con formato ORD-YYMM-XXXXX
-        $orderNumber = 'ORD-' . date('ym') . '-' . $this->faker->unique()->numberBetween(10000, 99999);
+        // Generar un número de orden único con formato ML-YYMM-XXXXX (estilo MercadoLibre)
+        $orderNumber = 'ML-' . date('ym') . '-' . $this->faker->unique()->numberBetween(10000, 99999);
         
         return [
             'order_number' => $orderNumber,
@@ -46,7 +46,7 @@ class OrderFactory extends Factory
             'status' => $this->faker->randomElement($statuses),
             'payment_status' => $this->faker->randomElement($paymentStatuses),
             'payment_method' => $this->faker->randomElement($paymentMethods),
-            'notes' => $this->faker->boolean(30) ? $this->faker->paragraph() : null,
+            'notes' => $this->faker->boolean(30) ? $this->faker->sentence() : null,
             'created_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
         ];
     }
