@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\MiCuentaController;
+use App\Http\Controllers\WishlistController;
 
 // Página de inicio
 Route::get('/', function () {
@@ -34,6 +35,13 @@ Route::delete('/account', [MiCuentaController::class, 'destroy'])->middleware('a
 Route::get('/cart', function () {
     return view('cart');
 })->name('cart');
+
+// Wishlist (Lista de deseos)
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+Route::post('/wishlist/add/{id}', [WishlistController::class, 'add'])->name('wishlist.add');
+Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+Route::post('/wishlist/clear', [WishlistController::class, 'clear'])->name('wishlist.clear');
+Route::post('/wishlist/move-to-cart/{id}', [WishlistController::class, 'moveToCart'])->name('wishlist.moveToCart');
 
 // Categorías
 Route::get('/categories', function () {

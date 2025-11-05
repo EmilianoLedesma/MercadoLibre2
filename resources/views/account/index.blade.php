@@ -1,183 +1,339 @@
 @extends('layouts.app')
 
-@section('title', 'Mi cuenta')
+@section('title', 'Mi Cuenta')
 
 @section('content')
-<!-- ========== TOP BANNER ========== -->
-<div style="background-color: #EE403D; color: white; text-align: center; padding: 12px 0; font-size: 14px;">
+@include('layouts.navbar')
+
+<!-- Page Title -->
+<div style="background-color: #F5F6F2; padding: 60px 0 40px 0;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-        <p style="margin: 0;">
-            Envío gratis en compras mayores a $100
-            <a href="#" style="color: white; text-decoration: underline; margin-left: 8px;">Descubre Ahora</a>
-        </p>
+        <h1 style="font-family: 'Jost', sans-serif; font-size: 48px; font-weight: 700; color: #212529; margin: 0 0 16px 0;">
+            Mi Cuenta
+        </h1>
+        <nav style="display: flex; gap: 8px; align-items: center; font-size: 14px;">
+            <a href="{{ route('home') }}" style="color: #666; text-decoration: none;">Inicio</a>
+            <span style="color: #999;">›</span>
+            <span style="color: #EE403D; font-weight: 500;">Mi Cuenta</span>
+        </nav>
     </div>
 </div>
 
-<!-- ========== SECONDARY HEADER ========== -->
-<div style="background-color: #F5F6F2; padding: 12px 0; font-size: 14px;">
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-        <nav style="display: flex; gap: 20px;">
-            <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Nosotros</a>
-            <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Mi Cuenta</a>
-            <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Favoritos</a>
-            <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Rastrear Pedido</a>
-        </nav>
+<!-- Account Dashboard -->
+<section style="padding: 60px 20px; background: white;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <div style="display: grid; grid-template-columns: 280px 1fr; gap: 30px;">
 
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <span style="color: #212529;">
-                ¿Necesitas ayuda?
-                <strong>Llámanos: <a href="tel:+1234567890" style="color: #EE403D; text-decoration: none;">+ 0020 500</a></strong>
-            </span>
-        </div>
-    </div>
-</div>
+            <!-- Sidebar Navigation -->
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <button class="account-nav-btn active" data-section="dashboard" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: #EE403D; color: white; border: 1px solid #E5E5E5; border-radius: 8px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 15px; font-weight: 500; transition: all 0.3s;">
+                    <i class="fas fa-chart-line" style="width: 20px;"></i>
+                    <span>Dashboard</span>
+                </button>
 
-<!-- ========== MAIN HEADER ========== -->
-<header style="background-color: white; padding: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
-        <!-- Logo -->
-        <div style="flex-shrink: 0;">
-            <a href="{{ route('home') }}" style="font-size: 32px; font-weight: 800; color: #212529; text-decoration: none; letter-spacing: 2px;">SEALS</a>
-        </div>
+                <button class="account-nav-btn" data-section="orders" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; color: #666; border: 1px solid #E5E5E5; border-radius: 8px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 15px; font-weight: 500; transition: all 0.3s;">
+                    <i class="fas fa-shopping-cart" style="width: 20px;"></i>
+                    <span>Compras</span>
+                </button>
 
-        <!-- Main Navigation -->
-        <nav style="display: flex; gap: 32px; flex: 1; justify-content: center;">
-            <a href="{{ route('home') }}" style="color: #EE403D; font-weight: 500; text-decoration: none; transition: color 0.25s;">Inicio</a>
-            <a href="{{ route('shop.index') }}" style="color: #212529; font-weight: 500; text-decoration: none; transition: color 0.25s;">Shop</a>
-            <a href="{{ route('categories') }}" style="color: #212529; font-weight: 500; text-decoration: none; transition: color 0.25s;">Categorías</a>
-            <a href="{{ route('contact') }}" style="color: #212529; font-weight: 500; text-decoration: none; transition: color 0.25s;">Contacto</a>
-        </nav>
+                <button class="account-nav-btn" data-section="address" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; color: #666; border: 1px solid #E5E5E5; border-radius: 8px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 15px; font-weight: 500; transition: all 0.3s;">
+                    <i class="fas fa-map-marker-alt" style="width: 20px;"></i>
+                    <span>Direcciones</span>
+                </button>
 
-        <!-- Header Actions -->
-        <div style="display: flex; align-items: center; gap: 20px;">
-            <!-- Search -->
-            <button style="background: none; border: none; cursor: pointer; padding: 8px;" aria-label="Buscar">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.35-4.35"></path>
-                </svg>
-            </button>
+                <button class="account-nav-btn" data-section="details" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; color: #666; border: 1px solid #E5E5E5; border-radius: 8px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 15px; font-weight: 500; transition: all 0.3s;">
+                    <i class="fas fa-user" style="width: 20px;"></i>
+                    <span>Detalles de la Cuenta</span>
+                </button>
 
-            <!-- User -->
-            @auth
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="color: #212529; font-weight: 500;">Hola, {{ Auth::user()->name }}</span>
-                    <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                        @csrf
-                        <button type="submit" style="background: #EE403D; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 500;">
-                            Cerrar Sesión
-                        </button>
-                    </form>
-                </div>
-            @else
-                <a href="{{ route('login') }}" style="background: none; border: none; cursor: pointer; padding: 8px;" aria-label="Cuenta">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+                <a href="{{ route('wishlist.index') }}" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; color: #666; border: 1px solid #E5E5E5; border-radius: 8px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 15px; font-weight: 500; transition: all 0.3s; text-decoration: none;">
+                    <i class="fas fa-heart" style="width: 20px;"></i>
+                    <span>Wishlist</span>
                 </a>
-            @endauth
 
-            <!-- Cart -->
-            <a href="{{ route('cart') }}" style="position: relative; background: none; border: none; cursor: pointer; padding: 8px; text-decoration: none; color: inherit;" aria-label="Carrito">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                <span style="position: absolute; top: 0; right: 0; background-color: #EE403D; color: white; font-size: 10px; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">3</span>
-            </a>
-        </div>
-    </div>
-</header>
-
-<!-- ========== CONTENT: MI CUENTA ========== -->
-<section style="padding: 40px 20px; background: #F8F8F8; min-height: 60vh;">
-    <div style="max-width:1200px; margin:0 auto;">
-        <div style="display:flex; gap:24px; flex-wrap:wrap;">
-            <div style="flex:1 1 320px; background:white; padding:24px; border-radius:8px; box-shadow:0 6px 18px rgba(16,24,40,0.06);">
-                <h3 style="margin:0 0 8px 0;">Mi cuenta</h3>
-                <p style="color:#6b7280; margin:0 0 16px 0;">Información personal</p>
-
-                @auth
-                <div style="margin-bottom:12px;">
-                    <label style="display:block; font-weight:600; margin-bottom:6px;">Nombre</label>
-                    <div style="padding:10px; background:#F8FAFC; border-radius:6px;">{{ Auth::user()->name }}</div>
-                </div>
-
-                <div style="margin-bottom:12px;">
-                    <label style="display:block; font-weight:600; margin-bottom:6px;">Correo electrónico</label>
-                    <div style="padding:10px; background:#F8FAFC; border-radius:6px;">{{ Auth::user()->email }}</div>
-                </div>
-
-                <div style="margin-bottom:20px;">
-                    <button type="button" onclick="showDeleteModal()" style="background:#dc2626; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:500;">
-                        Eliminar cuenta
-                    </button>
-                </div>
-
-                <form method="POST" action="{{ route('account.update') }}">
+                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                     @csrf
-                    @method('PUT')
-                    <div style="margin-bottom:12px;">
-                        <label style="display:block; font-weight:600; margin-bottom:6px;">Teléfono</label>
-                        <input type="tel" name="phone" value="{{ old('phone', optional(Auth::user())->phone) }}" placeholder="Número telefónico" style="width:100%; padding:10px; border-radius:6px; border:1px solid #e6e6e6;">
-                        @error('phone') <div class="text-danger" style="margin-top:6px;">{{ $message }}</div> @enderror
-                    </div>
-                    <div style="display:flex; gap:8px;"><button type="submit" style="background:#EE403D; color:#fff; border:none; padding:10px 14px; border-radius:6px; font-weight:600;">Guardar</button></div>
+                    <button type="submit" style="width: 100%; display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; color: #666; border: 1px solid #E5E5E5; border-radius: 8px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 15px; font-weight: 500; transition: all 0.3s;">
+                        <i class="fas fa-sign-out-alt" style="width: 20px;"></i>
+                        <span>Logout</span>
+                    </button>
                 </form>
-                @else
-                <p>Inicia sesión para ver y editar tu cuenta.</p>
-                @endauth
             </div>
 
-            <div style="flex:2 1 640px; background:white; padding:24px; border-radius:8px; box-shadow:0 6px 18px rgba(16,24,40,0.06);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <div>
-                        <h3 style="margin:0;">Direcciones</h3>
-                        <p style="color:#6b7280; margin:4px 0 0 0;">Agrega una o varias direcciones de entrega</p>
+            <!-- Main Content Area -->
+            <div>
+                @auth
+                <!-- Dashboard Section -->
+                <div id="section-dashboard" class="account-section">
+                    <!-- User Profile Header -->
+                    <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 32px; margin-bottom: 24px;">
+                        <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                            <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #EE403D 0%, #E32020 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: 700; flex-shrink: 0;">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                            <div>
+                                <div style="font-size: 14px; color: #999; margin-bottom: 4px;">Hola,</div>
+                                <div style="font-family: 'Jost', sans-serif; font-size: 24px; font-weight: 600; color: #212529;">{{ Auth::user()->name }}</div>
+                                <div style="font-size: 14px; color: #999; margin-top: 4px;">{{ now()->format('F d, Y') }}</div>
+                            </div>
+                        </div>
+                        <p style="color: #666; line-height: 1.6; margin: 0; font-size: 15px;">
+                            Desde el dashboard de tu cuenta puedes ver tus compras recientes, manejar tus dirección de envío y facturación, y editar tu contraseña y detalles de la cuenta.
+                        </p>
                     </div>
-                    <button id="add-address" type="button" style="background:#10B981; color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:600;">Agregar dirección</button>
+
+                    <!-- Stats Grid -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                        <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 24px; text-align: center; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                            <div style="width: 50px; height: 50px; background: #FEF3F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                                <i class="fas fa-shopping-cart" style="color: #EE403D; font-size: 24px;"></i>
+                            </div>
+                            <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Compras</div>
+                            <div style="font-size: 28px; font-weight: 700; color: #212529;">0</div>
+                        </div>
+
+                        <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 24px; text-align: center; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                            <div style="width: 50px; height: 50px; background: #F0F9FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                                <i class="fas fa-download" style="color: #3B82F6; font-size: 24px;"></i>
+                            </div>
+                            <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Facturación</div>
+                            <div style="font-size: 28px; font-weight: 700; color: #212529;">0</div>
+                        </div>
+
+                        <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 24px; text-align: center; transition: all 0.3s; cursor: pointer;" onclick="showSection('address')" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                            <div style="width: 50px; height: 50px; background: #F0FDF4; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                                <i class="fas fa-map-marker-alt" style="color: #10B981; font-size: 24px;"></i>
+                            </div>
+                            <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Direcciones  </div>
+                            <div style="font-size: 14px; font-weight: 500; color: #212529; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                                @if(isset($addresses) && count($addresses) > 0)
+                                    {{ $addresses[0]['street'] ?? 'Agregar Dirección' }}
+                                @else
+                                    Agregar Dirección
+                                @endif
+                            </div>
+                        </div>
+
+                        <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 24px; text-align: center; transition: all 0.3s; cursor: pointer;" onclick="showSection('details')" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                            <div style="width: 50px; height: 50px; background: #FEF3F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                                <i class="fas fa-user" style="color: #EE403D; font-size: 24px;"></i>
+                            </div>
+                            <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Detalles de la Cuenta</div>
+                            <div style="font-size: 14px; font-weight: 500; color: #212529;">{{ Auth::user()->email }}</div>
+                        </div>
+
+                        <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 24px; text-align: center; transition: all 0.3s; cursor: pointer;" onclick="window.location.href='{{ route('wishlist.index') }}'" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                            <div style="width: 50px; height: 50px; background: #FFF1F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                                <i class="fas fa-heart" style="color: #F43F5E; font-size: 24px;"></i>
+                            </div>
+                            <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Wishlist</div>
+                            <div style="font-size: 28px; font-weight: 700; color: #212529;">{{ count(session()->get('wishlist', [])) }}</div>
+                        </div>
+
+                        <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 24px; text-align: center; transition: all 0.3s; cursor: pointer;" onclick="document.querySelector('form[action=\\'{{ route('logout') }}\\']').submit()" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                            <div style="width: 50px; height: 50px; background: #F5F5F5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                                <i class="fas fa-sign-out-alt" style="color: #666; font-size: 24px;"></i>
+                            </div>
+                            <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Logout</div>
+                            <div style="font-size: 14px; font-weight: 500; color: #212529;">Sign Out</div>
+                        </div>
+                    </div>
                 </div>
 
-                <form method="POST" action="{{ route('account.addresses.save') }}" id="addresses-form">
-                    @csrf
-                    <div id="addresses-list" style="display:flex; flex-direction:column; gap:12px;">
-                        @if(isset($addresses) && count($addresses))
-                            @foreach($addresses as $idx => $addr)
-                            <div class="address-item" style="border:1px solid #eef2f6; padding:12px; border-radius:8px; position:relative;">
-                                <button type="button" class="remove-address" style="position:absolute; right:8px; top:8px; background:transparent; border:none; color:#ef4444; cursor:pointer;">Eliminar</button>
+                <!-- Orders Section -->
+                <div id="section-orders" class="account-section" style="display: none;">
+                    <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 32px;">
+                        <h2 style="font-family: 'Jost', sans-serif; font-size: 28px; font-weight: 700; color: #212529; margin: 0 0 24px 0;">
+                            Mis compras
+                        </h2>
 
-                                <div style="display:grid; grid-template-columns:1fr 120px; gap:10px; margin-bottom:8px;">
-                                    <input name="addresses[{{ $idx }}][street]" value="{{ old('addresses.'.$idx.'.street', $addr['street'] ?? '') }}" placeholder="Calle" style="padding:10px; border-radius:8px; border:1px solid #e6e6e6;">
-                                    <input name="addresses[{{ $idx }}][number]" value="{{ old('addresses.'.$idx.'.number', $addr['number'] ?? '') }}" placeholder="Número" style="padding:10px; border-radius:8px; border:1px solid #e6e6e6;">
-                                </div>
-
-                                <div style="display:grid; grid-template-columns:160px 1fr; gap:10px;">
-                                    <input name="addresses[{{ $idx }}][postal_code]" value="{{ old('addresses.'.$idx.'.postal_code', $addr['postal_code'] ?? '') }}" placeholder="Código postal" style="padding:10px; border-radius:8px; border:1px solid #e6e6e6;">
-                                    <input name="addresses[{{ $idx }}][note]" value="{{ old('addresses.'.$idx.'.note', $addr['note'] ?? '') }}" placeholder="Indicación para ubicar (ej: piso, referencia)" style="padding:10px; border-radius:8px; border:1px solid #e6e6e6;">
-                                </div>
-                            </div>
-                            @endforeach
-                        @else
-                            <div class="address-item" style="border:1px solid #eef2f6; padding:12px; border-radius:8px; position:relative;">
-                                <button type="button" class="remove-address" style="position:absolute; right:8px; top:8px; background:transparent; border:none; color:#ef4444; cursor:pointer;">Eliminar</button>
-
-                                <div style="display:grid; grid-template-columns:1fr 120px; gap:10px; margin-bottom:8px;">
-                                    <input name="addresses[0][street]" placeholder="Calle" style="padding:10px; border-radius:8px; border:1px solid #e6e6e6;">
-                                    <input name="addresses[0][number]" placeholder="Número" style="padding:10px; border-radius:8px; border:1px solid #e6e6e6;">
-                                </div>
-
-                                <div style="display:grid; grid-template-columns:160px 1fr; gap:10px;">
-                                    <input name="addresses[0][postal_code]" placeholder="Código postal" style="padding:10px; border-radius:8px; border:1px solid #e6e6e6;">
-                                    <input name="addresses[0][note]" placeholder="Indicación para ubicar (ej: piso, referencia)" style="padding:10px; border-radius:8px; border:1px solid #e6e6e6;">
-                                </div>
-                            </div>
-                        @endif
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid #E5E5E5;">
+                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Order</th>
+                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Date</th>
+                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Status</th>
+                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Total</th>
+                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; padding: 48px 16px; color: #999; font-size: 15px;">
+                                            Sin compras. <a href="{{ route('shop.index') }}" style="color: #EE403D; text-decoration: none; font-weight: 500;">Empieza a comprar</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+                </div>
 
-                    <div style="display:flex; gap:10px; margin-top:14px;"><button type="submit" style="background:#111827; color:#fff; border:none; padding:10px 14px; border-radius:8px; font-weight:600;">Guardar direcciones</button></div>
-                </form>
+                <!-- Address Section -->
+                <div id="section-address" class="account-section" style="display: none;">
+                    <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 32px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                            <h2 style="font-family: 'Jost', sans-serif; font-size: 28px; font-weight: 700; color: #212529; margin: 0;">
+                                Direcciones
+                            </h2>
+                            <button id="add-address" type="button" style="background: #10B981; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Jost', sans-serif; font-size: 14px; transition: background 0.3s;">
+                                <i class="fas fa-plus" style="margin-right: 8px;"></i>Agregar Dirección
+                            </button>
+                        </div>
+
+                        <form method="POST" action="{{ route('account.addresses.save') }}" id="addresses-form">
+                            @csrf
+                            <div id="addresses-list" style="display: grid; gap: 20px;">
+                                @if(isset($addresses) && count($addresses))
+                                    @foreach($addresses as $idx => $addr)
+                                    <div class="address-item" style="border: 1px solid #E5E5E5; padding: 24px; border-radius: 12px; position: relative; background: #FAFAFA;">
+                                        <input type="hidden" name="addresses[{{ $idx }}][id]" value="{{ $addr['id'] ?? '' }}">
+                                        <button type="button" class="remove-address" style="position: absolute; right: 16px; top: 16px; background: #FEF2F2; border: none; color: #EF4444; cursor: pointer; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; transition: all 0.3s;">
+                                            <i class="fas fa-trash" style="margin-right: 6px;"></i>Eliminar
+                                        </button>
+
+                                        <div style="display: grid; grid-template-columns: 1fr 150px; gap: 16px; margin-bottom: 16px;">
+                                            <div>
+                                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;">Calle</label>
+                                                <input name="addresses[{{ $idx }}][street]" value="{{ old('addresses.'.$idx.'.street', $addr['street'] ?? '') }}" placeholder="Nombre de la calle" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: 'Jost', sans-serif; font-size: 15px;">
+                                            </div>
+                                            <div>
+                                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;">Número</label>
+                                                <input name="addresses[{{ $idx }}][number]" value="{{ old('addresses.'.$idx.'.number', $addr['number'] ?? '') }}" placeholder="Número" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: 'Jost', sans-serif; font-size: 15px;">
+                                            </div>
+                                        </div>
+
+                                        <div style="display: grid; grid-template-columns: 180px 1fr; gap: 16px;">
+                                            <div>
+                                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;">Código Postal</label>
+                                                <input name="addresses[{{ $idx }}][postal_code]" value="{{ old('addresses.'.$idx.'.postal_code', $addr['postal_code'] ?? '') }}" placeholder="Código postal" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: 'Jost', sans-serif; font-size: 15px;">
+                                            </div>
+                                            <div>
+                                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;">Información Adicional</label>
+                                                <input name="addresses[{{ $idx }}][note]" value="{{ old('addresses.'.$idx.'.note', $addr['note'] ?? '') }}" placeholder="Ciudad / Estado o referencia" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: 'Jost', sans-serif; font-size: 15px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                @else
+                                    <div class="address-item" style="border: 1px solid #E5E5E5; padding: 24px; border-radius: 12px; position: relative; background: #FAFAFA;">
+                                        <button type="button" class="remove-address" style="position: absolute; right: 16px; top: 16px; background: #FEF2F2; border: none; color: #EF4444; cursor: pointer; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; transition: all 0.3s;">
+                                            <i class="fas fa-trash" style="margin-right: 6px;"></i>Eliminar
+                                        </button>
+
+                                        <div style="display: grid; grid-template-columns: 1fr 150px; gap: 16px; margin-bottom: 16px;">
+                                            <div>
+                                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;">Calle</label>
+                                                <input name="addresses[0][street]" placeholder="Nombre de la calle" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: 'Jost', sans-serif; font-size: 15px;">
+                                            </div>
+                                            <div>
+                                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;">Número</label>
+                                                <input name="addresses[0][number]" placeholder="Número" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: 'Jost', sans-serif; font-size: 15px;">
+                                            </div>
+                                        </div>
+
+                                        <div style="display: grid; grid-template-columns: 180px 1fr; gap: 16px;">
+                                            <div>
+                                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;">Código Postal</label>
+                                                <input name="addresses[0][postal_code]" placeholder="Código postal" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: 'Jost', sans-serif; font-size: 15px;">
+                                            </div>
+                                            <div>
+                                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;">Información Adicional</label>
+                                                <input name="addresses[0][note]" placeholder="Ciudad / Estado o referencia" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: 'Jost', sans-serif; font-size: 15px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                                <button type="submit" style="background: #EE403D; color: white; border: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-family: 'Jost', sans-serif; font-size: 15px; cursor: pointer; transition: background 0.3s;">
+                                    Save All Direcciones
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Detalles de la Cuenta Section -->
+                <div id="section-details" class="account-section" style="display: none;">
+                    <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 32px;">
+                        <h2 style="font-family: 'Jost', sans-serif; font-size: 28px; font-weight: 700; color: #212529; margin: 0 0 24px 0;">
+                            Detalles de la Cuenta
+                        </h2>
+
+                        <!-- Personal Info (Read-only) -->
+                        <div style="margin-bottom: 32px; padding: 24px; background: #FAFAFA; border-radius: 8px;">
+                            <h3 style="font-family: 'Jost', sans-serif; font-size: 18px; font-weight: 600; color: #212529; margin: 0 0 20px 0;">
+                                Información Personal
+                            </h3>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div>
+                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #666; font-size: 13px;">Nombre Completo</label>
+                                    <div style="padding: 12px 16px; background: white; border-radius: 6px; border: 1px solid #E5E5E5; color: #212529;">
+                                        {{ Auth::user()->name }}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #666; font-size: 13px;">Correo Electrónico</label>
+                                    <div style="padding: 12px 16px; background: white; border-radius: 6px; border: 1px solid #E5E5E5; color: #212529;">
+                                        {{ Auth::user()->email }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actualizar Teléfono -->
+                        <form method="POST" action="{{ route('account.update') }}" style="margin-bottom: 32px;">
+                            @csrf
+                            @method('PUT')
+
+                            <h3 style="font-family: 'Jost', sans-serif; font-size: 18px; font-weight: 600; color: #212529; margin: 0 0 20px 0;">
+                                Actualizar Número de Teléfono
+                            </h3>
+
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;">Número de Teléfono</label>
+                                <input type="tel" name="phone" value="{{ old('phone', optional(Auth::user())->phone) }}" placeholder="Tu número de teléfono" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: 'Jost', sans-serif; font-size: 15px;">
+                                @error('phone')
+                                <div style="color: #EF4444; font-size: 13px; margin-top: 6px;">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <button type="submit" style="background: #EE403D; color: white; border: none; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-family: 'Jost', sans-serif; font-size: 15px; cursor: pointer; transition: background 0.3s;">
+                                Actualizar Teléfono
+                            </button>
+                        </form>
+
+                        <!-- Zona Peligrosa -->
+                        <div style="border-top: 1px solid #E5E5E5; padding-top: 32px;">
+                            <h3 style="font-family: 'Jost', sans-serif; font-size: 18px; font-weight: 600; color: #EF4444; margin: 0 0 12px 0;">
+                                Zona Peligrosa
+                            </h3>
+                            <p style="color: #666; margin: 0 0 16px 0; font-size: 14px;">
+                                Una vez que elimines tu cuenta, no hay vuelta atrás. Por favor, ten certeza.
+                            </p>
+                            <button type="button" onclick="showDeleteModal()" style="background: #FEF2F2; color: #EF4444; border: 1px solid #EF4444; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-family: 'Jost', sans-serif; font-size: 15px; cursor: pointer; transition: all 0.3s;">
+                                <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>Eliminar Cuenta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                @else
+                <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 48px; text-align: center;">
+                    <i class="fas fa-user-lock" style="font-size: 64px; color: #E5E5E5; margin-bottom: 24px;"></i>
+                    <h2 style="font-family: 'Jost', sans-serif; font-size: 24px; font-weight: 600; color: #212529; margin: 0 0 12px 0;">
+                        Please Sign In
+                    </h2>
+                    <p style="color: #666; margin: 0 0 24px 0;">You need to be logged in to access your account dashboard.</p>
+                    <a href="{{ route('login') }}" style="display: inline-block; background: #EE403D; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-family: 'Jost', sans-serif; font-size: 15px;">
+                        Sign In
+                    </a>
+                </div>
+                @endauth
             </div>
         </div>
     </div>
@@ -187,8 +343,79 @@
 
 @include('components.delete-account-modal')
 
+@push('styles')
+<style>
+.account-nav-btn:hover {
+    background: #FEF3F2 !important;
+    border-color: #EE403D !important;
+    color: #EE403D !important;
+}
+
+.account-nav-btn.active {
+    background: #EE403D !important;
+    color: white !important;
+    border-color: #EE403D !important;
+}
+
+.remove-address:hover {
+    background: #EF4444 !important;
+    color: white !important;
+}
+
+#add-address:hover {
+    background: #059669 !important;
+}
+
+@media (max-width: 768px) {
+    section > div > div {
+        grid-template-columns: 1fr !important;
+    }
+
+    #section-dashboard > div:last-child {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+@endpush
+
 @push('scripts')
 <script>
+// Section Navigation
+function showSection(sectionName) {
+    // Hide all sections
+    document.querySelectorAll('.account-section').forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Show selected section
+    document.getElementById('section-' + sectionName).style.display = 'block';
+
+    // Update active button
+    document.querySelectorAll('.account-nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = 'white';
+        btn.style.color = '#666';
+        btn.style.borderColor = '#E5E5E5';
+    });
+
+    const activeBtn = document.querySelector(`[data-section="${sectionName}"]`);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.style.background = '#EE403D';
+        activeBtn.style.color = 'white';
+        activeBtn.style.borderColor = '#EE403D';
+    }
+}
+
+// Navigation button click handlers
+document.querySelectorAll('.account-nav-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const section = this.getAttribute('data-section');
+        showSection(section);
+    });
+});
+
+// Address Management
 document.addEventListener('DOMContentLoaded', function () {
     const addBtn = document.getElementById('add-address');
     const list = document.getElementById('addresses-list');
@@ -196,48 +423,72 @@ document.addEventListener('DOMContentLoaded', function () {
     function createAddressItem(index) {
         const wrapper = document.createElement('div');
         wrapper.className = 'address-item';
-        wrapper.style = 'border:1px solid #eef2f6; padding:12px; border-radius:8px; position:relative;';
+        wrapper.style = 'border: 1px solid #E5E5E5; padding: 24px; border-radius: 12px; position: relative; background: #FAFAFA;';
 
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'remove-address';
-        removeBtn.textContent = 'Eliminar';
-        removeBtn.style = 'position:absolute; right:8px; top:8px; background:transparent; border:none; color:#ef4444; cursor:pointer;';
+        removeBtn.innerHTML = '<i class="fas fa-trash" style="margin-right: 6px;"></i>Eliminar';
+        removeBtn.style = 'position: absolute; right: 16px; top: 16px; background: #FEF2F2; border: none; color: #EF4444; cursor: pointer; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; transition: all 0.3s;';
         removeBtn.addEventListener('click', () => wrapper.remove());
 
         wrapper.appendChild(removeBtn);
 
         const row1 = document.createElement('div');
-        row1.style = 'display:grid; grid-template-columns:1fr 120px; gap:10px; margin-bottom:8px;';
+        row1.style = 'display: grid; grid-template-columns: 1fr 150px; gap: 16px; margin-bottom: 16px;';
 
+        const streetDiv = document.createElement('div');
+        const streetLabel = document.createElement('label');
+        streetLabel.textContent = 'Calle';
+        streetLabel.style = 'display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;';
         const street = document.createElement('input');
         street.name = `addresses[${index}][street]`;
-        street.placeholder = 'Calle';
-        street.style = 'padding:10px; border-radius:8px; border:1px solid #e6e6e6;';
+        street.placeholder = 'Nombre de la calle';
+        street.style = 'width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: \'Jost\', sans-serif; font-size: 15px;';
+        streetDiv.appendChild(streetLabel);
+        streetDiv.appendChild(street);
 
+        const numberDiv = document.createElement('div');
+        const numberLabel = document.createElement('label');
+        numberLabel.textContent = 'Número';
+        numberLabel.style = 'display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;';
         const number = document.createElement('input');
         number.name = `addresses[${index}][number]`;
         number.placeholder = 'Número';
-        number.style = 'padding:10px; border-radius:8px; border:1px solid #e6e6e6;';
+        number.style = 'width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: \'Jost\', sans-serif; font-size: 15px;';
+        numberDiv.appendChild(numberLabel);
+        numberDiv.appendChild(number);
 
-        row1.appendChild(street);
-        row1.appendChild(number);
+        row1.appendChild(streetDiv);
+        row1.appendChild(numberDiv);
 
         const row2 = document.createElement('div');
-        row2.style = 'display:grid; grid-template-columns:160px 1fr; gap:10px;';
+        row2.style = 'display: grid; grid-template-columns: 180px 1fr; gap: 16px;';
 
+        const postalDiv = document.createElement('div');
+        const postalLabel = document.createElement('label');
+        postalLabel.textContent = 'Código Postal';
+        postalLabel.style = 'display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;';
         const postal = document.createElement('input');
         postal.name = `addresses[${index}][postal_code]`;
         postal.placeholder = 'Código postal';
-        postal.style = 'padding:10px; border-radius:8px; border:1px solid #e6e6e6;';
+        postal.style = 'width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: \'Jost\', sans-serif; font-size: 15px;';
+        postalDiv.appendChild(postalLabel);
+        postalDiv.appendChild(postal);
 
+        const noteDiv = document.createElement('div');
+        const noteLabel = document.createElement('label');
+        noteLabel.textContent = 'Información Adicional';
+        noteLabel.style = 'display: block; font-weight: 600; margin-bottom: 8px; color: #212529; font-size: 14px;';
         const note = document.createElement('input');
         note.name = `addresses[${index}][note]`;
-        note.placeholder = 'Indicación para ubicar (ej: piso, referencia)';
-        note.style = 'padding:10px; border-radius:8px; border:1px solid #e6e6e6;';
+        note.placeholder = 'Ciudad / Estado o referencia';
+        note.style = 'width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: \'Jost\', sans-serif; font-size: 15px;';
+        noteDiv.appendChild(noteLabel);
+        noteDiv.appendChild(note);
 
-        row2.appendChild(postal);
-        row2.appendChild(note);
+        row2.appendChild(postalDiv);
+        row2.appendChild(noteDiv);
 
         wrapper.appendChild(row1);
         wrapper.appendChild(row2);
@@ -246,13 +497,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     addBtn && addBtn.addEventListener('click', function () {
-        // compute next index
         const cur = list.querySelectorAll('.address-item').length;
         const item = createAddressItem(cur);
         list.appendChild(item);
     });
 
-    // attach remove handlers to existing buttons
     document.querySelectorAll('.remove-address').forEach(btn => btn.addEventListener('click', function () {
         this.closest('.address-item')?.remove();
     }));
