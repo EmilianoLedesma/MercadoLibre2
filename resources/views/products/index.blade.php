@@ -13,13 +13,53 @@
         z-index: 100;
     }
 
-    .top-bar {
-        background: #EE403D;
-        color: white;
-        padding: 8px 0;
-        text-align: center;
-        font-size: 14px;
-    }
+            <nav class="nav">
+                <a href="{{ route('home') }}" class="nav-link">Inicio</a>
+                <a href="{{ route('products.index') }}" class="nav-link active">Productos</a>
+                <a href="{{ route('categories') }}" class="nav-link">Categorías</a>
+                <a href="#" class="nav-link">Contacto</a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="icon-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+
+                @auth
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="color: #333; font-weight: 500;">Hola, {{ Auth::user()->name }}</span>
+                        <a href="{{ route('account') }}" class="nav-link" style="margin: 0;">Mi cuenta</a>
+                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="icon-btn" style="background: none; border: none; cursor: pointer;">
+                                Cerrar Sesión
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="icon-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+                @endauth
+
+                <a href="{{ route('cart') }}" class="icon-btn cart">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
 
     .header-main {
         padding: 16px 0;
