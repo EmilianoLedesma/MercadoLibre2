@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', $product->name)
 
-@push('styles')
+<?php $__env->startSection('title', $product->name); ?>
+
+<?php $__env->startPush('styles'); ?>
 <style>
     * {
         margin: 0;
@@ -16,48 +16,11 @@
         color: #212529;
     }
 
-                @auth
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="color: #333; font-weight: 500;">Hola, {{ Auth::user()->name }}</span>
-                        <a href="{{ route('account') }}" class="nav-link" style="margin: 0;">Mi cuenta</a>
-                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                            @csrf
-                            <button type="submit" class="icon-btn" style="background: none; border: none; cursor: pointer;">
-                                Cerrar Sesión
-                            </button>
-                        </form>
-                    </div>
-                @else
-                    <a href="{{ route('login') }}" class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </a>
-                @endauth
-
-                <a href="{{ route('cart') }}" class="icon-btn cart">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                    </svg>
-                    <span class="cart-count">0</span>
-                </a>
-            </div>
-        </div>
-    </div>
-</header>
-
-<main class="product-detail-page">
-    <div class="container">
-        <div class="page-header">
-            <h1>Detalles del Producto</h1>
-            <div class="header-actions">
-                <a href="{{ route('products.edit', $product) }}" class="btn btn-primary">Editar</a>
-                <a href="{{ route('products.index') }}" class="btn btn-secondary">Volver a Lista</a>
-            </div>
-        </div>
+    .product-detail-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 60px 20px;
+    }
 
     .product-detail-grid {
         display: grid;
@@ -522,17 +485,17 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <!-- Breadcrumb -->
 <div class="breadcrumb-container">
     <div class="breadcrumb">
-        <a href="{{ route('home') }}">Inicio</a>
+        <a href="<?php echo e(route('home')); ?>">Inicio</a>
         <span>/</span>
-        <a href="{{ route('products.index') }}">Productos</a>
+        <a href="<?php echo e(route('products.index')); ?>">Productos</a>
         <span>/</span>
-        <span style="color: #212529; font-weight: 500;">{{ $product->name }}</span>
+        <span style="color: #212529; font-weight: 500;"><?php echo e($product->name); ?></span>
     </div>
 </div>
 
@@ -541,7 +504,7 @@
     <div class="product-detail-grid">
         <!-- Product Images -->
         <div class="product-images">
-            @php
+            <?php
                 $images = is_string($product->images) ? json_decode($product->images, true) : $product->images;
                 $images = $images ?? [];
                 
@@ -560,16 +523,16 @@
                 } else {
                     $mainUrl = asset('images/placeholder-product.svg');
                 }
-            @endphp
+            ?>
 
             <div class="main-image-container">
-                <img src="{{ $mainUrl }}" alt="{{ $product->name }}" class="main-image" id="mainImage">
+                <img src="<?php echo e($mainUrl); ?>" alt="<?php echo e($product->name); ?>" class="main-image" id="mainImage">
             </div>
 
-            @if(count($images) > 1)
+            <?php if(count($images) > 1): ?>
             <div class="image-thumbnails">
-                @foreach($images as $index => $image)
-                    @php
+                <?php $__currentLoopData = $images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php
                         $storagePath = public_path('storage/' . $image);
                         $publicPath = public_path($image);
                         
@@ -580,25 +543,25 @@
                         } else {
                             $thumbUrl = asset('images/placeholder-product.svg');
                         }
-                    @endphp
-                    <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" onclick="changeImage('{{ $thumbUrl }}', this)">
-                        <img src="{{ $thumbUrl }}" alt="{{ $product->name }} - {{ $index + 1 }}">
+                    ?>
+                    <div class="thumbnail <?php echo e($index === 0 ? 'active' : ''); ?>" onclick="changeImage('<?php echo e($thumbUrl); ?>', this)">
+                        <img src="<?php echo e($thumbUrl); ?>" alt="<?php echo e($product->name); ?> - <?php echo e($index + 1); ?>">
                     </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
-            @endif
+            <?php endif; ?>
         </div>
 
         <!-- Product Info -->
         <div class="product-detail-info">
             <!-- Admin Badges -->
             <div class="admin-badges">
-                @if($product->is_featured)
+                <?php if($product->is_featured): ?>
                     <span class="admin-badge featured">⭐ Destacado</span>
-                @endif
-                @if(!$product->is_active)
+                <?php endif; ?>
+                <?php if(!$product->is_active): ?>
                     <span class="admin-badge inactive">❌ Inactivo</span>
-                @endif
+                <?php endif; ?>
             </div>
 
             <div class="product-meta">
@@ -612,27 +575,28 @@
                 <span class="reviews-count">(24 reseñas)</span>
             </div>
 
-            <h1 class="product-title">{{ $product->name }}</h1>
+            <h1 class="product-title"><?php echo e($product->name); ?></h1>
 
             <div class="product-price">
-                @if($product->sale_price)
-                    <span class="price-current">${{ number_format($product->sale_price, 2) }}</span>
-                    <span class="price-original">${{ number_format($product->price, 2) }}</span>
-                @else
-                    <span class="price-current">${{ number_format($product->price, 2) }}</span>
-                @endif
+                <?php if($product->sale_price): ?>
+                    <span class="price-current">$<?php echo e(number_format($product->sale_price, 2)); ?></span>
+                    <span class="price-original">$<?php echo e(number_format($product->price, 2)); ?></span>
+                <?php else: ?>
+                    <span class="price-current">$<?php echo e(number_format($product->price, 2)); ?></span>
+                <?php endif; ?>
             </div>
 
-            @if($product->stock_quantity > 0)
-                <span class="stock-badge {{ $product->stock_quantity < 10 ? 'low' : '' }}">
-                    Disponible ({{ $product->stock_quantity }})
+            <?php if($product->stock_quantity > 0): ?>
+                <span class="stock-badge <?php echo e($product->stock_quantity < 10 ? 'low' : ''); ?>">
+                    Disponible (<?php echo e($product->stock_quantity); ?>)
                 </span>
-            @else
+            <?php else: ?>
                 <span class="stock-badge out">Agotado</span>
-            @endif
+            <?php endif; ?>
 
             <p class="product-description">
-                {{ $product->short_description ?? $product->description }}
+                <?php echo e($product->short_description ?? $product->description); ?>
+
             </p>
 
             <!-- Quantity -->
@@ -640,7 +604,7 @@
                 <label class="option-label">Cantidad:</label>
                 <div class="quantity-controls">
                     <button class="qty-btn" onclick="decrementQty()">−</button>
-                    <input type="number" value="1" min="1" max="{{ $product->stock_quantity }}" class="qty-input" id="qtyInput">
+                    <input type="number" value="1" min="1" max="<?php echo e($product->stock_quantity); ?>" class="qty-input" id="qtyInput">
                     <button class="qty-btn" onclick="incrementQty()">+</button>
                 </div>
             </div>
@@ -650,12 +614,12 @@
                 <button class="btn-add-cart">
                     <i class="fas fa-shopping-cart"></i> Agregar al Carrito
                 </button>
-                <a href="{{ route('products.edit', $product) }}" class="btn-edit" title="Editar">
+                <a href="<?php echo e(route('products.edit', $product)); ?>" class="btn-edit" title="Editar">
                     <i class="fas fa-edit"></i>
                 </a>
-                <form action="{{ route('products.destroy', $product) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
-                    @csrf
-                    @method('DELETE')
+                <form action="<?php echo e(route('products.destroy', $product)); ?>" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
                     <button type="submit" class="btn-delete" title="Eliminar">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -666,20 +630,21 @@
             <div class="product-meta-info">
                 <div class="meta-item">
                     <span class="meta-label">SKU:</span>
-                    <span class="meta-value">{{ $product->sku }}</span>
+                    <span class="meta-value"><?php echo e($product->sku); ?></span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Categoría:</span>
-                    <span class="meta-value">{{ $product->category->name ?? 'Sin categoría' }}</span>
+                    <span class="meta-value"><?php echo e($product->category->name ?? 'Sin categoría'); ?></span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Vendedor:</span>
-                    <span class="meta-value">{{ $product->user->name ?? 'Desconocido' }}</span>
+                    <span class="meta-value"><?php echo e($product->user->name ?? 'Desconocido'); ?></span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Stock:</span>
-                    <span class="stock-status {{ $product->stock_quantity > 0 ? '' : 'out' }}">
-                        {{ $product->stock_quantity > 0 ? 'Disponible (' . $product->stock_quantity . ')' : 'Agotado' }}
+                    <span class="stock-status <?php echo e($product->stock_quantity > 0 ? '' : 'out'); ?>">
+                        <?php echo e($product->stock_quantity > 0 ? 'Disponible (' . $product->stock_quantity . ')' : 'Agotado'); ?>
+
                     </span>
                 </div>
             </div>
@@ -696,7 +661,8 @@
         <div class="tabs-content">
             <div class="tab-panel active" id="description">
                 <div class="full-description">
-                    {!! nl2br(e($product->description)) !!}
+                    <?php echo nl2br(e($product->description)); ?>
+
                 </div>
             </div>
 
@@ -705,31 +671,32 @@
                     <tbody>
                         <tr>
                             <th>ID del Producto</th>
-                            <td>#{{ $product->id }}</td>
+                            <td>#<?php echo e($product->id); ?></td>
                         </tr>
                         <tr>
                             <th>Slug</th>
-                            <td>{{ $product->slug }}</td>
+                            <td><?php echo e($product->slug); ?></td>
                         </tr>
                         <tr>
                             <th>Fecha de Creación</th>
-                            <td>{{ $product->created_at->format('d/m/Y H:i') }}</td>
+                            <td><?php echo e($product->created_at->format('d/m/Y H:i')); ?></td>
                         </tr>
                         <tr>
                             <th>Última Actualización</th>
-                            <td>{{ $product->updated_at->format('d/m/Y H:i') }}</td>
+                            <td><?php echo e($product->updated_at->format('d/m/Y H:i')); ?></td>
                         </tr>
                         <tr>
                             <th>Estado</th>
                             <td>
-                                <span style="color: {{ $product->is_active ? '#28A745' : '#DC3545' }}; font-weight: 600;">
-                                    {{ $product->is_active ? '✓ Activo' : '✗ Inactivo' }}
+                                <span style="color: <?php echo e($product->is_active ? '#28A745' : '#DC3545'); ?>; font-weight: 600;">
+                                    <?php echo e($product->is_active ? '✓ Activo' : '✗ Inactivo'); ?>
+
                                 </span>
                             </td>
                         </tr>
                         <tr>
                             <th>Destacado</th>
-                            <td>{{ $product->is_featured ? '⭐ Sí' : 'No' }}</td>
+                            <td><?php echo e($product->is_featured ? '⭐ Sí' : 'No'); ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -778,4 +745,6 @@
         }
     }
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\Lenguajes Automatas\MercadoLibre2\resources\views/products/show.blade.php ENDPATH**/ ?>

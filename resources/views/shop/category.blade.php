@@ -492,64 +492,21 @@
                     <span>{{ $cat->name }} ({{ $cat->products_count ?? 0 }})</span>
                     <span class="toggle-icon">▶</span>
                 </div>
-                <div class="category-submenu" id="submenu_cat_{{ $cat->id }}" class="{{ $cat->id == $category->id ? 'active' : '' }}">
+                <div class="category-submenu {{ $cat->id == $category->id ? 'active' : '' }}" id="submenu_cat_{{ $cat->id }}">
                     <div class="filter-option">
-                        <input type="radio" name="category" value="{{ $cat->id }}" id="radio_cat_{{ $cat->id }}"
-                            {{ $cat->id == $category->id ? 'checked' : '' }}
-                            onchange="window.location.href='{{ route('shop.category', $cat->slug) }}'">
-                        <label for="radio_cat_{{ $cat->id }}">Todos</label>
+                        <a href="{{ route('shop.category', $cat->slug) }}" 
+                           style="color: {{ $cat->id == $category->id ? '#EE403D' : '#666' }}; text-decoration: none; font-weight: {{ $cat->id == $category->id ? '600' : '400' }};">
+                            Ver todos en {{ $cat->name }}
+                        </a>
                     </div>
-                    @if($cat->name == 'Mujer')
-                        <div class="filter-option">
-                            <a href="#">Ropa</a>
-                        </div>
-                        <div class="filter-option">
-                            <a href="#">Zapatos</a>
-                        </div>
-                        <div class="filter-option">
-                            <a href="#">Gafas</a>
-                        </div>
-                        <div class="filter-option">
-                            <a href="#">Maquillaje</a>
-                        </div>
-                        <div class="filter-option">
-                            <a href="#">Accesorios</a>
-                        </div>
-                    @elseif($cat->name == 'Hombre')
-                        <div class="filter-option">
-                            <a href="#">Ropa</a>
-                        </div>
-                        <div class="filter-option">
-                            <a href="#">Zapatos</a>
-                        </div>
-                        <div class="filter-option">
-                            <a href="#">Gafas</a>
-                        </div>
-                        <div class="filter-option">
-                            <a href="#">Relojes</a>
-                        </div>
-                        <div class="filter-option">
-                            <a href="#">Accesorios</a>
-                        </div>
-                    @else
-                        <div class="filter-option">
-                            <a href="#">Ropa</a>
-                        </div>
-                        <div class="filter-option">
-                            <a href="#">Zapatos</a>
-                        </div>
-                        <div class="filter-option">
-                            <a href="#">Juguetes</a>
-                        </div>
-                    @endif
                 </div>
             </div>
             @endforeach
 
             <div class="filter-option" style="margin-top: 12px;">
-                <input type="radio" name="category" value="" id="cat_all"
-                    onchange="window.location.href='{{ route('shop.index') }}'">
-                <label for="cat_all">Todas las Categorías</label>
+                <a href="{{ route('shop.index') }}" style="color: #666; text-decoration: none;">
+                    Todas las Categorías
+                </a>
             </div>
         </div>
 

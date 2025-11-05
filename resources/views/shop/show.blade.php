@@ -573,18 +573,145 @@
                 {{ $product->short_description ?? $product->description }}
             </p>
 
-            <!-- Size Options -->
-            <div class="product-options">
-                <div class="option-group">
-                    <label class="option-label">Talla:</label>
-                    <div class="option-buttons">
-                        <button class="option-btn">S</button>
-                        <button class="option-btn active">M</button>
-                        <button class="option-btn">L</button>
-                        <button class="option-btn">XL</button>
-                    </div>
-                </div>
+            @php
+                $nombreProducto = strtolower($product->name);
+                $categoria = $product->category->name ?? '';
+                
+                // Detectar tipo de selector de talla necesario
+                $tipoTalla = null;
+                $requiereColor = false;
+                
+                // Productos de ropa (tallas S, M, L, XL)
+                if (str_contains($nombreProducto, 'remera') || 
+                    str_contains($nombreProducto, 'camiseta') ||
+                    str_contains($nombreProducto, 'buzo') || 
+                    str_contains($nombreProducto, 'hoodie') ||
+                    str_contains($nombreProducto, 'campera') || 
+                    str_contains($nombreProducto, 'jacket') ||
+                    str_contains($nombreProducto, 'vestido') || 
+                    str_contains($nombreProducto, 'jean') ||
+                    str_contains($nombreProducto, 'pantalón') ||
+                    str_contains($nombreProducto, 'shorts') ||
+                    str_contains($nombreProducto, 'playera')) {
+                    $tipoTalla = 'ropa';
+                    $requiereColor = true;
+                }
+                
+                // Calzado (números)
+                elseif (str_contains($nombreProducto, 'zapatilla') || 
+                        str_contains($nombreProducto, 'zapato') ||
+                        str_contains($nombreProducto, 'bota') || 
+                        str_contains($nombreProducto, 'botín') ||
+                        str_contains($nombreProducto, 'sandalia') ||
+                        str_contains($nombreProducto, 'ojotas')) {
+                    $tipoTalla = 'calzado';
+                    $requiereColor = true;
+                }
+                
+                // Deportes con tamaño específico
+                elseif (str_contains($nombreProducto, 'pelota') || 
+                        str_contains($nombreProducto, 'balón')) {
+                    $tipoTalla = 'pelota';
+                    $requiereColor = true;
+                }
+                elseif (str_contains($nombreProducto, 'bicicleta') || 
+                        str_contains($nombreProducto, 'bike')) {
+                    $tipoTalla = 'bicicleta';
+                    $requiereColor = true;
+                }
+                elseif (str_contains($nombreProducto, 'guantes')) {
+                    $tipoTalla = 'guantes';
+                    $requiereColor = true;
+                }
+                
+                // Accesorios de moda
+                elseif (($categoria === 'Moda' || $categoria === 'Deportes y Fitness') && 
+                        (str_contains($nombreProducto, 'gorra') || 
+                         str_contains($nombreProducto, 'mochila'))) {
+                    $tipoTalla = 'unica';
+                    $requiereColor = true;
+                }
+                
+                // Productos de hogar con color
+                elseif ($categoria === 'Hogar y Muebles' && 
+                        (str_contains($nombreProducto, 'sábana') || 
+                         str_contains($nombreProducto, 'toalla') ||
+                         str_contains($nombreProducto, 'alfombra') ||
+                         str_contains($nombreProducto, 'cortina') ||
+                         str_contains($nombreProducto, 'cojín') ||
+                         str_contains($nombreProducto, 'funda'))) {
+                    $requiereColor = true;
+                }
+                
+                // Electrodomésticos con color
+                elseif ($categoria === 'Electrodomésticos' && 
+                        (str_contains($nombreProducto, 'licuadora') || 
+                         str_contains($nombreProducto, 'cafetera') ||
+                         str_contains($nombreProducto, 'plancha') ||
+                         str_contains($nombreProducto, 'ventilador'))) {
+                    $requiereColor = true;
+                }
+            @endphp
 
+            <!-- Size and Color Options -->
+            @if($tipoTalla || $requiereColor)
+            <div class="product-options">
+                @if($tipoTalla)
+                <!-- Size Options -->
+                <div class="option-group">
+                    @if($tipoTalla === 'ropa')
+                        <label class="option-label">Talla:</label>
+                        <div class="option-buttons">
+                            <button class="option-btn">XS</button>
+                            <button class="option-btn">S</button>
+                            <button class="option-btn active">M</button>
+                            <button class="option-btn">L</button>
+                            <button class="option-btn">XL</button>
+                            <button class="option-btn">XXL</button>
+                        </div>
+                    @elseif($tipoTalla === 'calzado')
+                        <label class="option-label">Número:</label>
+                        <div class="option-buttons">
+                            <button class="option-btn">37</button>
+                            <button class="option-btn">38</button>
+                            <button class="option-btn">39</button>
+                            <button class="option-btn active">40</button>
+                            <button class="option-btn">41</button>
+                            <button class="option-btn">42</button>
+                            <button class="option-btn">43</button>
+                            <button class="option-btn">44</button>
+                        </div>
+                    @elseif($tipoTalla === 'pelota')
+                        <label class="option-label">Tamaño:</label>
+                        <div class="option-buttons">
+                            <button class="option-btn">Nro. 3</button>
+                            <button class="option-btn">Nro. 4</button>
+                            <button class="option-btn active">Nro. 5</button>
+                        </div>
+                    @elseif($tipoTalla === 'bicicleta')
+                        <label class="option-label">Rodado:</label>
+                        <div class="option-buttons">
+                            <button class="option-btn">R26</button>
+                            <button class="option-btn active">R29</button>
+                        </div>
+                    @elseif($tipoTalla === 'guantes')
+                        <label class="option-label">Tamaño:</label>
+                        <div class="option-buttons">
+                            <button class="option-btn">10 oz</button>
+                            <button class="option-btn active">12 oz</button>
+                            <button class="option-btn">14 oz</button>
+                            <button class="option-btn">16 oz</button>
+                        </div>
+                    @elseif($tipoTalla === 'unica')
+                        <label class="option-label">Talla:</label>
+                        <div class="option-buttons">
+                            <button class="option-btn active">Talla Única</button>
+                        </div>
+                    @endif
+                </div>
+                @endif
+
+                @if($requiereColor)
                 <!-- Color Options -->
                 <div class="option-group">
                     <label class="option-label">Color:</label>
@@ -592,9 +719,18 @@
                         <button class="option-btn active">Negro</button>
                         <button class="option-btn">Blanco</button>
                         <button class="option-btn">Azul</button>
+                        @if($tipoTalla === 'ropa' || $tipoTalla === 'calzado' || $tipoTalla === 'pelota' || $categoria === 'Deportes y Fitness')
+                            <button class="option-btn">Rojo</button>
+                            <button class="option-btn">Gris</button>
+                        @endif
+                        @if($tipoTalla === 'ropa')
+                            <button class="option-btn">Verde</button>
+                        @endif
                     </div>
                 </div>
+                @endif
             </div>
+            @endif
 
             <!-- Quantity -->
             <div class="quantity-selector">

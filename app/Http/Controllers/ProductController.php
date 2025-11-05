@@ -98,7 +98,9 @@ class ProductController extends Controller
 
         $productData = $request->except('images');
         $productData['slug'] = Str::slug($request->name);
-        $productData['user_id'] = Auth::id();
+        
+        // Asignar user_id: si hay usuario autenticado, usar su ID, sino usar ID 1 por defecto
+        $productData['user_id'] = Auth::id() ?? 1;
 
         // Procesar imágenes
         $images = [];
