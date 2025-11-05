@@ -54,6 +54,7 @@ class MiCuentaController extends Controller
 
         $rules = [
             'addresses' => ['required','array'],
+            'addresses.*.id' => ['nullable','integer','exists:addresses,id'],
             'addresses.*.street' => ['required','string','max:255'],
             'addresses.*.number' => ['nullable','string','max:50'],
             'addresses.*.postal_code' => ['required','string','max:20'],
@@ -69,22 +70,44 @@ class MiCuentaController extends Controller
         $validator->validate();
 
         $addresses = $request->input('addresses', []);
+        $submittedIds = [];
 
-        // Para simplificar, borraremos todas las direcciones del usuario y re-crearemos
-        $user->addresses()->delete();
-
+        // Update existing addresses or create new ones
         foreach ($addresses as $addr) {
-            Address::create([
+            $parsedNote = explode(' / ', $addr['note'] ?? '');
+            $addressData = [
                 'user_id' => $user->id,
                 'address_line_1' => $addr['street'],
                 'address_line_2' => $addr['number'] ?? null,
                 'postal_code' => $addr['postal_code'],
-                'city' => explode(' / ', $addr['note'] ?? '')[0] ?? '',
-                'state' => explode(' / ', $addr['note'] ?? '')[1] ?? '',
+                'city' => $parsedNote[0] ?? '',
+                'state' => $parsedNote[1] ?? '',
                 'country' => 'México',
                 'is_default' => false,
-            ]);
+            ];
+
+            if (isset($addr['id']) && $addr['id']) {
+                // Update existing address
+                $address = Address::where('id', $addr['id'])
+                    ->where('user_id', $user->id)
+                    ->first();
+                if ($address) {
+                    $address->update($addressData);
+                    $submittedIds[] = $address->id;
+                }
+            } else {
+                // Create new address
+                $newAddress = Address::create($addressData);
+                $submittedIds[] = $newAddress->id;
+            }
         }
+
+        // Delete addresses that were not in the submitted data
+        // BUT only if they're not referenced by orders
+        $user->addresses()
+            ->whereNotIn('id', $submittedIds)
+            ->whereDoesntHave('orders') // Only delete if no orders reference them
+            ->delete();
 
         return back()->with('success', 'Direcciones guardadas correctamente');
     }
