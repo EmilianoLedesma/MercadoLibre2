@@ -148,7 +148,7 @@
             </p>
             <a href="<?php echo e(route('shop.index')); ?>" style="display: inline-flex; align-items: center; gap: 8px; background: #EE403D; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-family: 'Jost', sans-serif; font-size: 15px; transition: background 0.3s;" onmouseover="this.style.background='#E32020'" onmouseout="this.style.background='#EE403D'">
                 <i class="fas fa-shopping-bag"></i>
-                <span>Continue Shopping</span>
+                <span>Continua comprando</span>
             </a>
         </div>
         <?php endif; ?>
