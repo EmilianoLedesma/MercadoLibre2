@@ -395,12 +395,15 @@
 
         <!-- Map Section -->
         <div class="map-section">
-            <div class="map-placeholder">
-                <div style="text-align: center;">
-                    <i class="fas fa-map-marked-alt" style="font-size: 48px; margin-bottom: 16px; color: #999;"></i>
-                    <p>Mapa - Integrar Google Maps aquí</p>
-                </div>
-            </div>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3736.022891145228!2d-100.27737752492052!3d20.546244280985086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d3452b278e7259%3A0xeb40a967d716216c!2sUniversidad%20Polit%C3%A9cnica%20de%20Quer%C3%A9taro!5e0!3m2!1ses-419!2smx!4v1762357425208!5m2!1ses-419!2smx"
+                width="100%"
+                height="450"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
         </div>
     </div>
 </div>

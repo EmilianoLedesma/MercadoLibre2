@@ -57,16 +57,15 @@
             </button>
 
             <!-- User -->
-                    <?php if(auth()->guard()->check()): ?>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="color: #212529; font-weight: 500;">Hola, <?php echo e(Auth::user()->name); ?></span>
-                    <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;">
-                        <?php echo csrf_field(); ?>
-                        <button type="submit" style="background: #EE403D; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 500;">
-                            Cerrar Sesión
-                        </button>
-                    </form>
-                </div>
+            <?php if(auth()->guard()->check()): ?>
+                <a href="<?php echo e(route('account')); ?>" style="color: #212529; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Hola, <?php echo e(Auth::user()->name); ?>
+
+                </a>
             <?php else: ?>
                 <a href="<?php echo e(route('login')); ?>" style="background: none; border: none; cursor: pointer; padding: 8px;" aria-label="Cuenta">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

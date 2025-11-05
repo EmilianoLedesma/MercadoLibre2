@@ -2,780 +2,361 @@
 
 @section('title', $product->name)
 
-@push('styles')
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Jost', sans-serif;
-        background-color: #FFFFFF;
-        color: #212529;
-    }
-
-                @auth
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="color: #333; font-weight: 500;">Hola, {{ Auth::user()->name }}</span>
-                        <a href="{{ route('account') }}" class="nav-link" style="margin: 0;">Mi cuenta</a>
-                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                            @csrf
-                            <button type="submit" class="icon-btn" style="background: none; border: none; cursor: pointer;">
-                                Cerrar Sesión
-                            </button>
-                        </form>
-                    </div>
-                @else
-                    <a href="{{ route('login') }}" class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </a>
-                @endauth
-
-                <a href="{{ route('cart') }}" class="icon-btn cart">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                    </svg>
-                    <span class="cart-count">0</span>
-                </a>
-            </div>
-        </div>
-    </div>
-</header>
-
-<main class="product-detail-page">
-    <div class="container">
-        <div class="page-header">
-            <h1>Detalles del Producto</h1>
-            <div class="header-actions">
-                <a href="{{ route('products.edit', $product) }}" class="btn btn-primary">Editar</a>
-                <a href="{{ route('products.index') }}" class="btn btn-secondary">Volver a Lista</a>
-            </div>
-        </div>
-
-    .product-detail-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 60px;
-        margin-bottom: 80px;
-    }
-
-    /* Product Images */
-    .product-images {
-        position: sticky;
-        top: 120px;
-        height: fit-content;
-    }
-
-    .main-image-container {
-        width: 100%;
-        padding-top: 125%;
-        position: relative;
-        background-color: #F5F6F2;
-        border-radius: 8px;
-        overflow: hidden;
-        margin-bottom: 20px;
-    }
-
-    .main-image {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .image-thumbnails {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-    }
-
-    .thumbnail {
-        padding-top: 100%;
-        position: relative;
-        background-color: #F5F6F2;
-        border-radius: 4px;
-        overflow: hidden;
-        cursor: pointer;
-        border: 2px solid transparent;
-        transition: border-color 0.3s;
-    }
-
-    .thumbnail.active {
-        border-color: #EE403D;
-    }
-
-    .thumbnail img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    /* Product Info */
-    .product-detail-info {
-        font-family: 'Jost', sans-serif;
-    }
-
-    .product-meta {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 16px;
-    }
-
-    .product-rating {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    .star {
-        color: #FFC107;
-        font-size: 16px;
-    }
-
-    .star.empty {
-        color: #E5E5E5;
-    }
-
-    .reviews-count {
-        color: #666;
-        font-size: 14px;
-    }
-
-    .product-title {
-        font-size: 32px;
-        font-weight: 600;
-        color: #212529;
-        margin-bottom: 20px;
-        line-height: 1.3;
-    }
-
-    .product-price {
-        margin-bottom: 24px;
-    }
-
-    .price-current {
-        font-size: 36px;
-        font-weight: 700;
-        color: #EE403D;
-    }
-
-    .price-original {
-        font-size: 24px;
-        color: #999;
-        text-decoration: line-through;
-        margin-left: 12px;
-    }
-
-    .stock-badge {
-        display: inline-block;
-        background-color: #28A745;
-        color: white;
-        padding: 6px 16px;
-        border-radius: 4px;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 20px;
-    }
-
-    .stock-badge.low {
-        background-color: #FFC107;
-    }
-
-    .stock-badge.out {
-        background-color: #DC3545;
-    }
-
-    .product-description {
-        color: #666;
-        line-height: 1.8;
-        margin-bottom: 32px;
-    }
-
-    /* Admin Badges */
-    .admin-badges {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 16px;
-        flex-wrap: wrap;
-    }
-
-    .admin-badge {
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        color: white;
-    }
-
-    .admin-badge.featured {
-        background-color: #667eea;
-    }
-
-    .admin-badge.inactive {
-        background-color: #64748b;
-    }
-
-    /* Product Options */
-    .product-options {
-        margin-bottom: 32px;
-    }
-
-    .option-group {
-        margin-bottom: 24px;
-    }
-
-    .option-label {
-        display: block;
-        font-size: 15px;
-        font-weight: 600;
-        color: #212529;
-        margin-bottom: 12px;
-    }
-
-    .option-buttons {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-
-    .option-btn {
-        padding: 12px 24px;
-        border: 2px solid #E5E5E5;
-        background-color: white;
-        color: #666;
-        font-size: 14px;
-        font-weight: 500;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .option-btn.active,
-    .option-btn:hover {
-        border-color: #EE403D;
-        color: #EE403D;
-    }
-
-    /* Quantity Selector */
-    .quantity-selector {
-        margin-bottom: 32px;
-    }
-
-    .quantity-controls {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-
-    .qty-btn {
-        width: 40px;
-        height: 40px;
-        border: 1px solid #E5E5E5;
-        background-color: white;
-        color: #212529;
-        font-size: 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .qty-btn:hover {
-        background-color: #F8F8F8;
-    }
-
-    .qty-input {
-        width: 80px;
-        height: 40px;
-        border: 1px solid #E5E5E5;
-        text-align: center;
-        font-size: 16px;
-        border-radius: 4px;
-    }
-
-    /* Actions */
-    .product-actions {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 32px;
-    }
-
-    .btn-add-cart {
-        flex: 1;
-        padding: 16px 32px;
-        background-color: #EE403D;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .btn-add-cart:hover {
-        background-color: #E32020;
-    }
-
-    .btn-wishlist,
-    .btn-edit,
-    .btn-delete {
-        width: 48px;
-        height: 48px;
-        border: 2px solid #E5E5E5;
-        background-color: white;
-        color: #666;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .btn-edit {
-        border-color: #667eea;
-        color: #667eea;
-    }
-
-    .btn-edit:hover {
-        background-color: #667eea;
-        color: white;
-    }
-
-    .btn-delete {
-        border-color: #DC3545;
-        color: #DC3545;
-    }
-
-    .btn-delete:hover {
-        background-color: #DC3545;
-        color: white;
-    }
-
-    .btn-wishlist:hover {
-        border-color: #EE403D;
-        color: #EE403D;
-    }
-
-    /* Meta Info */
-    .product-meta-info {
-        border-top: 1px solid #E5E5E5;
-        padding-top: 24px;
-    }
-
-    .meta-item {
-        display: flex;
-        align-items: center;
-        padding: 12px 0;
-        border-bottom: 1px solid #F8F8F8;
-    }
-
-    .meta-label {
-        font-weight: 600;
-        color: #212529;
-        min-width: 120px;
-    }
-
-    .meta-value {
-        color: #666;
-    }
-
-    .stock-status {
-        color: #28A745;
-        font-weight: 600;
-    }
-
-    .stock-status.out {
-        color: #DC3545;
-    }
-
-    /* Product Tabs */
-    .product-tabs {
-        margin-top: 60px;
-    }
-
-    .tabs-header {
-        display: flex;
-        gap: 32px;
-        border-bottom: 2px solid #E5E5E5;
-        margin-bottom: 32px;
-    }
-
-    .tab-btn {
-        padding: 16px 0;
-        background: none;
-        border: none;
-        border-bottom: 2px solid transparent;
-        color: #666;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        margin-bottom: -2px;
-    }
-
-    .tab-btn.active {
-        color: #EE403D;
-        border-bottom-color: #EE403D;
-    }
-
-    .tab-panel {
-        display: none;
-    }
-
-    .tab-panel.active {
-        display: block;
-    }
-
-    .full-description {
-        color: #666;
-        line-height: 2;
-        font-size: 15px;
-    }
-
-    .details-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .details-table tr {
-        border-bottom: 1px solid #E5E5E5;
-    }
-
-    .details-table th,
-    .details-table td {
-        padding: 16px;
-        text-align: left;
-    }
-
-    .details-table th {
-        font-weight: 600;
-        color: #212529;
-        width: 200px;
-    }
-
-    .details-table td {
-        color: #666;
-    }
-
-    /* Breadcrumb */
-    .breadcrumb-container {
-        background-color: #F8F8F8;
-        padding: 20px 0;
-    }
-
-    .breadcrumb {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-        font-size: 14px;
-        color: #666;
-    }
-
-    .breadcrumb a {
-        color: #666;
-        text-decoration: none;
-    }
-
-    .breadcrumb a:hover {
-        color: #EE403D;
-    }
-
-    .breadcrumb span {
-        margin: 0 8px;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .product-detail-grid {
-            grid-template-columns: 1fr;
-            gap: 32px;
-        }
-
-        .product-images {
-            position: static;
-        }
-
-        .product-title {
-            font-size: 24px;
-        }
-
-        .price-current {
-            font-size: 28px;
-        }
-    }
-</style>
-@endpush
-
 @section('content')
+@include('layouts.navbar')
+
 <!-- Breadcrumb -->
-<div class="breadcrumb-container">
-    <div class="breadcrumb">
-        <a href="{{ route('home') }}">Inicio</a>
-        <span>/</span>
-        <a href="{{ route('products.index') }}">Productos</a>
-        <span>/</span>
-        <span style="color: #212529; font-weight: 500;">{{ $product->name }}</span>
+<div style="background-color: #F8F9FA; padding: 20px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: flex; gap: 8px; align-items: center; font-size: 14px;">
+            <a href="{{ route('home') }}" style="color: #666; text-decoration: none;">Inicio</a>
+            <span style="color: #999;">›</span>
+            <a href="{{ route('products.index') }}" style="color: #666; text-decoration: none;">Productos</a>
+            <span style="color: #999;">›</span>
+            <span style="color: #EE403D; font-weight: 500;">{{ $product->name }}</span>
+        </div>
     </div>
 </div>
 
 <!-- Product Detail -->
-<div class="product-detail-container">
-    <div class="product-detail-grid">
-        <!-- Product Images -->
-        <div class="product-images">
-            @php
-                $images = is_string($product->images) ? json_decode($product->images, true) : $product->images;
-                $images = $images ?? [];
-                
-                if (count($images) > 0) {
-                    $mainImage = $images[0];
-                    $mainStorage = public_path('storage/' . $mainImage);
-                    $mainPublic = public_path($mainImage);
-                    
-                    if (file_exists($mainStorage)) {
-                        $mainUrl = asset('storage/' . $mainImage);
-                    } elseif (file_exists($mainPublic)) {
-                        $mainUrl = asset($mainImage);
+<section style="padding: 60px 20px; background: white;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+
+        <!-- Back and Actions -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+            <a href="{{ route('products.index') }}" style="display: inline-flex; align-items: center; gap: 8px; color: #666; text-decoration: none; font-family: 'Jost', sans-serif; font-weight: 500; font-size: 15px; transition: color 0.3s;" onmouseover="this.style.color='#EE403D'" onmouseout="this.style.color='#666'">
+                <i class="fas fa-arrow-left"></i>
+                Volver a Productos
+            </a>
+            <div style="display: flex; gap: 12px;">
+                <a href="{{ route('products.edit', $product) }}" style="display: inline-flex; align-items: center; gap: 8px; background: #EE403D; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-family: 'Jost', sans-serif; font-weight: 600; font-size: 15px; transition: all 0.3s;">
+                    <i class="fas fa-edit"></i>
+                    Editar Producto
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-bottom: 60px;">
+
+            <!-- Images -->
+            <div>
+                @php
+                    $images = is_string($product->images) ? json_decode($product->images, true) : $product->images;
+                    $images = $images ?? [];
+
+                    if (count($images) > 0) {
+                        $mainImage = $images[0];
+                        $mainStorage = public_path('storage/' . $mainImage);
+                        $mainPublic = public_path($mainImage);
+
+                        if (file_exists($mainStorage)) {
+                            $mainUrl = asset('storage/' . $mainImage);
+                        } elseif (file_exists($mainPublic)) {
+                            $mainUrl = asset($mainImage);
+                        } else {
+                            $mainUrl = asset('images/placeholder-product.svg');
+                        }
                     } else {
                         $mainUrl = asset('images/placeholder-product.svg');
                     }
-                } else {
-                    $mainUrl = asset('images/placeholder-product.svg');
-                }
-            @endphp
+                @endphp
 
-            <div class="main-image-container">
-                <img src="{{ $mainUrl }}" alt="{{ $product->name }}" class="main-image" id="mainImage">
-            </div>
-
-            @if(count($images) > 1)
-            <div class="image-thumbnails">
-                @foreach($images as $index => $image)
-                    @php
-                        $storagePath = public_path('storage/' . $image);
-                        $publicPath = public_path($image);
-                        
-                        if (file_exists($storagePath)) {
-                            $thumbUrl = asset('storage/' . $image);
-                        } elseif (file_exists($publicPath)) {
-                            $thumbUrl = asset($image);
-                        } else {
-                            $thumbUrl = asset('images/placeholder-product.svg');
-                        }
-                    @endphp
-                    <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" onclick="changeImage('{{ $thumbUrl }}', this)">
-                        <img src="{{ $thumbUrl }}" alt="{{ $product->name }} - {{ $index + 1 }}">
-                    </div>
-                @endforeach
-            </div>
-            @endif
-        </div>
-
-        <!-- Product Info -->
-        <div class="product-detail-info">
-            <!-- Admin Badges -->
-            <div class="admin-badges">
-                @if($product->is_featured)
-                    <span class="admin-badge featured">⭐ Destacado</span>
-                @endif
-                @if(!$product->is_active)
-                    <span class="admin-badge inactive">❌ Inactivo</span>
-                @endif
-            </div>
-
-            <div class="product-meta">
-                <div class="product-rating">
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star empty">★</span>
+                <div style="width: 100%; padding-top: 100%; position: relative; background-color: #F5F6F2; border-radius: 12px; overflow: hidden; margin-bottom: 20px;">
+                    <img src="{{ $mainUrl }}" alt="{{ $product->name }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" id="mainImage">
                 </div>
-                <span class="reviews-count">(24 reseñas)</span>
+
+                @if(count($images) > 1)
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                    @foreach($images as $index => $image)
+                        @php
+                            $storagePath = public_path('storage/' . $image);
+                            $publicPath = public_path($image);
+
+                            if (file_exists($storagePath)) {
+                                $thumbUrl = asset('storage/' . $image);
+                            } elseif (file_exists($publicPath)) {
+                                $thumbUrl = asset($image);
+                            } else {
+                                $thumbUrl = asset('images/placeholder-product.svg');
+                            }
+                        @endphp
+                        <div onclick="changeImage('{{ $thumbUrl }}')" style="padding-top: 100%; position: relative; background-color: #F5F6F2; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid {{ $index === 0 ? '#EE403D' : 'transparent' }}; transition: border-color 0.3s;" class="thumbnail" onmouseover="this.style.borderColor='#EE403D'" onmouseout="if(!this.classList.contains('active')) this.style.borderColor='transparent'">
+                            <img src="{{ $thumbUrl }}" alt="{{ $product->name }} - {{ $index + 1 }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    @endforeach
+                </div>
+                @endif
             </div>
 
-            <h1 class="product-title">{{ $product->name }}</h1>
+            <!-- Product Info -->
+            <div>
+                <!-- Admin Badges -->
+                @if($product->is_featured || !$product->is_active)
+                <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+                    @if($product->is_featured)
+                        <span style="padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #667EEA; color: white;">
+                            <i class="fas fa-star"></i> Destacado
+                        </span>
+                    @endif
+                    @if(!$product->is_active)
+                        <span style="padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #64748B; color: white;">
+                            <i class="fas fa-times-circle"></i> Inactivo
+                        </span>
+                    @endif
+                </div>
+                @endif
 
-            <div class="product-price">
-                @if($product->sale_price)
-                    <span class="price-current">${{ number_format($product->sale_price, 2) }}</span>
-                    <span class="price-original">${{ number_format($product->price, 2) }}</span>
+                <h1 style="font-family: 'Jost', sans-serif; font-size: 32px; font-weight: 600; color: #212529; margin: 0 0 20px 0; line-height: 1.3;">
+                    {{ $product->name }}
+                </h1>
+
+                <div style="margin-bottom: 24px;">
+                    @if($product->sale_price)
+                        <span style="font-size: 36px; font-weight: 700; color: #EE403D;">${{ number_format($product->sale_price, 2) }}</span>
+                        <span style="font-size: 24px; color: #999; text-decoration: line-through; margin-left: 12px;">${{ number_format($product->price, 2) }}</span>
+                    @else
+                        <span style="font-size: 36px; font-weight: 700; color: #EE403D;">${{ number_format($product->price, 2) }}</span>
+                    @endif
+                </div>
+
+                @if($product->stock_quantity > 0)
+                    <span style="display: inline-block; background-color: #28A745; color: white; padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; margin-bottom: 20px;">
+                        <i class="fas fa-check-circle"></i> Disponible ({{ $product->stock_quantity }})
+                    </span>
                 @else
-                    <span class="price-current">${{ number_format($product->price, 2) }}</span>
+                    <span style="display: inline-block; background-color: #DC3545; color: white; padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; margin-bottom: 20px;">
+                        <i class="fas fa-times-circle"></i> Agotado
+                    </span>
                 @endif
-            </div>
 
-            @if($product->stock_quantity > 0)
-                <span class="stock-badge {{ $product->stock_quantity < 10 ? 'low' : '' }}">
-                    Disponible ({{ $product->stock_quantity }})
-                </span>
-            @else
-                <span class="stock-badge out">Agotado</span>
-            @endif
+                <p style="color: #666; line-height: 1.8; margin: 0 0 32px 0; font-family: 'Jost', sans-serif; font-size: 15px;">
+                    {{ $product->short_description ?? $product->description }}
+                </p>
 
-            <p class="product-description">
-                {{ $product->short_description ?? $product->description }}
-            </p>
-
-            <!-- Quantity -->
-            <div class="quantity-selector">
-                <label class="option-label">Cantidad:</label>
-                <div class="quantity-controls">
-                    <button class="qty-btn" onclick="decrementQty()">−</button>
-                    <input type="number" value="1" min="1" max="{{ $product->stock_quantity }}" class="qty-input" id="qtyInput">
-                    <button class="qty-btn" onclick="incrementQty()">+</button>
+                <!-- Meta Info -->
+                <div style="border-top: 1px solid #E5E5E5; padding-top: 24px; margin-bottom: 32px;">
+                    <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #F8F8F8;">
+                        <span style="font-weight: 600; color: #212529; min-width: 120px; font-family: 'Jost', sans-serif; font-size: 14px;">SKU:</span>
+                        <span style="color: #666; font-family: 'Jost', sans-serif; font-size: 14px;">{{ $product->sku }}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #F8F8F8;">
+                        <span style="font-weight: 600; color: #212529; min-width: 120px; font-family: 'Jost', sans-serif; font-size: 14px;">Categoría:</span>
+                        <span style="color: #666; font-family: 'Jost', sans-serif; font-size: 14px;">{{ $product->category->name ?? 'Sin categoría' }}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #F8F8F8;">
+                        <span style="font-weight: 600; color: #212529; min-width: 120px; font-family: 'Jost', sans-serif; font-size: 14px;">Vendedor:</span>
+                        <span style="color: #666; font-family: 'Jost', sans-serif; font-size: 14px;">{{ $product->user->name ?? 'Desconocido' }}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; padding: 12px 0;">
+                        <span style="font-weight: 600; color: #212529; min-width: 120px; font-family: 'Jost', sans-serif; font-size: 14px;">Estado:</span>
+                        <span style="font-weight: 600; font-family: 'Jost', sans-serif; font-size: 14px; {{ $product->is_active ? 'color: #28A745;' : 'color: #DC3545;' }}">
+                            {{ $product->is_active ? '✓ Activo' : '✗ Inactivo' }}
+                        </span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Actions -->
-            <div class="product-actions">
-                <button class="btn-add-cart">
-                    <i class="fas fa-shopping-cart"></i> Agregar al Carrito
-                </button>
-                <a href="{{ route('products.edit', $product) }}" class="btn-edit" title="Editar">
-                    <i class="fas fa-edit"></i>
-                </a>
-                <form action="{{ route('products.destroy', $product) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn-delete" title="Eliminar">
+                <!-- Actions -->
+                <div style="display: flex; gap: 12px;">
+                    <a href="{{ route('shop.show', $product->slug) }}" target="_blank" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: #10B981; color: white; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-family: 'Jost', sans-serif; font-weight: 600; font-size: 16px; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#059669'" onmouseout="this.style.backgroundColor='#10B981'">
+                        <i class="fas fa-external-link-alt"></i>
+                        Ver en Tienda
+                    </a>
+                    <button type="button" onclick="confirmDelete({{ $product->id }}, '{{ addslashes($product->name) }}')" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border: 2px solid #DC3545; background: white; color: #DC3545; border-radius: 8px; cursor: pointer; transition: all 0.3s;" title="Eliminar" onmouseover="this.style.backgroundColor='#DC3545'; this.style.color='white'" onmouseout="this.style.backgroundColor='white'; this.style.color='#DC3545'">
                         <i class="fas fa-trash"></i>
                     </button>
-                </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Tabs -->
+        <div>
+            <div style="display: flex; gap: 32px; border-bottom: 2px solid #E5E5E5; margin-bottom: 32px;">
+                <button onclick="switchTab('description')" class="tab-btn active" style="padding: 16px 0; background: none; border: none; border-bottom: 2px solid #EE403D; color: #EE403D; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-bottom: -2px; font-family: 'Jost', sans-serif;">
+                    Descripción Completa
+                </button>
+                <button onclick="switchTab('details')" class="tab-btn" style="padding: 16px 0; background: none; border: none; border-bottom: 2px solid transparent; color: #666; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-bottom: -2px; font-family: 'Jost', sans-serif;">
+                    Información Adicional
+                </button>
             </div>
 
-            <!-- Meta Info -->
-            <div class="product-meta-info">
-                <div class="meta-item">
-                    <span class="meta-label">SKU:</span>
-                    <span class="meta-value">{{ $product->sku }}</span>
+            <div class="tabs-content">
+                <div class="tab-panel active" id="description" style="display: block;">
+                    <div style="color: #666; line-height: 2; font-size: 15px; font-family: 'Jost', sans-serif;">
+                        {!! nl2br(e($product->description)) !!}
+                    </div>
                 </div>
-                <div class="meta-item">
-                    <span class="meta-label">Categoría:</span>
-                    <span class="meta-value">{{ $product->category->name ?? 'Sin categoría' }}</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Vendedor:</span>
-                    <span class="meta-value">{{ $product->user->name ?? 'Desconocido' }}</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Stock:</span>
-                    <span class="stock-status {{ $product->stock_quantity > 0 ? '' : 'out' }}">
-                        {{ $product->stock_quantity > 0 ? 'Disponible (' . $product->stock_quantity . ')' : 'Agotado' }}
-                    </span>
+
+                <div class="tab-panel" id="details" style="display: none;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #E5E5E5;">
+                                <th style="padding: 16px; text-align: left; font-weight: 600; color: #212529; width: 200px; font-family: 'Jost', sans-serif;">ID del Producto</th>
+                                <td style="padding: 16px; text-align: left; color: #666; font-family: 'Jost', sans-serif;">#{{ $product->id }}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #E5E5E5;">
+                                <th style="padding: 16px; text-align: left; font-weight: 600; color: #212529; width: 200px; font-family: 'Jost', sans-serif;">Slug</th>
+                                <td style="padding: 16px; text-align: left; color: #666; font-family: 'Jost', sans-serif;">{{ $product->slug }}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #E5E5E5;">
+                                <th style="padding: 16px; text-align: left; font-weight: 600; color: #212529; width: 200px; font-family: 'Jost', sans-serif;">Fecha de Creación</th>
+                                <td style="padding: 16px; text-align: left; color: #666; font-family: 'Jost', sans-serif;">{{ $product->created_at->format('d/m/Y H:i') }}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #E5E5E5;">
+                                <th style="padding: 16px; text-align: left; font-weight: 600; color: #212529; width: 200px; font-family: 'Jost', sans-serif;">Última Actualización</th>
+                                <td style="padding: 16px; text-align: left; color: #666; font-family: 'Jost', sans-serif;">{{ $product->updated_at->format('d/m/Y H:i') }}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #E5E5E5;">
+                                <th style="padding: 16px; text-align: left; font-weight: 600; color: #212529; width: 200px; font-family: 'Jost', sans-serif;">Estado</th>
+                                <td style="padding: 16px; text-align: left; font-family: 'Jost', sans-serif;">
+                                    <span style="color: {{ $product->is_active ? '#28A745' : '#DC3545' }}; font-weight: 600;">
+                                        {{ $product->is_active ? '✓ Activo' : '✗ Inactivo' }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="padding: 16px; text-align: left; font-weight: 600; color: #212529; width: 200px; font-family: 'Jost', sans-serif;">Destacado</th>
+                                <td style="padding: 16px; text-align: left; color: #666; font-family: 'Jost', sans-serif;">{{ $product->is_featured ? '⭐ Sí' : 'No' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</section>
 
-    <!-- Product Tabs -->
-    <div class="product-tabs">
-        <div class="tabs-header">
-            <button class="tab-btn active" onclick="switchTab('description')">Descripción Completa</button>
-            <button class="tab-btn" onclick="switchTab('details')">Información Adicional</button>
+@include('layouts.footer')
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center;" onclick="closeDeleteModal(event)">
+    <div style="background: white; border-radius: 12px; max-width: 500px; width: 90%; padding: 32px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: modalSlideIn 0.3s ease;" onclick="event.stopPropagation()">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: #FEF2F2; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <i class="fas fa-exclamation-triangle" style="color: #EF4444; font-size: 28px;"></i>
         </div>
 
-        <div class="tabs-content">
-            <div class="tab-panel active" id="description">
-                <div class="full-description">
-                    {!! nl2br(e($product->description)) !!}
-                </div>
-            </div>
+        <h2 style="font-family: 'Jost', sans-serif; font-size: 24px; font-weight: 700; color: #212529; margin: 0 0 12px 0; text-align: center;">
+            ¿Eliminar Producto?
+        </h2>
 
-            <div class="tab-panel" id="details">
-                <table class="details-table">
-                    <tbody>
-                        <tr>
-                            <th>ID del Producto</th>
-                            <td>#{{ $product->id }}</td>
-                        </tr>
-                        <tr>
-                            <th>Slug</th>
-                            <td>{{ $product->slug }}</td>
-                        </tr>
-                        <tr>
-                            <th>Fecha de Creación</th>
-                            <td>{{ $product->created_at->format('d/m/Y H:i') }}</td>
-                        </tr>
-                        <tr>
-                            <th>Última Actualización</th>
-                            <td>{{ $product->updated_at->format('d/m/Y H:i') }}</td>
-                        </tr>
-                        <tr>
-                            <th>Estado</th>
-                            <td>
-                                <span style="color: {{ $product->is_active ? '#28A745' : '#DC3545' }}; font-weight: 600;">
-                                    {{ $product->is_active ? '✓ Activo' : '✗ Inactivo' }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Destacado</th>
-                            <td>{{ $product->is_featured ? '⭐ Sí' : 'No' }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <p style="color: #666; font-family: 'Jost', sans-serif; font-size: 15px; line-height: 1.6; text-align: center; margin: 0 0 24px 0;">
+            Estás a punto de eliminar el producto <strong id="productName"></strong>. Esta acción no se puede deshacer.
+        </p>
+
+        <div style="display: flex; gap: 12px; justify-content: center;">
+            <button type="button" onclick="closeDeleteModal()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid #E5E5E5; background: white; color: #666; font-family: 'Jost', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#F8F9FA'" onmouseout="this.style.backgroundColor='white'">
+                Cancelar
+            </button>
+            <form id="deleteForm" method="POST" style="margin: 0;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" style="padding: 12px 24px; border-radius: 8px; border: none; background: #EF4444; color: white; font-family: 'Jost', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#DC2626'" onmouseout="this.style.backgroundColor='#EF4444'">
+                    Eliminar Producto
+                </button>
+            </form>
         </div>
     </div>
 </div>
 
+@push('styles')
+<style>
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.tab-btn:hover {
+    color: #EE403D !important;
+}
+
+.tab-btn.active {
+    color: #EE403D !important;
+    border-bottom-color: #EE403D !important;
+}
+
+.thumbnail.active {
+    border-color: #EE403D !important;
+}
+
+@media (max-width: 768px) {
+    section > div > div:first-of-type {
+        grid-template-columns: 1fr !important;
+        gap: 32px !important;
+    }
+
+    h1 {
+        font-size: 24px !important;
+    }
+
+    .price-current {
+        font-size: 28px !important;
+    }
+}
+</style>
+@endpush
+
+@push('scripts')
 <script>
-    function changeImage(url, element) {
-        document.getElementById('mainImage').src = url;
-        
-        document.querySelectorAll('.thumbnail').forEach(thumb => {
-            thumb.classList.remove('active');
-        });
-        element.classList.add('active');
+function changeImage(url) {
+    document.getElementById('mainImage').src = url;
+
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.classList.remove('active');
+        thumb.style.borderColor = 'transparent';
+    });
+    event.currentTarget.classList.add('active');
+    event.currentTarget.style.borderColor = '#EE403D';
+}
+
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.color = '#666';
+        btn.style.borderBottomColor = 'transparent';
+    });
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.style.display = 'none';
+    });
+
+    event.target.classList.add('active');
+    event.target.style.color = '#EE403D';
+    event.target.style.borderBottomColor = '#EE403D';
+    document.getElementById(tabName).style.display = 'block';
+}
+
+function confirmDelete(productId, productName) {
+    const modal = document.getElementById('deleteModal');
+    const form = document.getElementById('deleteForm');
+    const nameSpan = document.getElementById('productName');
+
+    nameSpan.textContent = productName;
+    form.action = `/products/${productId}`;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDeleteModal(event) {
+    if (event && event.target !== event.currentTarget && !event.target.closest('button')) {
+        return;
     }
 
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        document.querySelectorAll('.tab-panel').forEach(panel => {
-            panel.classList.remove('active');
-        });
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
 
-        event.target.classList.add('active');
-        document.getElementById(tabName).classList.add('active');
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeDeleteModal();
     }
-
-    function incrementQty() {
-        const input = document.getElementById('qtyInput');
-        const max = parseInt(input.max);
-        const current = parseInt(input.value);
-        if (current < max) {
-            input.value = current + 1;
-        }
-    }
-
-    function decrementQty() {
-        const input = document.getElementById('qtyInput');
-        const min = parseInt(input.min);
-        const current = parseInt(input.value);
-        if (current > min) {
-            input.value = current - 1;
-        }
-    }
+});
 </script>
+@endpush
+
 @endsection

@@ -7,6 +7,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\MiCuentaController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\OrderController;
 
 // Página de inicio
 Route::get('/', function () {
@@ -30,6 +31,9 @@ Route::get('/account', [MiCuentaController::class, 'index'])->middleware('auth')
 Route::put('/account', [MiCuentaController::class, 'update'])->middleware('auth')->name('account.update');
 Route::post('/account/addresses', [MiCuentaController::class, 'saveAddresses'])->middleware('auth')->name('account.addresses.save');
 Route::delete('/account', [MiCuentaController::class, 'destroy'])->middleware('auth')->name('account.destroy');
+
+// Rutas para órdenes
+Route::get('/orders/{order}', [OrderController::class, 'show'])->middleware('auth')->name('orders.show');
 
 // Carrito
 Route::get('/cart', function () {

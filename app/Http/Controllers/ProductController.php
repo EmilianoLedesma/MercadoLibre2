@@ -201,15 +201,27 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        // Eliminar imágenes asociadas
-        $images = json_decode($product->images, true) ?? [];
-        foreach ($images as $image) {
-            Storage::disk('public')->delete($image);
+        try {
+            // Eliminar imágenes asociadas
+            $images = json_decode($product->images, true) ?? [];
+            foreach ($images as $image) {
+                Storage::disk('public')->delete($image);
+            }
+
+            $product->delete();
+
+            return redirect()->route('products.index')
+                ->with('success', 'Producto eliminado correctamente.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Si hay un error de restricción de clave foránea (productos con pedidos)
+            if ($e->getCode() == 23000) {
+                return redirect()->route('products.index')
+                    ->with('error', 'No se puede eliminar este producto porque tiene pedidos asociados. Puedes desactivarlo en su lugar.');
+            }
+
+            // Otros errores de base de datos
+            return redirect()->route('products.index')
+                ->with('error', 'Error al eliminar el producto: ' . $e->getMessage());
         }
-
-        $product->delete();
-
-        return redirect()->route('products.index')
-            ->with('success', 'Producto eliminado correctamente.');
     }
 }

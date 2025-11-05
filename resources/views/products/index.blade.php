@@ -2,731 +2,307 @@
 
 @section('title', 'Gestión de Productos')
 
-@push('styles')
-<style>
-    /* Header */
-    .header {
-        background: white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-
-            <nav class="nav">
-                <a href="{{ route('home') }}" class="nav-link">Inicio</a>
-                <a href="{{ route('products.index') }}" class="nav-link active">Productos</a>
-                <a href="{{ route('categories') }}" class="nav-link">Categorías</a>
-                <a href="#" class="nav-link">Contacto</a>
-            </nav>
-
-            <div class="header-actions">
-                <button class="icon-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                </button>
-
-                @auth
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="color: #333; font-weight: 500;">Hola, {{ Auth::user()->name }}</span>
-                        <a href="{{ route('account') }}" class="nav-link" style="margin: 0;">Mi cuenta</a>
-                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                            @csrf
-                            <button type="submit" class="icon-btn" style="background: none; border: none; cursor: pointer;">
-                                Cerrar Sesión
-                            </button>
-                        </form>
-                    </div>
-                @else
-                    <a href="{{ route('login') }}" class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </a>
-                @endauth
-
-                <a href="{{ route('cart') }}" class="icon-btn cart">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                    </svg>
-                    <span class="cart-count">0</span>
-                </a>
-            </div>
-        </div>
-    </div>
-</header>
-
-    .header-main {
-        padding: 16px 0;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-    }
-
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .logo h1 {
-        font-family: 'Jost', sans-serif;
-        font-size: 32px;
-        font-weight: 700;
-        color: #212529;
-        margin: 0;
-    }
-
-    .nav {
-        display: flex;
-        gap: 32px;
-    }
-
-    .nav-link {
-        font-family: 'Jost', sans-serif;
-        font-size: 15px;
-        color: #666;
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s;
-    }
-
-    .nav-link:hover,
-    .nav-link.active {
-        color: #EE403D;
-    }
-
-    .header-actions {
-        display: flex;
-        gap: 16px;
-        align-items: center;
-    }
-
-    .icon-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #666;
-        transition: color 0.3s;
-        position: relative;
-        padding: 8px;
-    }
-
-    .icon-btn:hover {
-        color: #EE403D;
-    }
-
-    .cart-count {
-        position: absolute;
-        top: 0;
-        right: 0;
-        background: #EE403D;
-        color: white;
-        border-radius: 50%;
-        width: 18px;
-        height: 18px;
-        font-size: 11px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-    }
-
-    /* Breadcrumb */
-    .breadcrumb {
-        padding: 20px 0;
-        background: #F8F9FA;
-    }
-
-    .breadcrumb-nav {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        font-size: 14px;
-    }
-
-    .breadcrumb-nav a {
-        color: #666;
-        text-decoration: none;
-    }
-
-    .breadcrumb-nav a:hover {
-        color: #EE403D;
-    }
-
-    .breadcrumb-nav span {
-        color: #212529;
-        font-weight: 500;
-    }
-
-    /* Main Content */
-    .products-page {
-        padding: 40px 0 80px;
-        background: #F8F9FA;
-    }
-
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 32px;
-    }
-
-    .page-header h1 {
-        font-family: 'Jost', sans-serif;
-        font-size: 32px;
-        font-weight: 700;
-        color: #212529;
-        margin: 0;
-    }
-
-    .btn-new-product {
-        background-color: #EE403D;
-        color: white;
-        padding: 12px 28px;
-        border-radius: 4px;
-        text-decoration: none;
-        font-family: 'Jost', sans-serif;
-        font-weight: 600;
-        font-size: 15px;
-        transition: all 0.3s ease;
-        border: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-new-product:hover {
-        background-color: #E32020;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(238, 64, 61, 0.3);
-    }
-
-    /* Alert Messages */
-    .alert {
-        padding: 16px 20px;
-        border-radius: 4px;
-        margin-bottom: 24px;
-        font-size: 15px;
-        font-family: 'Jost', sans-serif;
-    }
-
-    .alert-success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-
-    /* Table Container */
-    .table-card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-    }
-
-    /* Products Table */
-    .products-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .products-table thead {
-        background-color: #F8F9FA;
-    }
-
-    .products-table thead th {
-        padding: 16px 20px;
-        text-align: left;
-        font-size: 13px;
-        font-weight: 600;
-        color: #495057;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border-bottom: 2px solid #e9ecef;
-        font-family: 'Jost', sans-serif;
-    }
-
-    .products-table tbody tr {
-        border-bottom: 1px solid #f1f3f5;
-        transition: background-color 0.2s ease;
-    }
-
-    .products-table tbody tr:hover {
-        background-color: #F8F9FA;
-    }
-
-    .products-table tbody td {
-        padding: 20px;
-        color: #495057;
-        font-size: 14px;
-        vertical-align: middle;
-        font-family: 'Jost', sans-serif;
-    }
-
-    /* ID Column */
-    .products-table tbody td:first-child {
-        font-weight: 600;
-        color: #212529;
-    }
-
-    /* Product Image */
-    .product-image {
-        width: 60px;
-        height: 60px;
-    }
-
-    .product-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 6px;
-        background-color: #F8F9FA;
-    }
-
-    /* Product Name */
-    .product-name {
-        font-weight: 500;
-        color: #212529;
-        max-width: 300px;
-    }
-
-    /* Price */
-    .product-price {
-        font-weight: 600;
-        color: #212529;
-    }
-
-    /* Stock */
-    .product-stock {
-        font-weight: 500;
-    }
-
-    /* Status Badge */
-    .status-badge {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        text-align: center;
-    }
-
-    .status-badge.active {
-        background-color: #d4edda;
-        color: #28a745;
-    }
-
-    .status-badge.inactive {
-        background-color: #f8d7da;
-        color: #dc3545;
-    }
-
-    /* Action Buttons */
-    .actions-cell {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-    }
-
-    .btn-action {
-        width: 36px;
-        height: 36px;
-        border-radius: 6px;
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        background: transparent;
-        text-decoration: none;
-    }
-
-    .btn-action.view {
-        color: #6c757d;
-    }
-
-    .btn-action.view:hover {
-        background-color: #e9ecef;
-        color: #495057;
-    }
-
-    .btn-action.edit {
-        color: #EE403D;
-    }
-
-    .btn-action.edit:hover {
-        background-color: #ffe5e4;
-        color: #E32020;
-    }
-
-    .btn-action.delete {
-        color: #dc3545;
-    }
-
-    .btn-action.delete:hover {
-        background-color: #ffe5e8;
-        color: #c82333;
-    }
-
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
-    }
-
-    .empty-state svg {
-        width: 64px;
-        height: 64px;
-        margin-bottom: 16px;
-        opacity: 0.3;
-    }
-
-    .empty-state h3 {
-        font-size: 20px;
-        margin-bottom: 8px;
-        color: #495057;
-        font-family: 'Jost', sans-serif;
-    }
-
-    .empty-state p {
-        font-size: 14px;
-        margin-bottom: 24px;
-        font-family: 'Jost', sans-serif;
-    }
-
-    /* Pagination */
-    .pagination-container {
-        padding: 24px;
-        display: flex;
-        justify-content: center;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .header-content {
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .nav {
-            gap: 16px;
-        }
-
-        .page-header {
-            flex-direction: column;
-            gap: 16px;
-            align-items: flex-start;
-        }
-
-        .products-table {
-            font-size: 13px;
-        }
-
-        .products-table thead th {
-            padding: 12px;
-            font-size: 11px;
-        }
-
-        .products-table tbody td {
-            padding: 12px;
-        }
-
-        .product-name {
-            max-width: 150px;
-            font-size: 13px;
-        }
-    }
-</style>
-@endpush
-
 @section('content')
-<!-- Top Bar -->
-<div class="top-bar">
-    Envío gratis en compras mayores a $100
-</div>
+@include('layouts.navbar')
 
-<!-- Header -->
-<header class="header">
-    <div class="header-main">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1>SEALS</h1>
-                </div>
-
-                <nav class="nav">
-                    <a href="{{ route('home') }}" class="nav-link">Inicio</a>
-                    <a href="{{ route('shop.index') }}" class="nav-link">Shop</a>
-                    <a href="{{ route('categories') }}" class="nav-link">Categorías</a>
-                    <a href="{{ route('products.index') }}" class="nav-link active">Productos</a>
-                </nav>
-
-                <div class="header-actions">
-                    <button class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <path d="m21 21-4.35-4.35"></path>
-                        </svg>
-                    </button>
-
-                    @auth
-                        <div style="display: flex; align-items: center; gap: 16px;">
-                            <span style="color: #666; font-weight: 500; font-size: 14px;">Hola, {{ Auth::user()->name }}</span>
-                            <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                                @csrf
-                                <button type="submit" class="icon-btn" title="Cerrar Sesión">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                        <polyline points="16 17 21 12 16 7"></polyline>
-                                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                                    </svg>
-                                </button>
-                            </form>
-                        </div>
-                    @else
-                        <a href="{{ route('login') }}" class="icon-btn">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 1-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </a>
-                    @endauth
-
-                    <a href="{{ route('cart') }}" class="icon-btn cart">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <path d="M16 10a4 4 0 0 1-8 0"></path>
-                        </svg>
-                        <span class="cart-count">0</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- Breadcrumb -->
-<div class="breadcrumb">
-    <div class="container">
-        <div class="breadcrumb-nav">
-            <a href="{{ route('home') }}">Inicio</a>
-            <span>/</span>
-            <span>Productos</span>
-        </div>
+<!-- Page Title -->
+<div style="background-color: #F5F6F2; padding: 60px 0 40px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <h1 style="font-family: 'Jost', sans-serif; font-size: 48px; font-weight: 700; color: #212529; margin: 0 0 16px 0;">
+            Gestión de Productos
+        </h1>
+        <nav style="display: flex; gap: 8px; align-items: center; font-size: 14px;">
+            <a href="{{ route('home') }}" style="color: #666; text-decoration: none;">Inicio</a>
+            <span style="color: #999;">›</span>
+            <span style="color: #EE403D; font-weight: 500;">Productos</span>
+        </nav>
     </div>
 </div>
 
 <!-- Main Content -->
-<main class="products-page">
-    <div class="container">
-        <div class="page-header">
-            <h1>Gestión de Productos</h1>
-            <a href="{{ route('products.create') }}" class="btn-new-product">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
+<section style="padding: 60px 20px; background: white;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+
+        <!-- Header with Add Button -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+            <div>
+                <h2 style="font-family: 'Jost', sans-serif; font-size: 28px; font-weight: 700; color: #212529; margin: 0 0 8px 0;">
+                    Listado de Productos
+                </h2>
+                <p style="color: #666; margin: 0;">Gestiona tu inventario y productos disponibles</p>
+            </div>
+            <a href="{{ route('products.create') }}" style="display: inline-flex; align-items: center; gap: 8px; background: #EE403D; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-family: 'Jost', sans-serif; font-weight: 600; font-size: 15px; transition: all 0.3s;">
+                <i class="fas fa-plus"></i>
                 Nuevo Producto
             </a>
         </div>
-    @if(session('success'))
-        <div class="alert alert-success">
-            ✓ {{ session('success') }}
-        </div>
-    @endif
 
-    <div class="table-card">
-        <table class="products-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>IMAGEN</th>
-                    <th>NOMBRE</th>
-                    <th>SKU</th>
-                    <th>PRECIO</th>
-                    <th>STOCK</th>
-                    <th>CATEGORÍA</th>
-                    <th>ESTADO</th>
-                    <th>ACCIONES</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($products as $product)
-                    <tr>
-                        <td>{{ $product->id }}</td>
-                        <td>
-                            <div class="product-image">
-                                @php
-                                    $images = is_string($product->images) ? json_decode($product->images, true) : $product->images;
-                                    $images = $images ?? [];
-                                    $imagePath = !empty($images) ? $images[0] : null;
-                                    
-                                    if ($imagePath) {
-                                        $storageFile = public_path('storage/' . $imagePath);
-                                        $publicFile = public_path($imagePath);
-                                        
-                                        if (file_exists($storageFile)) {
-                                            $imageUrl = asset('storage/' . $imagePath);
-                                        } elseif (file_exists($publicFile)) {
-                                            $imageUrl = asset($imagePath);
-                                        } else {
-                                            $imageUrl = asset('images/placeholder-product.svg');
-                                        }
-                                    } else {
-                                        $imageUrl = asset('images/placeholder-product.svg');
-                                    }
-                                @endphp
-                                <img src="{{ $imageUrl }}" alt="{{ $product->name }}">
-                            </div>
-                        </td>
-                        <td class="product-name">{{ $product->name }}</td>
-                        <td>{{ $product->sku }}</td>
-                        <td class="product-price">${{ number_format($product->price, 2) }}</td>
-                        <td class="product-stock">{{ $product->stock_quantity }}</td>
-                        <td>{{ $product->category->name ?? 'N/A' }}</td>
-                        <td>
-                            <span class="status-badge {{ $product->is_active ? 'active' : 'inactive' }}">
-                                {{ $product->is_active ? 'Activo' : 'Inactivo' }}
-                            </span>
-                        </td>
-                        <td>
-                            <div class="actions-cell">
-                                <a href="{{ route('products.show', $product) }}" class="btn-action view" title="Ver">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                </a>
-                                <a href="{{ route('products.edit', $product) }}" class="btn-action edit" title="Editar">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                    </svg>
-                                </a>
-                                <form action="{{ route('products.destroy', $product) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-action delete" title="Eliminar">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                            <line x1="10" y1="11" x2="10" y2="17"></line>
-                                            <line x1="14" y1="11" x2="14" y2="17"></line>
-                                        </svg>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="9" class="empty-state">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                <polyline points="21 15 16 10 5 21"></polyline>
-                            </svg>
-                            <h3>No hay productos</h3>
-                            <p>Comienza agregando tu primer producto</p>
-                            <a href="{{ route('products.create') }}" class="btn-new-product">
-                                Crear Producto
-                            </a>
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-
-        @if($products->hasPages())
-        <div class="pagination-container">
-            {{ $products->links() }}
-        </div>
+        <!-- Alert Messages -->
+        @if(session('success'))
+            <div style="background: #D4EDDA; border: 1px solid #C3E6CB; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-check-circle" style="color: #155724; font-size: 20px;"></i>
+                <span style="color: #155724; font-family: 'Jost', sans-serif; font-size: 15px;">{{ session('success') }}</span>
+            </div>
         @endif
-    </div>
-    </div>
-</main>
 
-<!-- Footer -->
-<footer class="footer" style="background-color: #212529; color: white; padding: 60px 0 20px;">
-    <div class="container">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px;">
-            <!-- Columna 1 -->
-            <div>
-                <h3 style="font-family: 'Jost', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 20px;">SEALS</h3>
-                <p style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; line-height: 1.6;">
-                    Tu tienda online de confianza. Encuentra los mejores productos al mejor precio.
-                </p>
+        @if(session('error'))
+            <div style="background: #F8D7DA; border: 1px solid #F5C6CB; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-exclamation-circle" style="color: #721C24; font-size: 20px;"></i>
+                <span style="color: #721C24; font-family: 'Jost', sans-serif; font-size: 15px;">{{ session('error') }}</span>
             </div>
+        @endif
 
-            <!-- Columna 2 -->
-            <div>
-                <h4 style="font-family: 'Jost', sans-serif; font-size: 16px; font-weight: 600; margin-bottom: 16px;">Enlaces Rápidos</h4>
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="margin-bottom: 12px;">
-                        <a href="{{ route('home') }}" style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; text-decoration: none; transition: color 0.3s;">Inicio</a>
-                    </li>
-                    <li style="margin-bottom: 12px;">
-                        <a href="{{ route('shop.index') }}" style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; text-decoration: none; transition: color 0.3s;">Shop</a>
-                    </li>
-                    <li style="margin-bottom: 12px;">
-                        <a href="{{ route('categories') }}" style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; text-decoration: none; transition: color 0.3s;">Categorías</a>
-                    </li>
-                </ul>
-            </div>
+        <!-- Products Table -->
+        <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; overflow: hidden;">
+            @if($products->count() > 0)
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: #F8F9FA;">
+                            <tr>
+                                <th style="padding: 16px 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #E5E5E5;">ID</th>
+                                <th style="padding: 16px 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #E5E5E5;">IMAGEN</th>
+                                <th style="padding: 16px 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #E5E5E5;">NOMBRE</th>
+                                <th style="padding: 16px 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #E5E5E5;">SKU</th>
+                                <th style="padding: 16px 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #E5E5E5;">PRECIO</th>
+                                <th style="padding: 16px 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #E5E5E5;">STOCK</th>
+                                <th style="padding: 16px 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #E5E5E5;">CATEGORÍA</th>
+                                <th style="padding: 16px 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #E5E5E5;">ESTADO</th>
+                                <th style="padding: 16px 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #E5E5E5;">ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($products as $product)
+                                <tr style="border-bottom: 1px solid #F1F3F5; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#F8F9FA'" onmouseout="this.style.backgroundColor='white'">
+                                    <td style="padding: 20px; color: #212529; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600;">{{ $product->id }}</td>
+                                    <td style="padding: 20px;">
+                                        <div style="width: 60px; height: 60px; border-radius: 6px; overflow: hidden; background: #F8F9FA;">
+                                            @php
+                                                $images = is_string($product->images) ? json_decode($product->images, true) : $product->images;
+                                                $images = $images ?? [];
+                                                $imagePath = !empty($images) ? $images[0] : null;
 
-            <!-- Columna 3 -->
-            <div>
-                <h4 style="font-family: 'Jost', sans-serif; font-size: 16px; font-weight: 600; margin-bottom: 16px;">Contacto</h4>
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="margin-bottom: 12px; font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD;">
-                        📧 info@seals.com
-                    </li>
-                    <li style="margin-bottom: 12px; font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD;">
-                        📞 +0020 500
-                    </li>
-                    <li style="margin-bottom: 12px; font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD;">
-                        📍 Buenos Aires, Argentina
-                    </li>
-                </ul>
-            </div>
+                                                if ($imagePath) {
+                                                    $storageFile = public_path('storage/' . $imagePath);
+                                                    $publicFile = public_path($imagePath);
 
-            <!-- Columna 4 -->
-            <div>
-                <h4 style="font-family: 'Jost', sans-serif; font-size: 16px; font-weight: 600; margin-bottom: 16px;">Síguenos</h4>
-                <div style="display: flex; gap: 16px;">
-                    <a href="#" style="color: #ADB5BD; transition: color 0.3s;">
-                        <i class="fab fa-facebook" style="font-size: 20px;"></i>
-                    </a>
-                    <a href="#" style="color: #ADB5BD; transition: color 0.3s;">
-                        <i class="fab fa-instagram" style="font-size: 20px;"></i>
-                    </a>
-                    <a href="#" style="color: #ADB5BD; transition: color 0.3s;">
-                        <i class="fab fa-twitter" style="font-size: 20px;"></i>
-                    </a>
-                    <a href="#" style="color: #ADB5BD; transition: color 0.3s;">
-                        <i class="fab fa-youtube" style="font-size: 20px;"></i>
+                                                    if (file_exists($storageFile)) {
+                                                        $imageUrl = asset('storage/' . $imagePath);
+                                                    } elseif (file_exists($publicFile)) {
+                                                        $imageUrl = asset($imagePath);
+                                                    } else {
+                                                        $imageUrl = asset('images/placeholder-product.svg');
+                                                    }
+                                                } else {
+                                                    $imageUrl = asset('images/placeholder-product.svg');
+                                                }
+                                            @endphp
+                                            <img src="{{ $imageUrl }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                        </div>
+                                    </td>
+                                    <td style="padding: 20px; color: #212529; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 500;">{{ $product->name }}</td>
+                                    <td style="padding: 20px; color: #495057; font-family: 'Jost', sans-serif; font-size: 14px;">{{ $product->sku }}</td>
+                                    <td style="padding: 20px; color: #212529; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600;">${{ number_format($product->price, 2) }}</td>
+                                    <td style="padding: 20px; color: #495057; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 500;">{{ $product->stock_quantity }}</td>
+                                    <td style="padding: 20px; color: #495057; font-family: 'Jost', sans-serif; font-size: 14px;">{{ $product->category->name ?? 'N/A' }}</td>
+                                    <td style="padding: 20px;">
+                                        <span style="display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; {{ $product->is_active ? 'background: #D4EDDA; color: #28A745;' : 'background: #F8D7DA; color: #DC3545;' }}">
+                                            {{ $product->is_active ? 'Activo' : 'Inactivo' }}
+                                        </span>
+                                    </td>
+                                    <td style="padding: 20px;">
+                                        <div style="display: flex; gap: 8px; align-items: center;">
+                                            <a href="{{ route('products.show', $product) }}" style="width: 36px; height: 36px; border-radius: 6px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; background: transparent; text-decoration: none; color: #6C757D;" title="Ver" onmouseover="this.style.backgroundColor='#E9ECEF'; this.style.color='#495057'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#6C757D'">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ route('products.edit', $product) }}" style="width: 36px; height: 36px; border-radius: 6px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; background: transparent; text-decoration: none; color: #EE403D;" title="Editar" onmouseover="this.style.backgroundColor='#FFE5E4'; this.style.color='#E32020'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#EE403D'">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" onclick="confirmDelete({{ $product->id }}, '{{ addslashes($product->name) }}')" style="width: 36px; height: 36px; border-radius: 6px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; background: transparent; color: #DC3545;" title="Eliminar" onmouseover="this.style.backgroundColor='#FFE5E8'; this.style.color='#C82333'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#DC3545'">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                @if($products->hasPages())
+                <div style="padding: 24px; display: flex; justify-content: center; border-top: 1px solid #E5E5E5;">
+                    {{ $products->links() }}
+                </div>
+                @endif
+            @else
+                <!-- Empty State -->
+                <div style="text-align: center; padding: 80px 20px;">
+                    <i class="fas fa-box-open" style="font-size: 64px; color: #E5E5E5; margin-bottom: 24px;"></i>
+                    <h3 style="font-family: 'Jost', sans-serif; font-size: 20px; font-weight: 600; color: #495057; margin: 0 0 12px 0;">
+                        No hay productos
+                    </h3>
+                    <p style="color: #6C757D; margin: 0 0 24px 0; font-family: 'Jost', sans-serif; font-size: 15px;">
+                        Comienza agregando tu primer producto
+                    </p>
+                    <a href="{{ route('products.create') }}" style="display: inline-flex; align-items: center; gap: 8px; background: #EE403D; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-family: 'Jost', sans-serif; font-weight: 600; font-size: 15px; transition: all 0.3s;">
+                        <i class="fas fa-plus"></i>
+                        Crear Producto
                     </a>
                 </div>
-            </div>
-        </div>
-
-        <div style="border-top: 1px solid #495057; padding-top: 20px; text-align: center;">
-            <p style="font-family: 'Jost', sans-serif; font-size: 14px; color: #ADB5BD; margin: 0;">
-                &copy; {{ date('Y') }} SEALS. Todos los derechos reservados.
-            </p>
+            @endif
         </div>
     </div>
-</footer>
+</section>
+
+@include('layouts.footer')
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center;" onclick="closeDeleteModal(event)">
+    <div style="background: white; border-radius: 12px; max-width: 500px; width: 90%; padding: 32px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: modalSlideIn 0.3s ease;" onclick="event.stopPropagation()">
+        <!-- Icon -->
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: #FEF2F2; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <i class="fas fa-exclamation-triangle" style="color: #EF4444; font-size: 28px;"></i>
+        </div>
+
+        <!-- Title -->
+        <h2 style="font-family: 'Jost', sans-serif; font-size: 24px; font-weight: 700; color: #212529; margin: 0 0 12px 0; text-align: center;">
+            ¿Eliminar Producto?
+        </h2>
+
+        <!-- Message -->
+        <p style="color: #666; font-family: 'Jost', sans-serif; font-size: 15px; line-height: 1.6; text-align: center; margin: 0 0 24px 0;">
+            Estás a punto de eliminar el producto <strong id="productName"></strong>. Esta acción no se puede deshacer.
+        </p>
+
+        <!-- Buttons -->
+        <div style="display: flex; gap: 12px; justify-content: center;">
+            <button type="button" onclick="closeDeleteModal()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid #E5E5E5; background: white; color: #666; font-family: 'Jost', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#F8F9FA'" onmouseout="this.style.backgroundColor='white'">
+                Cancelar
+            </button>
+            <form id="deleteForm" method="POST" style="margin: 0;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" style="padding: 12px 24px; border-radius: 8px; border: none; background: #EF4444; color: white; font-family: 'Jost', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#DC2626'" onmouseout="this.style.backgroundColor='#EF4444'">
+                    Eliminar Producto
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@push('styles')
+<style>
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li {
+    display: inline-block;
+}
+
+.pagination a,
+.pagination span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 6px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.pagination a {
+    color: #666;
+    background: white;
+    border: 1px solid #E5E5E5;
+}
+
+.pagination a:hover {
+    background: #F8F9FA;
+    border-color: #EE403D;
+    color: #EE403D;
+}
+
+.pagination .active span {
+    background: #EE403D;
+    color: white;
+    border: 1px solid #EE403D;
+}
+
+.pagination .disabled span {
+    color: #CCC;
+    background: #F8F9FA;
+    border: 1px solid #E5E5E5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    table {
+        font-size: 13px;
+    }
+
+    th, td {
+        padding: 12px !important;
+    }
+}
+</style>
+@endpush
+
+@push('scripts')
+<script>
+function confirmDelete(productId, productName) {
+    const modal = document.getElementById('deleteModal');
+    const form = document.getElementById('deleteForm');
+    const nameSpan = document.getElementById('productName');
+
+    nameSpan.textContent = productName;
+    form.action = `/products/${productId}`;
+    modal.style.display = 'flex';
+
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDeleteModal(event) {
+    if (event && event.target !== event.currentTarget && !event.target.closest('button')) {
+        return;
+    }
+
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'none';
+
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal with ESC key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeDeleteModal();
+    }
+});
+</script>
+@endpush
+
 @endsection

@@ -84,12 +84,12 @@
 
                     <!-- Stats Grid -->
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                        <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 24px; text-align: center; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                        <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 24px; text-align: center; transition: all 0.3s; cursor: pointer;" onclick="showSection('orders')" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
                             <div style="width: 50px; height: 50px; background: #FEF3F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
                                 <i class="fas fa-shopping-cart" style="color: #EE403D; font-size: 24px;"></i>
                             </div>
                             <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Compras</div>
-                            <div style="font-size: 28px; font-weight: 700; color: #212529;">0</div>
+                            <div style="font-size: 28px; font-weight: 700; color: #212529;">{{ isset($orders) ? $orders->count() : 0 }}</div>
                         </div>
 
                         <div style="background: white; border: 1px solid #E5E5E5; border-radius: 12px; padding: 24px; text-align: center; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
@@ -159,11 +159,50 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td colspan="5" style="text-align: center; padding: 48px 16px; color: #999; font-size: 15px;">
-                                            Sin compras. <a href="{{ route('shop.index') }}" style="color: #EE403D; text-decoration: none; font-weight: 500;">Empieza a comprar</a>
-                                        </td>
-                                    </tr>
+                                    @if(isset($orders) && $orders->count() > 0)
+                                        @foreach($orders as $order)
+                                            <tr style="border-bottom: 1px solid #F1F3F5;">
+                                                <td style="padding: 20px;">
+                                                    <span style="font-family: 'Jost', sans-serif; font-weight: 600; color: #212529;">#{{ $order->order_number }}</span>
+                                                </td>
+                                                <td style="padding: 20px; color: #666; font-size: 14px;">
+                                                    {{ $order->created_at->format('d/m/Y') }}
+                                                </td>
+                                                <td style="padding: 20px;">
+                                                    @php
+                                                        $statusColors = [
+                                                            'pending' => ['bg' => '#FEF3C7', 'text' => '#92400E', 'label' => 'Pendiente'],
+                                                            'processing' => ['bg' => '#DBEAFE', 'text' => '#1E40AF', 'label' => 'Procesando'],
+                                                            'shipped' => ['bg' => '#E0E7FF', 'text' => '#3730A3', 'label' => 'Enviado'],
+                                                            'delivered' => ['bg' => '#D1FAE5', 'text' => '#065F46', 'label' => 'Entregado'],
+                                                            'cancelled' => ['bg' => '#FEE2E2', 'text' => '#991B1B', 'label' => 'Cancelado'],
+                                                        ];
+                                                        $statusConfig = $statusColors[$order->status] ?? ['bg' => '#F3F4F6', 'text' => '#374151', 'label' => $order->status];
+                                                    @endphp
+                                                    <span style="display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: {{ $statusConfig['bg'] }}; color: {{ $statusConfig['text'] }};">
+                                                        {{ $statusConfig['label'] }}
+                                                    </span>
+                                                </td>
+                                                <td style="padding: 20px;">
+                                                    <span style="font-family: 'Jost', sans-serif; font-weight: 600; color: #212529; font-size: 16px;">
+                                                        ${{ number_format($order->total, 2) }}
+                                                    </span>
+                                                </td>
+                                                <td style="padding: 20px;">
+                                                    <a href="{{ route('orders.show', $order) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #EE403D; color: white; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#E32020'" onmouseout="this.style.backgroundColor='#EE403D'">
+                                                        <i class="fas fa-eye"></i>
+                                                        Ver
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="5" style="text-align: center; padding: 48px 16px; color: #999; font-size: 15px;">
+                                                Sin compras. <a href="{{ route('shop.index') }}" style="color: #EE403D; text-decoration: none; font-weight: 500;">Empieza a comprar</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

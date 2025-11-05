@@ -59,4 +59,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Address::class);
     }
+
+    /**
+     * Relación: usuario tiene muchas órdenes
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
