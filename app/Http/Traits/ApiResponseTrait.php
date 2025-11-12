@@ -9,10 +9,7 @@ trait ApiResponseTrait
     /**
      * Respuesta exitosa genérica
      *
-     * @param mixed $data
-     * @param string $message
-     * @param int $code
-     * @return JsonResponse
+     * @param  mixed  $data
      */
     protected function successResponse($data = null, string $message = 'Success', int $code = 200): JsonResponse
     {
@@ -26,10 +23,7 @@ trait ApiResponseTrait
     /**
      * Respuesta de error genérica
      *
-     * @param string $message
-     * @param int $code
-     * @param mixed $errors
-     * @return JsonResponse
+     * @param  mixed  $errors
      */
     protected function errorResponse(string $message = 'Error', int $code = 400, $errors = null): JsonResponse
     {
@@ -47,10 +41,6 @@ trait ApiResponseTrait
 
     /**
      * Respuesta de validación fallida
-     *
-     * @param array $errors
-     * @param string $message
-     * @return JsonResponse
      */
     protected function validationErrorResponse(array $errors, string $message = 'Validation failed'): JsonResponse
     {
@@ -63,9 +53,6 @@ trait ApiResponseTrait
 
     /**
      * Respuesta de no autorizado
-     *
-     * @param string $message
-     * @return JsonResponse
      */
     protected function unauthorizedResponse(string $message = 'Unauthorized'): JsonResponse
     {
@@ -77,9 +64,6 @@ trait ApiResponseTrait
 
     /**
      * Respuesta de no encontrado
-     *
-     * @param string $message
-     * @return JsonResponse
      */
     protected function notFoundResponse(string $message = 'Resource not found'): JsonResponse
     {
@@ -91,9 +75,6 @@ trait ApiResponseTrait
 
     /**
      * Respuesta de servidor con error
-     *
-     * @param string $message
-     * @return JsonResponse
      */
     protected function serverErrorResponse(string $message = 'Internal server error'): JsonResponse
     {

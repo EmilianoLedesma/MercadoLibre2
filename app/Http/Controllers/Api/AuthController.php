@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -19,9 +19,6 @@ class AuthController extends Controller
 
     /**
      * Registro de nuevos usuarios
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function register(Request $request): JsonResponse
     {
@@ -69,15 +66,12 @@ class AuthController extends Controller
                 'expires_in' => config('jwt.ttl') * 60, // en segundos
             ], 'Usuario registrado exitosamente', 201);
         } catch (\Exception $e) {
-            return $this->serverErrorResponse('Error al registrar usuario: ' . $e->getMessage());
+            return $this->serverErrorResponse('Error al registrar usuario: '.$e->getMessage());
         }
     }
 
     /**
      * Inicio de sesión de usuarios
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function login(Request $request): JsonResponse
     {
@@ -98,7 +92,7 @@ class AuthController extends Controller
 
         try {
             // Intentar autenticar y generar token
-            if (!$token = JWTAuth::attempt($credentials)) {
+            if (! $token = JWTAuth::attempt($credentials)) {
                 return $this->unauthorizedResponse('Credenciales incorrectas');
             }
 
@@ -106,7 +100,7 @@ class AuthController extends Controller
             $user = Auth::guard('api')->user();
 
             // Verificar si el usuario está activo
-            if (!$user->is_active) {
+            if (! $user->is_active) {
                 return $this->unauthorizedResponse('Usuario inactivo. Contacte al administrador.');
             }
 
@@ -124,21 +118,19 @@ class AuthController extends Controller
                 'expires_in' => config('jwt.ttl') * 60, // en segundos
             ], 'Inicio de sesión exitoso');
         } catch (JWTException $e) {
-            return $this->serverErrorResponse('No se pudo crear el token: ' . $e->getMessage());
+            return $this->serverErrorResponse('No se pudo crear el token: '.$e->getMessage());
         }
     }
 
     /**
      * Obtener información del usuario autenticado
-     *
-     * @return JsonResponse
      */
     public function me(): JsonResponse
     {
         try {
             $user = Auth::guard('api')->user();
 
-            if (!$user) {
+            if (! $user) {
                 return $this->unauthorizedResponse('No autenticado');
             }
 
@@ -155,14 +147,12 @@ class AuthController extends Controller
                 'updated_at' => $user->updated_at,
             ], 'Usuario autenticado');
         } catch (\Exception $e) {
-            return $this->serverErrorResponse('Error al obtener usuario: ' . $e->getMessage());
+            return $this->serverErrorResponse('Error al obtener usuario: '.$e->getMessage());
         }
     }
 
     /**
      * Cerrar sesión (invalidar token)
-     *
-     * @return JsonResponse
      */
     public function logout(): JsonResponse
     {
@@ -174,14 +164,12 @@ class AuthController extends Controller
                 'Sesión cerrada exitosamente'
             );
         } catch (JWTException $e) {
-            return $this->serverErrorResponse('Error al cerrar sesión: ' . $e->getMessage());
+            return $this->serverErrorResponse('Error al cerrar sesión: '.$e->getMessage());
         }
     }
 
     /**
      * Refrescar token
-     *
-     * @return JsonResponse
      */
     public function refresh(): JsonResponse
     {
@@ -194,7 +182,7 @@ class AuthController extends Controller
                 'expires_in' => config('jwt.ttl') * 60, // en segundos
             ], 'Token refrescado exitosamente');
         } catch (JWTException $e) {
-            return $this->serverErrorResponse('No se pudo refrescar el token: ' . $e->getMessage());
+            return $this->serverErrorResponse('No se pudo refrescar el token: '.$e->getMessage());
         }
     }
 }

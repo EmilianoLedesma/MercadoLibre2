@@ -5,10 +5,10 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
-use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JwtMiddleware
 {
@@ -23,7 +23,7 @@ class JwtMiddleware
             // Intentar autenticar al usuario con el token
             $user = JWTAuth::parseToken()->authenticate();
 
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Usuario no encontrado',
@@ -31,7 +31,7 @@ class JwtMiddleware
             }
 
             // Verificar si el usuario está activo
-            if (!$user->is_active) {
+            if (! $user->is_active) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Usuario inactivo. Contacte al administrador.',
@@ -58,7 +58,7 @@ class JwtMiddleware
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error de autenticación: ' . $e->getMessage(),
+                'message' => 'Error de autenticación: '.$e->getMessage(),
             ], 500);
         }
 

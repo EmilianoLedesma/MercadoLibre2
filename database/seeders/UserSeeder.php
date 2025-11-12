@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Crear usuario administrador principal
-        if (!User::where('email', 'admin@mercadolibre.com')->exists()) {
+        if (! User::where('email', 'admin@mercadolibre.com')->exists()) {
             User::create([
                 'name' => 'Administrador MercadoLibre',
                 'email' => 'admin@mercadolibre.com',
@@ -113,7 +113,7 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($testUsers as $userData) {
-            if (!User::where('email', $userData['email'])->exists()) {
+            if (! User::where('email', $userData['email'])->exists()) {
                 User::create(array_merge($userData, [
                     'email_verified_at' => now(),
                     'is_active' => true,
