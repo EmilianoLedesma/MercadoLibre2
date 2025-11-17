@@ -1,34 +1,34 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
-    <title>@yield('title', 'SEALS') - MercadoLibre2</title>
+    <title><?php echo $__env->yieldContent('title', 'SEALS'); ?> - MercadoLibre2</title>
 
-    {{-- Preconnect para optimización --}}
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
-    {{-- Fuente Jost de Weiboo con font-display swap para mejor rendimiento --}}
+    
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    {{-- Font Awesome cargado de forma asíncrona --}}
+    
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 
-    {{-- Estilos CSS --}}
-    <link rel="stylesheet" href="{{ asset('css/preloader.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/weiboo-design-system.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
+    
+    <link rel="stylesheet" href="<?php echo e(asset('css/preloader.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/weiboo-design-system.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/footer.css')); ?>">
 
-    @stack('styles')
+    <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 <body style="font-family: 'Jost', sans-serif; margin: 0; padding: 0; color: #212529;">
-    {{-- Preloader --}}
+    
     <div class="preloader-wrapper" id="preloader">
         <div class="preloader-new">
             <svg class="cart_preloader" role="img" aria-label="Shopping cart preloader line animation" viewBox="0 0 128 128" width="128px" height="128px" xmlns="http://www.w3.org/2000/svg">
@@ -52,16 +52,16 @@
         </div>
     </div>
 
-    {{-- Toast Notifications --}}
+    
     <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
 
-    {{-- Contenido principal --}}
-    @yield('content')
+    
+    <?php echo $__env->yieldContent('content'); ?>
 
-    {{-- Scripts --}}
-    @stack('scripts')
+    
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 
-    {{-- Toast Notification Styles and Script --}}
+    
     <style>
         .toast {
             min-width: 300px;
@@ -236,25 +236,25 @@
 
         // Show flash messages on page load
         document.addEventListener('DOMContentLoaded', function() {
-            @if(session('success'))
-                showToast("{{ session('success') }}", 'success');
-            @endif
+            <?php if(session('success')): ?>
+                showToast("<?php echo e(session('success')); ?>", 'success');
+            <?php endif; ?>
 
-            @if(session('error'))
-                showToast("{{ session('error') }}", 'error');
-            @endif
+            <?php if(session('error')): ?>
+                showToast("<?php echo e(session('error')); ?>", 'error');
+            <?php endif; ?>
 
-            @if(session('warning'))
-                showToast("{{ session('warning') }}", 'warning');
-            @endif
+            <?php if(session('warning')): ?>
+                showToast("<?php echo e(session('warning')); ?>", 'warning');
+            <?php endif; ?>
 
-            @if(session('info'))
-                showToast("{{ session('info') }}", 'info');
-            @endif
+            <?php if(session('info')): ?>
+                showToast("<?php echo e(session('info')); ?>", 'info');
+            <?php endif; ?>
         });
     </script>
 
-    {{-- Script del Preloader --}}
+    
     <script>
         // Ocultar preloader cuando la página termine de cargar
         window.addEventListener('load', function() {
@@ -282,3 +282,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Users\Emiliano\Documents\UPQ SISTEMAS\7mo_Cuatrimestre\Programación Web\ML2 Seals Edition\MercadoLibre2\resources\views/layouts/app.blade.php ENDPATH**/ ?>

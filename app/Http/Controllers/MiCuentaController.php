@@ -23,7 +23,11 @@ class MiCuentaController extends Controller
             ];
         })->toArray() : [];
 
-        return view('account.index', compact('addresses'));
+        // Get user's orders
+        $orders = $user ? $user->orders()->with('items.product')->latest()->get() : collect();
+        $ordersCount = $orders->count();
+
+        return view('account.index', compact('addresses', 'orders', 'ordersCount'));
     }
 
     /** Actualizar datos simples del usuario (teléfono) */

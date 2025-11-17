@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', $product->name); ?>
 
-@section('title', $product->name)
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     .product-detail-container {
         max-width: 1200px;
@@ -449,9 +447,9 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <!-- TOP BANNER -->
 <div style="background-color: #EE403D; color: white; text-align: center; padding: 12px 0; font-family: 'Jost', sans-serif;">
     <p style="margin: 0;">Envío gratis en compras mayores a $100</p>
@@ -476,36 +474,36 @@
 <header style="background-color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 20px 0;">
     <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
         <div style="flex-shrink: 0;">
-            <a href="{{ route('home') }}" style="font-size: 32px; font-weight: 700; color: #212529; text-decoration: none; font-family: 'Jost', sans-serif;">SEALS</a>
+            <a href="<?php echo e(route('home')); ?>" style="font-size: 32px; font-weight: 700; color: #212529; text-decoration: none; font-family: 'Jost', sans-serif;">SEALS</a>
         </div>
 
         <nav style="display: flex; gap: 32px; align-items: center;">
-            <a href="{{ route('home') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Inicio</a>
-            <a href="{{ route('shop.index') }}" style="color: #EE403D; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Shop</a>
-            <a href="{{ route('categories') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Categorías</a>
-            <a href="{{ route('contact') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Contacto</a>
+            <a href="<?php echo e(route('home')); ?>" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Inicio</a>
+            <a href="<?php echo e(route('shop.index')); ?>" style="color: #EE403D; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Shop</a>
+            <a href="<?php echo e(route('categories')); ?>" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Categorías</a>
+            <a href="<?php echo e(route('contact')); ?>" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Contacto</a>
         </nav>
 
         <div style="display: flex; gap: 16px; align-items: center;">
             <button style="background: none; border: none; cursor: pointer; color: #212529; font-size: 20px;">
                 <i class="fas fa-search"></i>
             </button>
-            @auth
-                <span style="color: #666; font-family: 'Jost', sans-serif;">Hola, {{ Auth::user()->name }}</span>
-            @else
-                <a href="{{ route('login') }}" style="color: #666; text-decoration: none;">
+            <?php if(auth()->guard()->check()): ?>
+                <span style="color: #666; font-family: 'Jost', sans-serif;">Hola, <?php echo e(Auth::user()->name); ?></span>
+            <?php else: ?>
+                <a href="<?php echo e(route('login')); ?>" style="color: #666; text-decoration: none;">
                     <i class="fas fa-user"></i>
                 </a>
-            @endauth
-            <a href="{{ route('cart') }}" style="color: #212529; text-decoration: none; position: relative;">
+            <?php endif; ?>
+            <a href="<?php echo e(route('cart')); ?>" style="color: #212529; text-decoration: none; position: relative;">
                 <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-                @php
+                <?php
                     $cart = session()->get('cart', []);
                     $cartCount = array_sum(array_column($cart, 'quantity'));
-                @endphp
-                @if($cartCount > 0)
-                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: 'Jost', sans-serif;">{{ $cartCount }}</span>
-                @endif
+                ?>
+                <?php if($cartCount > 0): ?>
+                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: 'Jost', sans-serif;"><?php echo e($cartCount); ?></span>
+                <?php endif; ?>
             </a>
         </div>
     </div>
@@ -515,11 +513,11 @@
 <div style="background-color: #F8F8F8; padding: 20px 0;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
         <nav style="font-family: 'Jost', sans-serif; font-size: 14px; color: #666;">
-            <a href="{{ route('home') }}" style="color: #666; text-decoration: none;">Inicio</a>
+            <a href="<?php echo e(route('home')); ?>" style="color: #666; text-decoration: none;">Inicio</a>
             <span style="margin: 0 8px;">/</span>
-            <a href="{{ route('shop.index') }}" style="color: #666; text-decoration: none;">Shop</a>
+            <a href="<?php echo e(route('shop.index')); ?>" style="color: #666; text-decoration: none;">Shop</a>
             <span style="margin: 0 8px;">/</span>
-            <span style="color: #212529; font-weight: 500;">{{ $product->name }}</span>
+            <span style="color: #212529; font-weight: 500;"><?php echo e($product->name); ?></span>
         </nav>
     </div>
 </div>
@@ -529,22 +527,22 @@
     <div class="product-detail-grid">
         <!-- Product Images -->
         <div class="product-images">
-            @php
+            <?php
                 $images = json_decode($product->images, true) ?? [];
                 $mainImage = !empty($images) ? asset('storage/' . $images[0]) : 'https://via.placeholder.com/600x750';
-            @endphp
+            ?>
             <div class="main-image-container">
-                <img src="{{ $mainImage }}" alt="{{ $product->name }}" class="main-image" id="mainImage">
+                <img src="<?php echo e($mainImage); ?>" alt="<?php echo e($product->name); ?>" class="main-image" id="mainImage">
             </div>
-            @if(count($images) > 1)
+            <?php if(count($images) > 1): ?>
             <div class="image-thumbnails">
-                @foreach($images as $index => $image)
-                <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" onclick="changeImage('{{ asset('storage/' . $image) }}', this)">
-                    <img src="{{ asset('storage/' . $image) }}" alt="Thumbnail {{ $index + 1 }}">
+                <?php $__currentLoopData = $images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="thumbnail <?php echo e($index === 0 ? 'active' : ''); ?>" onclick="changeImage('<?php echo e(asset('storage/' . $image)); ?>', this)">
+                    <img src="<?php echo e(asset('storage/' . $image)); ?>" alt="Thumbnail <?php echo e($index + 1); ?>">
                 </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
-            @endif
+            <?php endif; ?>
         </div>
 
         <!-- Product Info -->
@@ -560,26 +558,27 @@
                 <span class="reviews-count">(24 reseñas)</span>
             </div>
 
-            <h1 class="product-detail-title">{{ $product->name }}</h1>
+            <h1 class="product-detail-title"><?php echo e($product->name); ?></h1>
 
             <div class="product-detail-price">
-                @if($product->sale_price)
-                    <span class="current-price">${{ number_format($product->sale_price, 2) }}</span>
-                    <span class="original-price">${{ number_format($product->price, 2) }}</span>
-                    @php
+                <?php if($product->sale_price): ?>
+                    <span class="current-price">$<?php echo e(number_format($product->sale_price, 2)); ?></span>
+                    <span class="original-price">$<?php echo e(number_format($product->price, 2)); ?></span>
+                    <?php
                         $discount = round((($product->price - $product->sale_price) / $product->price) * 100);
-                    @endphp
-                    <span class="discount-badge">-{{ $discount }}%</span>
-                @else
-                    <span class="current-price">${{ number_format($product->price, 2) }}</span>
-                @endif
+                    ?>
+                    <span class="discount-badge">-<?php echo e($discount); ?>%</span>
+                <?php else: ?>
+                    <span class="current-price">$<?php echo e(number_format($product->price, 2)); ?></span>
+                <?php endif; ?>
             </div>
 
             <p class="product-description">
-                {{ $product->short_description ?? $product->description }}
+                <?php echo e($product->short_description ?? $product->description); ?>
+
             </p>
 
-            @php
+            <?php
                 $nombreProducto = strtolower($product->name);
                 $categoria = $product->category->name ?? '';
                 
@@ -657,15 +656,15 @@
                          str_contains($nombreProducto, 'ventilador'))) {
                     $requiereColor = true;
                 }
-            @endphp
+            ?>
 
             <!-- Size and Color Options -->
-            @if($tipoTalla || $requiereColor)
+            <?php if($tipoTalla || $requiereColor): ?>
             <div class="product-options">
-                @if($tipoTalla)
+                <?php if($tipoTalla): ?>
                 <!-- Size Options -->
                 <div class="option-group">
-                    @if($tipoTalla === 'ropa')
+                    <?php if($tipoTalla === 'ropa'): ?>
                         <label class="option-label">Talla:</label>
                         <div class="option-buttons">
                             <button class="option-btn">XS</button>
@@ -675,7 +674,7 @@
                             <button class="option-btn">XL</button>
                             <button class="option-btn">XXL</button>
                         </div>
-                    @elseif($tipoTalla === 'calzado')
+                    <?php elseif($tipoTalla === 'calzado'): ?>
                         <label class="option-label">Número:</label>
                         <div class="option-buttons">
                             <button class="option-btn">37</button>
@@ -687,20 +686,20 @@
                             <button class="option-btn">43</button>
                             <button class="option-btn">44</button>
                         </div>
-                    @elseif($tipoTalla === 'pelota')
+                    <?php elseif($tipoTalla === 'pelota'): ?>
                         <label class="option-label">Tamaño:</label>
                         <div class="option-buttons">
                             <button class="option-btn">Nro. 3</button>
                             <button class="option-btn">Nro. 4</button>
                             <button class="option-btn active">Nro. 5</button>
                         </div>
-                    @elseif($tipoTalla === 'bicicleta')
+                    <?php elseif($tipoTalla === 'bicicleta'): ?>
                         <label class="option-label">Rodado:</label>
                         <div class="option-buttons">
                             <button class="option-btn">R26</button>
                             <button class="option-btn active">R29</button>
                         </div>
-                    @elseif($tipoTalla === 'guantes')
+                    <?php elseif($tipoTalla === 'guantes'): ?>
                         <label class="option-label">Tamaño:</label>
                         <div class="option-buttons">
                             <button class="option-btn">10 oz</button>
@@ -708,16 +707,16 @@
                             <button class="option-btn">14 oz</button>
                             <button class="option-btn">16 oz</button>
                         </div>
-                    @elseif($tipoTalla === 'unica')
+                    <?php elseif($tipoTalla === 'unica'): ?>
                         <label class="option-label">Talla:</label>
                         <div class="option-buttons">
                             <button class="option-btn active">Talla Única</button>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
-                @endif
+                <?php endif; ?>
 
-                @if($requiereColor)
+                <?php if($requiereColor): ?>
                 <!-- Color Options -->
                 <div class="option-group">
                     <label class="option-label">Color:</label>
@@ -725,33 +724,33 @@
                         <button class="option-btn active">Negro</button>
                         <button class="option-btn">Blanco</button>
                         <button class="option-btn">Azul</button>
-                        @if($tipoTalla === 'ropa' || $tipoTalla === 'calzado' || $tipoTalla === 'pelota' || $categoria === 'Deportes y Fitness')
+                        <?php if($tipoTalla === 'ropa' || $tipoTalla === 'calzado' || $tipoTalla === 'pelota' || $categoria === 'Deportes y Fitness'): ?>
                             <button class="option-btn">Rojo</button>
                             <button class="option-btn">Gris</button>
-                        @endif
-                        @if($tipoTalla === 'ropa')
+                        <?php endif; ?>
+                        <?php if($tipoTalla === 'ropa'): ?>
                             <button class="option-btn">Verde</button>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?>
             </div>
-            @endif
+            <?php endif; ?>
 
             <!-- Quantity -->
             <div class="quantity-selector">
                 <label class="option-label">Cantidad:</label>
                 <div class="quantity-controls">
                     <button class="qty-btn" onclick="decrementQty()">−</button>
-                    <input type="number" value="1" min="1" max="{{ $product->stock_quantity }}" class="qty-input" id="qtyInput">
+                    <input type="number" value="1" min="1" max="<?php echo e($product->stock_quantity); ?>" class="qty-input" id="qtyInput">
                     <button class="qty-btn" onclick="incrementQty()">+</button>
                 </div>
             </div>
 
             <!-- Actions -->
             <div class="product-actions">
-                <form action="{{ route('cart.add', $product->id) }}" method="POST" id="addToCartForm">
-                    @csrf
+                <form action="<?php echo e(route('cart.add', $product->id)); ?>" method="POST" id="addToCartForm">
+                    <?php echo csrf_field(); ?>
                     <input type="hidden" name="quantity" id="quantityInput" value="1">
                     <button type="submit" class="btn-add-cart">
                         <i class="fas fa-shopping-cart"></i> Agregar al Carrito
@@ -766,16 +765,17 @@
             <div class="product-meta-info">
                 <div class="meta-item">
                     <span class="meta-label">SKU:</span>
-                    <span class="meta-value">{{ $product->sku }}</span>
+                    <span class="meta-value"><?php echo e($product->sku); ?></span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Categoría:</span>
-                    <span class="meta-value">{{ $product->category->name ?? 'Sin categoría' }}</span>
+                    <span class="meta-value"><?php echo e($product->category->name ?? 'Sin categoría'); ?></span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Stock:</span>
-                    <span class="stock-status {{ $product->stock_quantity > 0 ? '' : 'out' }}">
-                        {{ $product->stock_quantity > 0 ? 'Disponible (' . $product->stock_quantity . ')' : 'Agotado' }}
+                    <span class="stock-status <?php echo e($product->stock_quantity > 0 ? '' : 'out'); ?>">
+                        <?php echo e($product->stock_quantity > 0 ? 'Disponible (' . $product->stock_quantity . ')' : 'Agotado'); ?>
+
                     </span>
                 </div>
             </div>
@@ -791,7 +791,7 @@
         </div>
 
         <div class="tab-content active" id="description">
-            <p>{{ $product->description }}</p>
+            <p><?php echo e($product->description); ?></p>
         </div>
 
         <div class="tab-content" id="info">
@@ -817,33 +817,33 @@
     </div>
 
     <!-- Related Products -->
-    @if($relatedProducts->count() > 0)
+    <?php if($relatedProducts->count() > 0): ?>
     <div class="related-products">
         <h2 class="section-title">Productos Relacionados</h2>
         <div class="related-grid">
-            @foreach($relatedProducts as $relatedProduct)
+            <?php $__currentLoopData = $relatedProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $relatedProduct): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div class="product-card">
                 <div class="product-image-container">
-                    @php
+                    <?php
                         $relatedImages = json_decode($relatedProduct->images, true);
                         $relatedImagePath = !empty($relatedImages) ? asset('storage/' . $relatedImages[0]) : 'https://via.placeholder.com/300x375';
-                    @endphp
-                    <img src="{{ $relatedImagePath }}" alt="{{ $relatedProduct->name }}" class="product-image">
+                    ?>
+                    <img src="<?php echo e($relatedImagePath); ?>" alt="<?php echo e($relatedProduct->name); ?>" class="product-image">
                 </div>
                 <div class="product-info">
-                    <p class="product-category">{{ $relatedProduct->category->name ?? '' }}</p>
+                    <p class="product-category"><?php echo e($relatedProduct->category->name ?? ''); ?></p>
                     <h3 class="product-title">
-                        <a href="{{ route('shop.show', $relatedProduct->slug) }}">{{ $relatedProduct->name }}</a>
+                        <a href="<?php echo e(route('shop.show', $relatedProduct->slug)); ?>"><?php echo e($relatedProduct->name); ?></a>
                     </h3>
                     <div class="product-price">
-                        <span class="price-current">${{ number_format($relatedProduct->price, 2) }}</span>
+                        <span class="price-current">$<?php echo e(number_format($relatedProduct->price, 2)); ?></span>
                     </div>
                 </div>
             </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 </div>
 
 <!-- FOOTER -->
@@ -915,4 +915,6 @@ function switchTab(tabName) {
     document.getElementById(tabName).classList.add('active');
 }
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Emiliano\Documents\UPQ SISTEMAS\7mo_Cuatrimestre\Programación Web\ML2 Seals Edition\MercadoLibre2\resources\views/shop/show.blade.php ENDPATH**/ ?>

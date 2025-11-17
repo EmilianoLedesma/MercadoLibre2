@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Shop'); ?>
 
-@section('title', 'Shop')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     .shop-container {
         max-width: 1200px;
@@ -493,9 +491,9 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <!-- TOP BANNER -->
 <div style="background-color: #EE403D; color: white; text-align: center; padding: 12px 0; font-family: 'Jost', sans-serif;">
     <p style="margin: 0;">Envío gratis en compras mayores a $100</p>
@@ -520,40 +518,40 @@
 <header style="background-color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 20px 0;">
     <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
         <div style="flex-shrink: 0;">
-            <a href="{{ route('home') }}" style="font-size: 32px; font-weight: 700; color: #212529; text-decoration: none; font-family: 'Jost', sans-serif;">SEALS</a>
+            <a href="<?php echo e(route('home')); ?>" style="font-size: 32px; font-weight: 700; color: #212529; text-decoration: none; font-family: 'Jost', sans-serif;">SEALS</a>
         </div>
 
         <nav style="display: flex; gap: 32px; align-items: center;">
-            <a href="{{ route('home') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Inicio</a>
-            <a href="{{ route('shop.index') }}" style="color: #EE403D; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Shop</a>
-            <a href="{{ route('categories') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Categorías</a>
-            <a href="{{ route('contact') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Contacto</a>
+            <a href="<?php echo e(route('home')); ?>" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Inicio</a>
+            <a href="<?php echo e(route('shop.index')); ?>" style="color: #EE403D; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Shop</a>
+            <a href="<?php echo e(route('categories')); ?>" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Categorías</a>
+            <a href="<?php echo e(route('contact')); ?>" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif; transition: color 0.3s;">Contacto</a>
         </nav>
 
         <div style="display: flex; gap: 16px; align-items: center;">
             <button style="background: none; border: none; cursor: pointer; color: #212529; font-size: 20px;">
                 <i class="fas fa-search"></i>
             </button>
-            @auth
-                <span style="color: #666; font-family: 'Jost', sans-serif;">Hola, {{ Auth::user()->name }}</span>
-                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                    @csrf
+            <?php if(auth()->guard()->check()): ?>
+                <span style="color: #666; font-family: 'Jost', sans-serif;">Hola, <?php echo e(Auth::user()->name); ?></span>
+                <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;">
+                    <?php echo csrf_field(); ?>
                     <button type="submit" style="background: none; border: none; color: #666; cursor: pointer; font-family: 'Jost', sans-serif;">Salir</button>
                 </form>
-            @else
-                <a href="{{ route('login') }}" style="color: #666; text-decoration: none;">
+            <?php else: ?>
+                <a href="<?php echo e(route('login')); ?>" style="color: #666; text-decoration: none;">
                     <i class="fas fa-user"></i>
                 </a>
-            @endauth
-            <a href="{{ route('cart') }}" style="color: #212529; text-decoration: none; position: relative;">
+            <?php endif; ?>
+            <a href="<?php echo e(route('cart')); ?>" style="color: #212529; text-decoration: none; position: relative;">
                 <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-                @php
+                <?php
                     $cart = session()->get('cart', []);
                     $cartCount = array_sum(array_column($cart, 'quantity'));
-                @endphp
-                @if($cartCount > 0)
-                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: 'Jost', sans-serif;">{{ $cartCount }}</span>
-                @endif
+                ?>
+                <?php if($cartCount > 0): ?>
+                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: 'Jost', sans-serif;"><?php echo e($cartCount); ?></span>
+                <?php endif; ?>
             </a>
         </div>
     </div>
@@ -563,7 +561,7 @@
 <div style="background-color: #F8F8F8; padding: 20px 0;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
         <nav style="font-family: 'Jost', sans-serif; font-size: 14px; color: #666;">
-            <a href="{{ route('home') }}" style="color: #666; text-decoration: none;">Inicio</a>
+            <a href="<?php echo e(route('home')); ?>" style="color: #666; text-decoration: none;">Inicio</a>
             <span style="margin: 0 8px;">/</span>
             <span style="color: #212529; font-weight: 500;">Shop</span>
         </nav>
@@ -574,31 +572,33 @@
 <div class="shop-container">
     <!-- SIDEBAR FILTERS -->
     <aside class="shop-sidebar">
-        <form action="{{ route('shop.index') }}" method="GET" id="filterForm">
+        <form action="<?php echo e(route('shop.index')); ?>" method="GET" id="filterForm">
             <!-- PRODUCT CATEGORY - Collapsible -->
             <div class="filter-section">
                 <h3 class="filter-title">CATEGORÍAS</h3>
 
-                @foreach($categories as $category)
+                <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div>
-                    <div class="category-toggle" onclick="toggleCategory('cat_{{ $category->id }}')">
-                        <span>{{ $category->name }} ({{ $category->products_count ?? 0 }})</span>
+                    <div class="category-toggle" onclick="toggleCategory('cat_<?php echo e($category->id); ?>')">
+                        <span><?php echo e($category->name); ?> (<?php echo e($category->products_count ?? 0); ?>)</span>
                         <span class="toggle-icon">▶</span>
                     </div>
-                    <div class="category-submenu" id="submenu_cat_{{ $category->id }}">
+                    <div class="category-submenu" id="submenu_cat_<?php echo e($category->id); ?>">
                         <div class="filter-option">
-                            <a href="{{ route('shop.category', $category->slug) }}" 
-                               style="color: {{ request()->route('slug') == $category->slug ? '#EE403D' : '#666' }}; text-decoration: none; font-weight: {{ request()->route('slug') == $category->slug ? '600' : '400' }};">
-                                Ver todos en {{ $category->name }}
+                            <a href="<?php echo e(route('shop.category', $category->slug)); ?>" 
+                               style="color: <?php echo e(request()->route('slug') == $category->slug ? '#EE403D' : '#666'); ?>; text-decoration: none; font-weight: <?php echo e(request()->route('slug') == $category->slug ? '600' : '400'); ?>;">
+                                Ver todos en <?php echo e($category->name); ?>
+
                             </a>
                         </div>
                     </div>
                 </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                 <div class="filter-option" style="margin-top: 12px;">
                     <input type="radio" name="category" value="" id="cat_all"
-                        {{ !request('category') ? 'checked' : '' }}
+                        <?php echo e(!request('category') ? 'checked' : ''); ?>
+
                         onchange="document.getElementById('filterForm').submit()">
                     <label for="cat_all">Todas las Categorías</label>
                 </div>
@@ -610,11 +610,11 @@
                 <div class="price-inputs">
                     <div style="display: flex; align-items: center; gap: 4px;">
                         <span style="color: #666; font-size: 14px;">Min: $</span>
-                        <input type="number" name="min_price" placeholder="50" value="{{ request('min_price', 50) }}" style="width: 70px;">
+                        <input type="number" name="min_price" placeholder="50" value="<?php echo e(request('min_price', 50)); ?>" style="width: 70px;">
                     </div>
                     <div style="display: flex; align-items: center; gap: 4px;">
                         <span style="color: #666; font-size: 14px;">Max: $</span>
-                        <input type="number" name="max_price" placeholder="10000" value="{{ request('max_price', 10000) }}" style="width: 70px;">
+                        <input type="number" name="max_price" placeholder="10000" value="<?php echo e(request('max_price', 10000)); ?>" style="width: 70px;">
                     </div>
                 </div>
             </div>
@@ -677,20 +677,20 @@
             <div class="filter-section">
                 <h3 class="filter-title">FILTRAR POR MARCA</h3>
                 <div class="brand-list">
-                    @php
+                    <?php
                     $brands = [
                         'Alexander McQueen', 'Adidas', 'Balenciaga', 'Balmain', 'Burberry',
                         'Chloé', 'Dsquared2', 'Givenchy', 'Kenzo', 'Leo',
                         'Maison Margiela', 'Moschino', 'Nike', 'Versace', 'Gucci',
                         'Prada', 'Dior', 'Armani', 'Calvin Klein', 'Tommy Hilfiger'
                     ];
-                    @endphp
+                    ?>
 
-                    @foreach($brands as $brand)
+                    <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="brand-option">
-                        <a href="{{ route('shop.index', ['brand' => strtolower(str_replace(' ', '-', $brand))]) }}">{{ $brand }}</a>
+                        <a href="<?php echo e(route('shop.index', ['brand' => strtolower(str_replace(' ', '-', $brand))])); ?>"><?php echo e($brand); ?></a>
                     </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
 
@@ -698,7 +698,7 @@
         </form>
 
         <!-- PROMOTIONAL BANNER -->
-        <a href="{{ route('shop.index') }}" style="text-decoration: none;">
+        <a href="<?php echo e(route('shop.index')); ?>" style="text-decoration: none;">
             <div class="promo-banner">
                 <div class="promo-banner-label">Moda de Invierno</div>
                 <div class="promo-banner-title">Descubre Nuestra Nueva Colección</div>
@@ -710,38 +710,38 @@
     <main class="shop-main">
         <!-- Shop Header -->
         <div class="shop-header">
-            <p class="shop-results">Mostrando {{ $products->count() }} de {{ $products->total() }} productos</p>
+            <p class="shop-results">Mostrando <?php echo e($products->count()); ?> de <?php echo e($products->total()); ?> productos</p>
             <div class="shop-sort">
                 <label for="sort">Ordenar por:</label>
                 <select name="sort" id="sort" onchange="document.getElementById('filterForm').submit()">
-                    <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Más recientes</option>
-                    <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
-                    <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
-                    <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Nombre A-Z</option>
+                    <option value="latest" <?php echo e(request('sort') == 'latest' ? 'selected' : ''); ?>>Más recientes</option>
+                    <option value="price_low" <?php echo e(request('sort') == 'price_low' ? 'selected' : ''); ?>>Precio: Menor a Mayor</option>
+                    <option value="price_high" <?php echo e(request('sort') == 'price_high' ? 'selected' : ''); ?>>Precio: Mayor a Menor</option>
+                    <option value="name" <?php echo e(request('sort') == 'name' ? 'selected' : ''); ?>>Nombre A-Z</option>
                 </select>
             </div>
         </div>
 
         <!-- Products Grid -->
         <div class="products-grid">
-            @forelse($products as $product)
+            <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
             <div class="product-card">
                 <div class="product-image-container">
-                    @php
+                    <?php
                         $images = json_decode($product->images, true);
                         $imagePath = !empty($images) ? asset('storage/' . $images[0]) : 'https://via.placeholder.com/300x375';
-                    @endphp
-                    <img src="{{ $imagePath }}" alt="{{ $product->name }}" class="product-image" loading="lazy">
+                    ?>
+                    <img src="<?php echo e($imagePath); ?>" alt="<?php echo e($product->name); ?>" class="product-image" loading="lazy">
 
-                    @if($product->sale_price)
+                    <?php if($product->sale_price): ?>
                     <div class="product-badges">
                         <span class="badge badge-sale">SALE</span>
                     </div>
-                    @elseif($product->is_featured)
+                    <?php elseif($product->is_featured): ?>
                     <div class="product-badges">
                         <span class="badge badge-hot">HOT</span>
                     </div>
-                    @endif
+                    <?php endif; ?>
 
                     <div class="product-actions">
                         <button class="action-btn" title="Wishlist">
@@ -754,7 +754,7 @@
                 </div>
 
                 <div class="product-info">
-                    <p class="product-category">{{ $product->category->name ?? 'Sin categoría' }}</p>
+                    <p class="product-category"><?php echo e($product->category->name ?? 'Sin categoría'); ?></p>
 
                     <div class="product-rating">
                         <span class="star">★</span>
@@ -765,30 +765,31 @@
                     </div>
 
                     <h3 class="product-title">
-                        <a href="{{ route('shop.show', $product->slug) }}">{{ $product->name }}</a>
+                        <a href="<?php echo e(route('shop.show', $product->slug)); ?>"><?php echo e($product->name); ?></a>
                     </h3>
 
                     <div class="product-price">
-                        @if($product->sale_price)
-                            <span class="price-current">${{ number_format($product->sale_price, 2) }}</span>
-                            <span class="price-original">${{ number_format($product->price, 2) }}</span>
-                        @else
-                            <span class="price-current">${{ number_format($product->price, 2) }}</span>
-                        @endif
+                        <?php if($product->sale_price): ?>
+                            <span class="price-current">$<?php echo e(number_format($product->sale_price, 2)); ?></span>
+                            <span class="price-original">$<?php echo e(number_format($product->price, 2)); ?></span>
+                        <?php else: ?>
+                            <span class="price-current">$<?php echo e(number_format($product->price, 2)); ?></span>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #666; font-family: 'Jost', sans-serif;">
                 <i class="fas fa-inbox" style="font-size: 48px; color: #E5E5E5; margin-bottom: 16px;"></i>
                 <p style="font-size: 18px;">No se encontraron productos</p>
             </div>
-            @endforelse
+            <?php endif; ?>
         </div>
 
         <!-- Pagination -->
         <div class="pagination">
-            {{ $products->links() }}
+            <?php echo e($products->links()); ?>
+
         </div>
     </main>
 </div>
@@ -804,9 +805,9 @@
             <div>
                 <h4 style="font-family: 'Jost', sans-serif; font-size: 16px; margin-bottom: 16px;">Enlaces</h4>
                 <nav style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="{{ route('home') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Inicio</a>
-                    <a href="{{ route('shop.index') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Shop</a>
-                    <a href="{{ route('categories') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Categorías</a>
+                    <a href="<?php echo e(route('home')); ?>" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Inicio</a>
+                    <a href="<?php echo e(route('shop.index')); ?>" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Shop</a>
+                    <a href="<?php echo e(route('categories')); ?>" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Categorías</a>
                 </nav>
             </div>
         </div>
@@ -852,4 +853,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Emiliano\Documents\UPQ SISTEMAS\7mo_Cuatrimestre\Programación Web\ML2 Seals Edition\MercadoLibre2\resources\views/shop/index.blade.php ENDPATH**/ ?>

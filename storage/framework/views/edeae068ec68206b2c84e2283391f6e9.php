@@ -13,8 +13,8 @@
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
         <nav style="display: flex; gap: 20px;">
             <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Nosotros</a>
-            <a href="{{ route('account') }}" style="color: #212529; text-decoration: none; transition: color 0.25s;">Mi Cuenta</a>
-            <a href="{{ route('wishlist.index') }}" style="color: #212529; text-decoration: none; transition: color 0.25s;">Favoritos</a>
+            <a href="<?php echo e(route('account')); ?>" style="color: #212529; text-decoration: none; transition: color 0.25s;">Mi Cuenta</a>
+            <a href="<?php echo e(route('wishlist.index')); ?>" style="color: #212529; text-decoration: none; transition: color 0.25s;">Favoritos</a>
             <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Rastrear Pedido</a>
         </nav>
 
@@ -32,15 +32,15 @@
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
         <!-- Logo -->
         <div style="flex-shrink: 0;">
-            <a href="{{ route('home') }}" style="font-size: 32px; font-weight: 800; color: #212529; text-decoration: none; letter-spacing: 2px;">SEALS</a>
+            <a href="<?php echo e(route('home')); ?>" style="font-size: 32px; font-weight: 800; color: #212529; text-decoration: none; letter-spacing: 2px;">SEALS</a>
         </div>
 
         <!-- Main Navigation -->
         <nav style="display: flex; gap: 32px; flex: 1; justify-content: center;">
-            <a href="{{ route('home') }}" style="color: {{ request()->routeIs('home') ? '#EE403D' : '#212529' }}; font-weight: 500; text-decoration: none; transition: color 0.25s;">Inicio</a>
-            <a href="{{ route('shop.index') }}" style="color: {{ request()->routeIs('shop.*') ? '#EE403D' : '#212529' }}; font-weight: 500; text-decoration: none; transition: color 0.25s;">Shop</a>
-            <a href="{{ route('categories') }}" style="color: {{ request()->routeIs('categories') ? '#EE403D' : '#212529' }}; font-weight: 500; text-decoration: none; transition: color 0.25s;">Categorías</a>
-            <a href="{{ route('contact') }}" style="color: {{ request()->routeIs('contact') ? '#EE403D' : '#212529' }}; font-weight: 500; text-decoration: none; transition: color 0.25s;">Contacto</a>
+            <a href="<?php echo e(route('home')); ?>" style="color: <?php echo e(request()->routeIs('home') ? '#EE403D' : '#212529'); ?>; font-weight: 500; text-decoration: none; transition: color 0.25s;">Inicio</a>
+            <a href="<?php echo e(route('shop.index')); ?>" style="color: <?php echo e(request()->routeIs('shop.*') ? '#EE403D' : '#212529'); ?>; font-weight: 500; text-decoration: none; transition: color 0.25s;">Shop</a>
+            <a href="<?php echo e(route('categories')); ?>" style="color: <?php echo e(request()->routeIs('categories') ? '#EE403D' : '#212529'); ?>; font-weight: 500; text-decoration: none; transition: color 0.25s;">Categorías</a>
+            <a href="<?php echo e(route('contact')); ?>" style="color: <?php echo e(request()->routeIs('contact') ? '#EE403D' : '#212529'); ?>; font-weight: 500; text-decoration: none; transition: color 0.25s;">Contacto</a>
         </nav>
 
         <!-- Header Actions -->
@@ -54,40 +54,41 @@
             </button>
 
             <!-- User -->
-            @auth
+            <?php if(auth()->guard()->check()): ?>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <a href="{{ route('account') }}" style="color: #212529; font-weight: 500; text-decoration: none;">Hola, {{ Auth::user()->name }}</a>
-                    <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                        @csrf
+                    <a href="<?php echo e(route('account')); ?>" style="color: #212529; font-weight: 500; text-decoration: none;">Hola, <?php echo e(Auth::user()->name); ?></a>
+                    <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;">
+                        <?php echo csrf_field(); ?>
                         <button type="submit" style="background: #EE403D; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 500;">
                             Cerrar Sesión
                         </button>
                     </form>
                 </div>
-            @else
-                <a href="{{ route('login') }}" style="background: none; border: none; cursor: pointer; padding: 8px;" aria-label="Cuenta">
+            <?php else: ?>
+                <a href="<?php echo e(route('login')); ?>" style="background: none; border: none; cursor: pointer; padding: 8px;" aria-label="Cuenta">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                 </a>
-            @endauth
+            <?php endif; ?>
 
             <!-- Cart -->
-            <a href="{{ route('cart') }}" style="position: relative; background: none; border: none; cursor: pointer; padding: 8px; text-decoration: none; color: inherit;" aria-label="Carrito">
+            <a href="<?php echo e(route('cart')); ?>" style="position: relative; background: none; border: none; cursor: pointer; padding: 8px; text-decoration: none; color: inherit;" aria-label="Carrito">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="9" cy="21" r="1"></circle>
                     <circle cx="20" cy="21" r="1"></circle>
                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                 </svg>
-                @php
+                <?php
                     $cart = session()->get('cart', []);
                     $cartCount = array_sum(array_column($cart, 'quantity'));
-                @endphp
-                @if($cartCount > 0)
-                <span style="position: absolute; top: 0; right: 0; background-color: #EE403D; color: white; font-size: 10px; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">{{ $cartCount }}</span>
-                @endif
+                ?>
+                <?php if($cartCount > 0): ?>
+                <span style="position: absolute; top: 0; right: 0; background-color: #EE403D; color: white; font-size: 10px; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;"><?php echo e($cartCount); ?></span>
+                <?php endif; ?>
             </a>
         </div>
     </div>
 </header>
+<?php /**PATH C:\Users\Emiliano\Documents\UPQ SISTEMAS\7mo_Cuatrimestre\Programación Web\ML2 Seals Edition\MercadoLibre2\resources\views/layouts/navbar.blade.php ENDPATH**/ ?>

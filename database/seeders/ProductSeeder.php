@@ -301,13 +301,20 @@ class ProductSeeder extends Seeder
                     $sku = 'ML-' . strtoupper(substr($category->name, 0, 3)) . '-' . rand(10000, 99999);
                 }
                 
+                // Normalize price values from seed data (some values are in cents)
+                $rawPrice = $productData['price'] ?? 0;
+                $price = (float) $rawPrice;
+                if ($price > 1000) {
+                    $price = $price / 100.0;
+                }
+
                 Product::create([
                     'name' => $productData['name'],
                     'slug' => $slug,
                     'description' => $productData['description'],
                     'short_description' => substr($productData['description'], 0, 150),
                     'sku' => $sku,
-                    'price' => $productData['price'],
+                    'price' => round($price, 2),
                     'stock_quantity' => $productData['stock_quantity'],
                     'category_id' => $category->id,
                     'user_id' => $users->random()->id,

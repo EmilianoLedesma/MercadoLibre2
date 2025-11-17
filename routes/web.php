@@ -7,6 +7,8 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\MiCuentaController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CartController;
 
 // Página de inicio
 Route::get('/', function () {
@@ -32,9 +34,17 @@ Route::post('/account/addresses', [MiCuentaController::class, 'saveAddresses'])-
 Route::delete('/account', [MiCuentaController::class, 'destroy'])->middleware('auth')->name('account.destroy');
 
 // Carrito
-Route::get('/cart', function () {
-    return view('cart');
-})->name('cart');
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::post('/cart/add/{productId}', [CartController::class, 'add'])->name('cart.add');
+Route::patch('/cart/update/{productId}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/remove/{productId}', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
+
+// Checkout
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::get('/checkout/confirmation/{orderId}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
 
 // Wishlist (Lista de deseos)
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');

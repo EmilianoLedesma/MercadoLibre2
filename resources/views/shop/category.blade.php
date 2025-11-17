@@ -459,7 +459,13 @@
             @endauth
             <a href="{{ route('cart') }}" style="color: #212529; text-decoration: none; position: relative;">
                 <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px;">3</span>
+                @php
+                    $cart = session()->get('cart', []);
+                    $cartCount = array_sum(array_column($cart, 'quantity'));
+                @endphp
+                @if($cartCount > 0)
+                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px;">{{ $cartCount }}</span>
+                @endif
             </a>
         </div>
     </div>
