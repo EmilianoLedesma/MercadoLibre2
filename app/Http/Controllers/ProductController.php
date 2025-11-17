@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -16,7 +16,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->latest()->paginate(10);
+        $products = Product::with('category:id,name,slug')
+            ->select('id', 'name', 'slug', 'price', 'stock_quantity', 'is_active', 'category_id', 'created_at')
+            ->latest()
+            ->paginate(10);
+
         return view('products.index', compact('products'));
     }
 
@@ -30,11 +34,16 @@ class ProductController extends Controller
         if ($categoriesCount === 0) {
             $this->createDefaultCategories();
         }
-        
-        $categories = Category::where('is_active', true)->get();
+
+        $categories = cache()->remember('active_categories', 3600, function () {
+            return Category::where('is_active', true)
+                ->select('id', 'name')
+                ->get();
+        });
+
         return view('products.create', compact('categories'));
     }
-    
+
     /**
      * Crear categorías por defecto si no existen
      */
@@ -93,12 +102,12 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $productData = $request->except('images');
         $productData['slug'] = Str::slug($request->name);
-        
+
         // Asignar user_id: si hay usuario autenticado, usar su ID, sino usar ID 1 por defecto
         $productData['user_id'] = Auth::id() ?? 1;
 
@@ -124,6 +133,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product->load('category', 'user');
+
         return view('products.show', compact('product'));
     }
 
@@ -137,8 +147,13 @@ class ProductController extends Controller
         if ($categoriesCount === 0) {
             $this->createDefaultCategories();
         }
-        
-        $categories = Category::where('is_active', true)->get();
+
+        $categories = cache()->remember('active_categories', 3600, function () {
+            return Category::where('is_active', true)
+                ->select('id', 'name')
+                ->get();
+        });
+
         return view('products.edit', compact('product', 'categories'));
     }
 
@@ -159,7 +174,7 @@ class ProductController extends Controller
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'delete_images' => 'nullable|array'
+            'delete_images' => 'nullable|array',
         ]);
 
         $productData = $request->except(['images', 'delete_images']);
@@ -167,7 +182,7 @@ class ProductController extends Controller
 
         // Actualizar imágenes
         $currentImages = json_decode($product->images, true) ?? [];
-        
+
         // Eliminar imágenes marcadas
         if ($request->has('delete_images')) {
             foreach ($request->delete_images as $index) {

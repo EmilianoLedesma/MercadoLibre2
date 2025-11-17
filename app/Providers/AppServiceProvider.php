@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
+use App\Observers\CategoryObserver;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,5 +24,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::defaultView('vendor.pagination.custom');
         Paginator::defaultSimpleView('vendor.pagination.custom');
+
+        // Register observers for cache invalidation
+        Category::observe(CategoryObserver::class);
     }
 }
