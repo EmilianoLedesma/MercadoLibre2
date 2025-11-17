@@ -22,6 +22,7 @@ Pagos y badges disponibles:
 - Rutas principales
 - Requisitos
 - Instalación (Windows)
+- **JWT Authentication API** ⭐ NEW
 - Desarrollo y build
 - Testing y calidad
 - Variables de entorno
@@ -176,6 +177,73 @@ Atajo opcional (incluye build):
 ```powershell
 composer run setup
 ```
+
+## JWT Authentication API
+
+Este proyecto incluye autenticación JWT completa para API REST. Sigue estos pasos para configurarla:
+
+### Instalación JWT
+
+```powershell
+# 1) Instalar el paquete JWT
+composer require tymon/jwt-auth
+
+# 2) Generar la clave secreta JWT
+php artisan jwt:secret
+
+# 3) Ejecutar migraciones con seeders (incluye usuarios de prueba)
+php artisan migrate:fresh --seed
+```
+
+### Usuarios de Prueba
+
+Después de ejecutar los seeders, tendrás acceso a:
+
+**Administrador:**
+- Email: `admin@mercadolibre.com`
+- Password: `admin123`
+- Role: `admin`
+
+**Vendedores:**
+- Email: `ventas@techstore.com.ar` | Password: `password123`
+- Email: `contacto@electrohogar.com` | Password: `password123`
+
+**Clientes:**
+- Email: `juan.perez@gmail.com` | Password: `password123`
+- Email: `maria.gonzalez@hotmail.com` | Password: `password123`
+
+### Endpoints API Disponibles
+
+**Públicos (no requieren autenticación):**
+- `POST /api/auth/register` - Registro de usuarios
+- `POST /api/auth/login` - Inicio de sesión (retorna token JWT)
+
+**Protegidos (requieren token JWT):**
+- `GET /api/auth/me` - Obtener usuario autenticado
+- `POST /api/auth/logout` - Cerrar sesión
+- `POST /api/auth/refresh` - Refrescar token
+- `GET /api/user` - Información del usuario
+
+### Ejemplo de Uso con cURL
+
+```bash
+# Login
+curl -X POST http://localhost:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"email":"admin@mercadolibre.com","password":"admin123"}'
+
+# Usar el token en requests protegidos
+curl -X GET http://localhost:8000/api/auth/me \
+  -H "Authorization: Bearer {tu_token_aqui}" \
+  -H "Accept: application/json"
+```
+
+### Documentación Completa
+
+Para más detalles sobre la API JWT:
+- 📖 **[Guía de Instalación y Configuración JWT](docs/JWT_SETUP.md)**
+- 📋 **[Documentación de Endpoints API](docs/API_ENDPOINTS.md)**
 
 ## Desarrollo y build
 
