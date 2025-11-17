@@ -165,7 +165,7 @@
             <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
                     <span style="position: absolute; top: 12px; right: 12px; background-color: #28A745; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">NEW</span>
-                    <img src="https://via.placeholder.com/300x400/F0E68C/FFFFFF?text=Product+1" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="https://via.placeholder.com/300x400/F0E68C/FFFFFF?text=Product+1" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                 </div>
                 <div style="padding: 20px;">
                     <h4 style="font-size: 16px; font-weight: 500; color: #212529; margin: 0 0 12px 0;">Producto Destacado 1</h4>
@@ -183,7 +183,7 @@
                 <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
                     <span style="position: absolute; top: 12px; right: 12px; background-color: #E32020; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">-38%</span>
                     <span style="position: absolute; top: 45px; right: 12px; background-color: #EE403D; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">HOT</span>
-                    <img src="https://via.placeholder.com/300x400/F08080/FFFFFF?text=Product+2" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="https://via.placeholder.com/300x400/F08080/FFFFFF?text=Product+2" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                 </div>
                 <div style="padding: 20px;">
                     <h4 style="font-size: 16px; font-weight: 500; color: #212529; margin: 0 0 12px 0;">Producto en Oferta</h4>
@@ -200,7 +200,7 @@
             <!-- Product Card 3 -->
             <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
-                    <img src="https://via.placeholder.com/300x400/98FB98/FFFFFF?text=Product+3" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="https://via.placeholder.com/300x400/98FB98/FFFFFF?text=Product+3" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                 </div>
                 <div style="padding: 20px;">
                     <h4 style="font-size: 16px; font-weight: 500; color: #212529; margin: 0 0 12px 0;">Producto Regular</h4>
@@ -217,7 +217,7 @@
             <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
                     <span style="position: absolute; top: 12px; right: 12px; background-color: #EE403D; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">HOT</span>
-                    <img src="https://via.placeholder.com/300x400/FFB6C1/FFFFFF?text=Product+4" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="https://via.placeholder.com/300x400/FFB6C1/FFFFFF?text=Product+4" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                 </div>
                 <div style="padding: 20px;">
                     <h4 style="font-size: 16px; font-weight: 500; color: #212529; margin: 0 0 12px 0;">Producto Popular</h4>

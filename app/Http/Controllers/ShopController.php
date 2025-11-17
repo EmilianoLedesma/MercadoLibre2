@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -13,7 +13,9 @@ class ShopController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with('category')->where('is_active', true);
+        $query = Product::with('category:id,name,slug')
+            ->select('id', 'name', 'slug', 'price', 'sale_price', 'images', 'is_featured', 'category_id', 'created_at')
+            ->where('is_active', true);
 
         // Filter by category
         if ($request->has('category') && $request->category != '') {
@@ -30,7 +32,7 @@ class ShopController extends Controller
 
         // Search by name
         if ($request->has('search') && $request->search != '') {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         // Sort
@@ -50,9 +52,14 @@ class ShopController extends Controller
         }
 
         $products = $query->paginate(12);
-        $categories = Category::where('is_active', true)
-            ->withCount('products')
-            ->get();
+
+        // Cache categories for 1 hour
+        $categories = cache()->remember('active_categories_with_count', 3600, function () {
+            return Category::where('is_active', true)
+                ->select('id', 'name', 'slug')
+                ->withCount('products')
+                ->get();
+        });
 
         return view('shop.index', compact('products', 'categories'));
     }
@@ -64,13 +71,14 @@ class ShopController extends Controller
     {
         $product = Product::where('slug', $slug)
             ->where('is_active', true)
-            ->with('category')
+            ->with('category:id,name,slug')
             ->firstOrFail();
 
         // Get related products from same category
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('is_active', true)
+            ->select('id', 'name', 'slug', 'price', 'sale_price', 'images', 'category_id')
             ->limit(4)
             ->get();
 
@@ -84,15 +92,21 @@ class ShopController extends Controller
     {
         $category = Category::where('slug', $slug)
             ->where('is_active', true)
+            ->select('id', 'name', 'slug', 'description')
             ->firstOrFail();
 
         $products = Product::where('category_id', $category->id)
             ->where('is_active', true)
+            ->select('id', 'name', 'slug', 'price', 'sale_price', 'images', 'is_featured', 'category_id')
             ->paginate(12);
 
-        $categories = Category::where('is_active', true)
-            ->withCount('products')
-            ->get();
+        // Cache categories for 1 hour
+        $categories = cache()->remember('active_categories_with_count', 3600, function () {
+            return Category::where('is_active', true)
+                ->select('id', 'name', 'slug')
+                ->withCount('products')
+                ->get();
+        });
 
         return view('shop.category', compact('category', 'products', 'categories'));
     }
