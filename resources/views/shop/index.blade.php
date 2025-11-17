@@ -725,7 +725,7 @@
                         $images = json_decode($product->images, true);
                         $imagePath = !empty($images) ? asset('storage/' . $images[0]) : 'https://via.placeholder.com/300x375';
                     @endphp
-                    <img src="{{ $imagePath }}" alt="{{ $product->name }}" class="product-image">
+                    <img src="{{ $imagePath }}" alt="{{ $product->name }}" class="product-image" loading="lazy">
 
                     @if($product->sale_price)
                     <div class="product-badges">

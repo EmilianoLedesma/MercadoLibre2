@@ -16,7 +16,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->latest()->paginate(10);
+        $products = Product::with('category:id,name,slug')
+            ->select('id', 'name', 'slug', 'price', 'stock_quantity', 'is_active', 'category_id', 'created_at')
+            ->latest()
+            ->paginate(10);
         return view('products.index', compact('products'));
     }
 
@@ -31,7 +34,11 @@ class ProductController extends Controller
             $this->createDefaultCategories();
         }
         
-        $categories = Category::where('is_active', true)->get();
+        $categories = cache()->remember('active_categories', 3600, function () {
+            return Category::where('is_active', true)
+                ->select('id', 'name')
+                ->get();
+        });
         return view('products.create', compact('categories'));
     }
     
@@ -138,7 +145,11 @@ class ProductController extends Controller
             $this->createDefaultCategories();
         }
         
-        $categories = Category::where('is_active', true)->get();
+        $categories = cache()->remember('active_categories', 3600, function () {
+            return Category::where('is_active', true)
+                ->select('id', 'name')
+                ->get();
+        });
         return view('products.edit', compact('product', 'categories'));
     }
 

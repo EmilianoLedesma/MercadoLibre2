@@ -10,12 +10,14 @@
     {{-- Preconnect para optimización --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
-    {{-- Fuente Jost de Weiboo --}}
+    {{-- Fuente Jost de Weiboo con font-display swap para mejor rendimiento --}}
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    {{-- Font Awesome --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    {{-- Font Awesome cargado de forma asíncrona --}}
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 
     {{-- Estilos CSS --}}
     <link rel="stylesheet" href="{{ asset('css/preloader.css') }}">
@@ -62,15 +64,13 @@
         window.addEventListener('load', function() {
             const preloader = document.getElementById('preloader');
 
-            // Esperar un momento para asegurar que todo esté cargado
-            setTimeout(function() {
-                preloader.classList.add('hidden');
+            // Ocultar inmediatamente cuando la página termine de cargar
+            preloader.classList.add('hidden');
 
-                // Remover del DOM después de la transición (opcional)
-                setTimeout(function() {
-                    preloader.style.display = 'none';
-                }, 600); // Tiempo de la transición CSS
-            }, 500); // Mostrar el preloader por al menos 500ms
+            // Remover del DOM después de la transición
+            setTimeout(function() {
+                preloader.style.display = 'none';
+            }, 600); // Tiempo de la transición CSS
         });
 
         // También ocultar si el usuario navega hacia atrás/adelante
