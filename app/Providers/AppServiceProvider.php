@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::defaultView('vendor.pagination.custom');
         Paginator::defaultSimpleView('vendor.pagination.custom');
-        
+
         // Register observers for cache invalidation
         Category::observe(CategoryObserver::class);
     }

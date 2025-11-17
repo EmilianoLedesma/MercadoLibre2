@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -32,7 +32,7 @@ class ShopController extends Controller
 
         // Search by name
         if ($request->has('search') && $request->search != '') {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         // Sort
@@ -52,7 +52,7 @@ class ShopController extends Controller
         }
 
         $products = $query->paginate(12);
-        
+
         // Cache categories for 1 hour
         $categories = cache()->remember('active_categories_with_count', 3600, function () {
             return Category::where('is_active', true)
