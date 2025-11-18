@@ -71,7 +71,7 @@ class ShopController extends Controller
     {
         $product = Product::where('slug', $slug)
             ->where('is_active', true)
-            ->with('category:id,name,slug')
+            ->with(['category:id,name,slug', 'user:id,name,last_name,email'])
             ->firstOrFail();
 
         // Get related products from same category
@@ -109,5 +109,57 @@ class ShopController extends Controller
         });
 
         return view('shop.category', compact('category', 'products', 'categories'));
+    }
+
+    /**
+     * Search products (API endpoint for AJAX)
+     */
+    public function search(Request $request)
+    {
+        try {
+            $query = $request->get('q', '');
+            
+            if (strlen($query) < 2) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Query too short',
+                    'products' => [],
+                    'total' => 0
+                ]);
+            }
+
+            $products = Product::with('category:id,name,slug')
+                ->select('id', 'name', 'slug', 'price', 'sale_price', 'images', 'category_id')
+                ->where('is_active', true)
+                ->where('name', 'like', '%'.$query.'%')
+                ->limit(10)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'products' => $products->map(function($product) {
+                    $images = json_decode($product->images, true);
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'slug' => $product->slug,
+                        'price' => floatval($product->sale_price ?? $product->price),
+                        'original_price' => $product->sale_price ? floatval($product->price) : null,
+                        'image' => !empty($images) ? asset('storage/' . $images[0]) : null,
+                        'category' => $product->category->name ?? 'Sin categoría',
+                        'url' => route('shop.show', $product->slug)
+                    ];
+                }),
+                'total' => $products->count()
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Search error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al buscar productos',
+                'products' => [],
+                'total' => 0
+            ], 500);
+        }
     }
 }

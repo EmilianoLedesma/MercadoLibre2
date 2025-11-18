@@ -529,7 +529,7 @@
         </nav>
 
         <div style="display: flex; gap: 16px; align-items: center;">
-            <button style="background: none; border: none; cursor: pointer; color: #212529; font-size: 20px;">
+            <button onclick="toggleSearch()" style="background: none; border: none; cursor: pointer; color: #212529; font-size: 20px;">
                 <i class="fas fa-search"></i>
             </button>
             <?php if(auth()->guard()->check()): ?>
@@ -853,6 +853,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<!-- Search Modal -->
+<?php echo $__env->make('components.search-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Emiliano\Documents\UPQ SISTEMAS\7mo_Cuatrimestre\Programación Web\ML2 Seals Edition\MercadoLibre2\resources\views/shop/index.blade.php ENDPATH**/ ?>

@@ -140,6 +140,59 @@
         margin: 0;
     }
 
+    .card-details {
+        display: none;
+        margin-top: 24px;
+        padding: 24px;
+        background-color: #F8F9FA;
+        border-radius: 8px;
+        border: 1px solid #E5E5E5;
+    }
+
+    .card-details.active {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .card-icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        color: #666;
+        font-size: 24px;
+    }
+
+    .card-number-wrapper {
+        position: relative;
+    }
+
+    .card-brand-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 24px;
+        color: #666;
+    }
+
+    .cvv-info {
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+    }
+
     /* Order Summary */
     .order-summary {
         background: white;
@@ -492,6 +545,50 @@
                     @error('payment_method')
                         <span class="error-message">{{ $message }}</span>
                     @enderror
+
+                    <!-- Card Details Section -->
+                    <div class="card-details" id="cardDetails">
+                        <h3 style="font-family: 'Jost', sans-serif; font-size: 16px; font-weight: 600; color: #212529; margin-bottom: 20px;">
+                            Información de la Tarjeta
+                        </h3>
+
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="card_name">Nombre del Titular <span>*</span></label>
+                            <input type="text" id="card_name" name="card_name" class="form-control card-field" placeholder="Nombre como aparece en la tarjeta" value="{{ old('card_name') }}">
+                            <span class="error-message" id="card_name_error" style="display: none;"></span>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="card_number">Número de Tarjeta <span>*</span></label>
+                            <div class="card-number-wrapper">
+                                <input type="text" id="card_number" name="card_number" class="form-control card-field" placeholder="1234 5678 9012 3456" maxlength="19" value="{{ old('card_number') }}">
+                                <span class="card-brand-icon" id="cardBrandIcon"></span>
+                            </div>
+                            <span class="error-message" id="card_number_error" style="display: none;"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="card_expiry">Fecha de Expiración <span>*</span></label>
+                                <input type="text" id="card_expiry" name="card_expiry" class="form-control card-field" placeholder="MM/AA" maxlength="5" value="{{ old('card_expiry') }}">
+                                <span class="error-message" id="card_expiry_error" style="display: none;"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="card_cvv">CVV <span>*</span></label>
+                                <input type="text" id="card_cvv" name="card_cvv" class="form-control card-field" placeholder="123" maxlength="4" value="{{ old('card_cvv') }}">
+                                <div class="cvv-info">
+                                    <i class="fas fa-info-circle"></i> 3 o 4 dígitos en el reverso
+                                </div>
+                                <span class="error-message" id="card_cvv_error" style="display: none;"></span>
+                            </div>
+                        </div>
+
+                        <div class="card-icon">
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                            <i class="fab fa-cc-amex"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -572,6 +669,211 @@
 
 @push('scripts')
 <script>
+    // Toggle card details visibility
+    const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+    const cardDetails = document.getElementById('cardDetails');
+    const cardFields = document.querySelectorAll('.card-field');
+
+    paymentMethods.forEach(method => {
+        method.addEventListener('change', function() {
+            if (this.value === 'card') {
+                cardDetails.classList.add('active');
+                // Make card fields required
+                cardFields.forEach(field => field.setAttribute('required', 'required'));
+            } else {
+                cardDetails.classList.remove('active');
+                // Remove required from card fields
+                cardFields.forEach(field => {
+                    field.removeAttribute('required');
+                    field.classList.remove('error');
+                });
+                // Clear error messages
+                clearCardErrors();
+            }
+        });
+    });
+
+    // Card number formatting and validation
+    const cardNumberInput = document.getElementById('card_number');
+    const cardBrandIcon = document.getElementById('cardBrandIcon');
+
+    cardNumberInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s/g, '');
+        let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+        e.target.value = formattedValue;
+
+        // Detect card brand
+        detectCardBrand(value);
+
+        // Validate card number
+        if (value.length > 0) {
+            validateCardNumber(value);
+        }
+    });
+
+    function detectCardBrand(number) {
+        const brands = {
+            visa: /^4/,
+            mastercard: /^5[1-5]/,
+            amex: /^3[47]/,
+            discover: /^6(?:011|5)/
+        };
+
+        let brand = '';
+        for (let key in brands) {
+            if (brands[key].test(number)) {
+                brand = key;
+                break;
+            }
+        }
+
+        switch(brand) {
+            case 'visa':
+                cardBrandIcon.innerHTML = '<i class="fab fa-cc-visa" style="color: #1A1F71;"></i>';
+                break;
+            case 'mastercard':
+                cardBrandIcon.innerHTML = '<i class="fab fa-cc-mastercard" style="color: #EB001B;"></i>';
+                break;
+            case 'amex':
+                cardBrandIcon.innerHTML = '<i class="fab fa-cc-amex" style="color: #006FCF;"></i>';
+                break;
+            case 'discover':
+                cardBrandIcon.innerHTML = '<i class="fab fa-cc-discover" style="color: #FF6000;"></i>';
+                break;
+            default:
+                cardBrandIcon.innerHTML = '';
+        }
+    }
+
+    function validateCardNumber(number) {
+        // Luhn algorithm
+        let sum = 0;
+        let isEven = false;
+        
+        for (let i = number.length - 1; i >= 0; i--) {
+            let digit = parseInt(number.charAt(i));
+            
+            if (isEven) {
+                digit *= 2;
+                if (digit > 9) {
+                    digit -= 9;
+                }
+            }
+            
+            sum += digit;
+            isEven = !isEven;
+        }
+        
+        const isValid = (sum % 10 === 0) && number.length >= 13 && number.length <= 19;
+        
+        if (!isValid && number.length >= 13) {
+            showCardError('card_number', 'Número de tarjeta inválido');
+            return false;
+        } else {
+            hideCardError('card_number');
+            return true;
+        }
+    }
+
+    // Card expiry formatting and validation
+    const cardExpiryInput = document.getElementById('card_expiry');
+    
+    cardExpiryInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2, 4);
+        }
+        
+        e.target.value = value;
+
+        if (value.length === 5) {
+            validateCardExpiry(value);
+        }
+    });
+
+    function validateCardExpiry(expiry) {
+        const parts = expiry.split('/');
+        if (parts.length !== 2) {
+            showCardError('card_expiry', 'Formato inválido (MM/AA)');
+            return false;
+        }
+
+        const month = parseInt(parts[0]);
+        const year = parseInt('20' + parts[1]);
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth() + 1;
+
+        if (month < 1 || month > 12) {
+            showCardError('card_expiry', 'Mes inválido');
+            return false;
+        }
+
+        if (year < currentYear || (year === currentYear && month < currentMonth)) {
+            showCardError('card_expiry', 'Tarjeta expirada');
+            return false;
+        }
+
+        hideCardError('card_expiry');
+        return true;
+    }
+
+    // CVV validation
+    const cardCvvInput = document.getElementById('card_cvv');
+    
+    cardCvvInput.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '');
+        
+        if (e.target.value.length >= 3) {
+            validateCVV(e.target.value);
+        }
+    });
+
+    function validateCVV(cvv) {
+        if (cvv.length < 3 || cvv.length > 4) {
+            showCardError('card_cvv', 'CVV debe tener 3 o 4 dígitos');
+            return false;
+        }
+        hideCardError('card_cvv');
+        return true;
+    }
+
+    // Card name validation
+    const cardNameInput = document.getElementById('card_name');
+    
+    cardNameInput.addEventListener('blur', function() {
+        if (this.value.trim().length < 3) {
+            showCardError('card_name', 'Ingrese el nombre completo del titular');
+            return false;
+        }
+        hideCardError('card_name');
+        return true;
+    });
+
+    // Helper functions for error display
+    function showCardError(fieldId, message) {
+        const field = document.getElementById(fieldId);
+        const errorSpan = document.getElementById(fieldId + '_error');
+        
+        field.classList.add('error');
+        errorSpan.textContent = message;
+        errorSpan.style.display = 'block';
+    }
+
+    function hideCardError(fieldId) {
+        const field = document.getElementById(fieldId);
+        const errorSpan = document.getElementById(fieldId + '_error');
+        
+        field.classList.remove('error');
+        errorSpan.style.display = 'none';
+    }
+
+    function clearCardErrors() {
+        const errorFields = ['card_name', 'card_number', 'card_expiry', 'card_cvv'];
+        errorFields.forEach(field => hideCardError(field));
+    }
+
     // Form validation feedback
     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
         const requiredFields = this.querySelectorAll('[required]');
@@ -586,9 +888,32 @@
             }
         });
 
+        // Additional validation for card fields if card payment is selected
+        const selectedPayment = document.querySelector('input[name="payment_method"]:checked').value;
+        if (selectedPayment === 'card') {
+            const cardNumber = document.getElementById('card_number').value.replace(/\s/g, '');
+            const cardExpiry = document.getElementById('card_expiry').value;
+            const cardCvv = document.getElementById('card_cvv').value;
+            const cardName = document.getElementById('card_name').value;
+
+            if (!validateCardNumber(cardNumber)) {
+                isValid = false;
+            }
+            if (!validateCardExpiry(cardExpiry)) {
+                isValid = false;
+            }
+            if (!validateCVV(cardCvv)) {
+                isValid = false;
+            }
+            if (cardName.trim().length < 3) {
+                showCardError('card_name', 'Ingrese el nombre completo del titular');
+                isValid = false;
+            }
+        }
+
         if (!isValid) {
             e.preventDefault();
-            alert('Por favor completa todos los campos requeridos');
+            alert('Por favor completa todos los campos requeridos correctamente');
         }
     });
 

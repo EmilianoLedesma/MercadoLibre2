@@ -68,4 +68,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Order::class);
     }
+
+    /**
+     * Relación: vendedor puede tener una tienda
+     */
+    public function store()
+    {
+        return $this->hasOne(\App\Models\Store::class);
+    }
+
+    /**
+     * Relación: vendedor tiene muchos productos
+     */
+    public function products()
+    {
+        return $this->hasMany(\App\Models\Product::class);
+    }
 }

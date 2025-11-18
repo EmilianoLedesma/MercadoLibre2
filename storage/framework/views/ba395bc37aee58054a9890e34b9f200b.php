@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Login'); ?>
 
-@section('title', 'Login')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     .auth-page {
         min-height: 100vh;
@@ -251,9 +249,9 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="auth-page">
     <div class="auth-container">
         <!-- Banner Section -->
@@ -268,24 +266,25 @@
             <h1 class="auth-form-title">Iniciar Sesión</h1>
             <p class="auth-form-subtitle">Ingresa tus credenciales para continuar</p>
 
-            @if (session('success'))
+            <?php if(session('success')): ?>
                 <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+                    <?php echo e(session('success')); ?>
 
-            @if ($errors->any())
+                </div>
+            <?php endif; ?>
+
+            <?php if($errors->any()): ?>
                 <div class="alert alert-error">
                     <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li><?php echo e($error); ?></li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
                 </div>
-            @endif
+            <?php endif; ?>
 
-            <form action="{{ route('login.post') }}" method="POST">
-                @csrf
+            <form action="<?php echo e(route('login.post')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
 
                 <div class="form-group">
                     <label for="email" class="form-label">Correo Electrónico</label>
@@ -295,7 +294,7 @@
                         id="email"
                         class="form-input"
                         placeholder="tu@email.com"
-                        value="{{ old('email') }}"
+                        value="<?php echo e(old('email')); ?>"
                         required
                         autocomplete="email"
                     >
@@ -328,12 +327,12 @@
             </form>
 
             <div class="auth-footer">
-                ¿No tienes una cuenta? <a href="{{ route('register') }}">Regístrate aquí</a>
+                ¿No tienes una cuenta? <a href="<?php echo e(route('register')); ?>">Regístrate aquí</a>
             </div>
 
             <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid #E5E5E5;">
                 <p style="font-size: 14px; color: #666; margin-bottom: 12px; font-family: 'Jost', sans-serif;">¿Quieres vender tus productos?</p>
-                <a href="{{ route('seller.register') }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background-color: white; color: #212529; text-decoration: none; border: 2px solid #E5E5E5; border-radius: 8px; font-weight: 500; font-family: 'Jost', sans-serif; transition: all 0.3s;">
+                <a href="<?php echo e(route('seller.register')); ?>" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background-color: white; color: #212529; text-decoration: none; border: 2px solid #E5E5E5; border-radius: 8px; font-weight: 500; font-family: 'Jost', sans-serif; transition: all 0.3s;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -343,7 +342,7 @@
             </div>
 
             <div class="back-home">
-                <a href="{{ route('home') }}">
+                <a href="<?php echo e(route('home')); ?>">
                     <i class="fas fa-arrow-left"></i>
                     Volver al inicio
                 </a>
@@ -351,4 +350,6 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Emiliano\Documents\UPQ SISTEMAS\7mo_Cuatrimestre\Programación Web\ML2 Seals Edition\MercadoLibre2\resources\views/auth/login.blade.php ENDPATH**/ ?>

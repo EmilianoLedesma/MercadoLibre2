@@ -531,7 +531,7 @@
         </nav>
 
         <div style="display: flex; gap: 16px; align-items: center;">
-            <button style="background: none; border: none; cursor: pointer; color: #212529; font-size: 20px;">
+            <button onclick="toggleSearch()" style="background: none; border: none; cursor: pointer; color: #212529; font-size: 20px;">
                 <i class="fas fa-search"></i>
             </button>
             @auth
@@ -852,4 +852,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<!-- Search Modal -->
+@include('components.search-modal')
+
 @endsection

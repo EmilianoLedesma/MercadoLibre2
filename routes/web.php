@@ -9,6 +9,9 @@ use App\Http\Controllers\MiCuentaController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\SellerController;
+use App\Http\Controllers\SellerProductController;
+use App\Http\Controllers\CategoryController;
 
 // Página de inicio
 Route::get('/', function () {
@@ -20,6 +23,8 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+Route::get('/seller/register', [AuthController::class, 'showSellerRegister'])->name('seller.register');
+Route::post('/seller/register', [AuthController::class, 'registerSeller'])->name('seller.register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Ruta de clientes (solo para usuarios autenticados)
@@ -54,9 +59,7 @@ Route::post('/wishlist/clear', [WishlistController::class, 'clear'])->name('wish
 Route::post('/wishlist/move-to-cart/{id}', [WishlistController::class, 'moveToCart'])->name('wishlist.moveToCart');
 
 // Categorías
-Route::get('/categories', function () {
-    return view('categories');
-})->name('categories');
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
 
 // Contacto
 Route::get('/contact', function () {
@@ -65,8 +68,23 @@ Route::get('/contact', function () {
 
 // Tienda - Vistas públicas para clientes
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/shop/search', [ShopController::class, 'search'])->name('shop.search');
 Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop.show');
 Route::get('/category/{slug}', [ShopController::class, 'category'])->name('shop.category');
 
 // Rutas de productos - CRUD completo (Admin/Management)
 Route::resource('products', ProductController::class);
+
+// Rutas para Vendedores (Sellers)
+Route::middleware(['auth'])->prefix('seller')->name('seller.')->group(function () {
+    // Dashboard del vendedor
+    Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('dashboard');
+    
+    // Perfil y tienda del vendedor
+    Route::get('/profile', [SellerController::class, 'profile'])->name('profile');
+    Route::put('/profile', [SellerController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/store', [SellerController::class, 'updateStore'])->name('store.update');
+    
+    // CRUD de productos del vendedor
+    Route::resource('products', SellerProductController::class);
+});
