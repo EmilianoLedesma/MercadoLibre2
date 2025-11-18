@@ -12,6 +12,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\SellerProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
 
 // Página de inicio
 Route::get('/', function () {
@@ -87,4 +89,14 @@ Route::middleware(['auth'])->prefix('seller')->name('seller.')->group(function (
     
     // CRUD de productos del vendedor
     Route::resource('products', SellerProductController::class);
+});
+
+// Rutas protegidas por rol (Admin)
+Route::middleware(['auth', 'role:admin,seller'])->group(function () {
+    // CRUD de Usuarios (solo admin)
+    Route::resource('users', UserController::class)->middleware('role:admin');
+    
+    // CRUD de Pedidos
+    Route::resource('orders', OrderController::class)->except(['create', 'store']);
+    Route::post('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 });
