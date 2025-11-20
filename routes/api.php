@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,11 +40,27 @@ Route::middleware(['auth:api'])->group(function () {
         ]);
     })->name('api.user');
 
-    // Aquí puedes agregar más rutas protegidas según tus necesidades
-    // Por ejemplo:
-    // Route::apiResource('products', ProductApiController::class);
-    // Route::apiResource('categories', CategoryApiController::class);
-    // Route::apiResource('orders', OrderApiController::class);
+    // Rutas de productos (acceso público para lectura, admin/seller para escritura)
+    Route::get('/products', [ProductController::class, 'index'])->name('api.products.index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('api.products.show');
+
+    // Rutas de productos protegidas (solo admin y seller)
+    Route::middleware(['role:admin,seller'])->group(function () {
+        Route::post('/products', [ProductController::class, 'store'])->name('api.products.store');
+        Route::put('/products/{id}', [ProductController::class, 'update'])->name('api.products.update');
+        Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('api.products.destroy');
+    });
+
+    // Rutas de categorías (acceso público para lectura, admin para escritura)
+    Route::get('/categories', [CategoryController::class, 'index'])->name('api.categories.index');
+    Route::get('/categories/{id}', [CategoryController::class, 'show'])->name('api.categories.show');
+
+    // Rutas de categorías protegidas (solo admin)
+    Route::middleware(['role:admin'])->group(function () {
+        Route::post('/categories', [CategoryController::class, 'store'])->name('api.categories.store');
+        Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('api.categories.update');
+        Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('api.categories.destroy');
+    });
 });
 
 // Ruta de verificación de API

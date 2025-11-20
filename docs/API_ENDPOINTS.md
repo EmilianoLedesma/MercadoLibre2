@@ -503,23 +503,218 @@ if token:
 
 ---
 
+## Endpoints Implementados en Sprint 3 ✅
+
+Los siguientes endpoints fueron implementados en Sprint 3 (20-26 Nov 2025):
+
+### Productos ✅
+
+#### GET /api/products
+Listar productos con filtros y paginación.
+
+**Auth requerida:** Sí
+
+**Query Parameters:**
+
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| category_id | integer | Filtrar por categoría |
+| is_active | boolean | Filtrar por estado activo |
+| is_featured | boolean | Filtrar por destacados |
+| min_price | decimal | Precio mínimo |
+| max_price | decimal | Precio máximo |
+| search | string | Búsqueda en nombre/descripción/SKU |
+| sort_by | string | Campo para ordenar (default: created_at) |
+| sort_order | string | Orden: asc/desc (default: desc) |
+| per_page | integer | Resultados por página (default: 15) |
+| page | integer | Número de página |
+
+**Ejemplo Request:**
+```
+GET /api/products?category_id=1&is_active=true&min_price=10&max_price=100&search=laptop&per_page=20
+```
+
+**Respuesta exitosa (200):**
+```json
+{
+  "success": true,
+  "message": "Productos obtenidos exitosamente",
+  "data": {
+    "products": [...],
+    "pagination": {
+      "total": 50,
+      "per_page": 20,
+      "current_page": 1,
+      "last_page": 3,
+      "from": 1,
+      "to": 20
+    }
+  }
+}
+```
+
+---
+
+#### GET /api/products/{id}
+Ver detalles de un producto específico.
+
+**Auth requerida:** Sí
+
+**Respuesta exitosa (200):**
+```json
+{
+  "success": true,
+  "message": "Producto obtenido exitosamente",
+  "data": {
+    "id": 1,
+    "name": "Laptop Gaming",
+    "slug": "laptop-gaming",
+    "sku": "LAP-001",
+    "price": 999.99,
+    "sale_price": 899.99,
+    "stock_quantity": 10,
+    "category_id": 1,
+    "category": {...},
+    "images": [],
+    "is_active": true,
+    "is_featured": true
+  }
+}
+```
+
+---
+
+#### POST /api/products
+Crear un nuevo producto.
+
+**Auth requerida:** Sí (admin o seller)
+
+**Body Parameters:**
+
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| name | string | Sí | Nombre del producto |
+| description | string | No | Descripción |
+| sku | string | Sí | SKU único |
+| price | decimal | Sí | Precio |
+| sale_price | decimal | No | Precio de oferta |
+| stock_quantity | integer | Sí | Cantidad en stock |
+| category_id | integer | Sí | ID de categoría |
+| images | array | No | Array de imágenes |
+| is_active | boolean | No | Activo (default: true) |
+| is_featured | boolean | No | Destacado (default: false) |
+
+**Respuesta exitosa (201):**
+```json
+{
+  "success": true,
+  "message": "Producto creado exitosamente",
+  "data": {...}
+}
+```
+
+---
+
+#### PUT /api/products/{id}
+Actualizar un producto existente.
+
+**Auth requerida:** Sí (admin o seller)
+
+**Respuesta exitosa (200):**
+```json
+{
+  "success": true,
+  "message": "Producto actualizado exitosamente",
+  "data": {...}
+}
+```
+
+---
+
+#### DELETE /api/products/{id}
+Eliminar un producto.
+
+**Auth requerida:** Sí (admin o seller)
+
+**Respuesta exitosa (200):**
+```json
+{
+  "success": true,
+  "message": "Producto eliminado exitosamente",
+  "data": null
+}
+```
+
+---
+
+### Categorías ✅
+
+#### GET /api/categories
+Listar categorías con paginación.
+
+**Auth requerida:** Sí
+
+**Query Parameters:**
+
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| is_active | boolean | Filtrar por estado activo |
+| search | string | Búsqueda en nombre/descripción |
+| sort_by | string | Campo para ordenar (default: name) |
+| sort_order | string | Orden: asc/desc (default: asc) |
+| per_page | integer | Resultados por página (default: 15) |
+
+**Respuesta exitosa (200):**
+```json
+{
+  "success": true,
+  "message": "Categorías obtenidas exitosamente",
+  "data": {
+    "categories": [...],
+    "pagination": {...}
+  }
+}
+```
+
+---
+
+#### GET /api/categories/{id}
+Ver detalles de una categoría con sus productos.
+
+**Auth requerida:** Sí
+
+---
+
+#### POST /api/categories
+Crear una nueva categoría.
+
+**Auth requerida:** Sí (solo admin)
+
+**Body Parameters:**
+
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| name | string | Sí | Nombre único |
+| description | string | No | Descripción |
+| is_active | boolean | No | Activa (default: true) |
+
+---
+
+#### PUT /api/categories/{id}
+Actualizar una categoría.
+
+**Auth requerida:** Sí (solo admin)
+
+---
+
+#### DELETE /api/categories/{id}
+Eliminar una categoría (solo si no tiene productos).
+
+**Auth requerida:** Sí (solo admin)
+
+---
+
 ## Próximos Endpoints (Por Implementar)
-
-Los siguientes endpoints se implementarán en futuros sprints:
-
-### Productos
-- `GET /api/products` - Listar productos
-- `POST /api/products` - Crear producto
-- `GET /api/products/{id}` - Ver producto
-- `PUT /api/products/{id}` - Actualizar producto
-- `DELETE /api/products/{id}` - Eliminar producto
-
-### Categorías
-- `GET /api/categories` - Listar categorías
-- `POST /api/categories` - Crear categoría
-- `GET /api/categories/{id}` - Ver categoría
-- `PUT /api/categories/{id}` - Actualizar categoría
-- `DELETE /api/categories/{id}` - Eliminar categoría
 
 ### Órdenes
 - `GET /api/orders` - Listar órdenes
@@ -541,7 +736,15 @@ Los siguientes endpoints se implementarán en futuros sprints:
 
 ## Changelog
 
-- **v1.0.0** (12 Nov 2024)
+- **v1.1.0** (Sprint 3 - 20-26 Nov 2025)
+  - ✨ Endpoints de productos completos con filtros avanzados
+  - ✨ Endpoints de categorías completos
+  - 🔒 Middleware de autorización por roles (admin, seller, customer)
+  - 📚 Cliente API JavaScript para integración frontend
+  - 🧪 Tests de integración API
+  - 📝 Documentación actualizada con ejemplos
+  
+- **v1.0.0** (Sprint 1 - 12 Nov 2024)
   - Endpoints de autenticación completos
   - Health check endpoint
   - Documentación inicial
@@ -554,4 +757,9 @@ Para reportar problemas o solicitar nuevas funcionalidades:
 - Crear un issue en el repositorio
 - Contactar al equipo de desarrollo
 
-**Sprint 1 - Responsable JWT:** Joaquín Moreno
+**Sprint 1 - Responsable JWT:** Joaquín Moreno  
+**Sprint 3 - Responsables:**
+- Artemio Hurtado (Backend Lead) - API Controllers
+- Ricardo Méndez (Analista BD) - Filtros y optimización
+- Joaquín Moreno (Seguridad) - Middleware de roles
+- Abraham Velázquez (Backend Developer) - Tests
