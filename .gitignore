@@ -34,3 +34,9 @@ yarn-error.log*
 # Testing
 coverage/
 .nyc_output/
+
+# Ignorar vistas compiladas de Blade (no deben versionarse)
+/storage/framework/views/
+
+# Ignorar backups de entorno
+.env.backup
