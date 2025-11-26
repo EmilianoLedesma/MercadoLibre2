@@ -287,8 +287,11 @@
         transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 8px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        width: 260px;
+        height: 50px;
     }
 
     .btn-primary {

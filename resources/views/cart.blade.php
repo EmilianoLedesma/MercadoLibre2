@@ -159,6 +159,123 @@
         color: #EE403D;
     }
 
+    /* Confirmation Modal */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        animation: slideUp 0.3s ease;
+        position: relative;
+    }
+
+    .modal-icon {
+        width: 64px;
+        height: 64px;
+        background: #FEF2F2;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+
+    .modal-icon i {
+        font-size: 32px;
+        color: #EE403D;
+    }
+
+    .modal-title {
+        font-family: 'Jost', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: #212529;
+        text-align: center;
+        margin-bottom: 12px;
+    }
+
+    .modal-message {
+        font-family: 'Jost', sans-serif;
+        font-size: 15px;
+        color: #666;
+        text-align: center;
+        margin-bottom: 28px;
+        line-height: 1.6;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .modal-btn {
+        flex: 1;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-family: 'Jost', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+    }
+
+    .modal-btn-cancel {
+        background: white;
+        color: #666;
+        border: 2px solid #E5E5E5;
+    }
+
+    .modal-btn-cancel:hover {
+        background: #F5F6F2;
+        border-color: #D1D5DB;
+    }
+
+    .modal-btn-confirm {
+        background: #EE403D;
+        color: white;
+    }
+
+    .modal-btn-confirm:hover {
+        background: #E32020;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
     /* Cart Summary */
     .cart-summary {
         background: white;
@@ -323,25 +440,34 @@
                     <div class="cart-item" data-id="{{ $id }}">
                         <div class="item-product">
                             <div class="item-image">
-                                <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}">
+                                @php
+                                    // Handle both 'image' and 'images' keys for backward compatibility
+                                    if (isset($item['image'])) {
+                                        $imageSrc = $item['image'];
+                                    } elseif (isset($item['images'])) {
+                                        $images = is_string($item['images']) ? json_decode($item['images'], true) : $item['images'];
+                                        $imageSrc = is_array($images) && count($images) > 0 
+                                            ? asset('storage/' . $images[0]) 
+                                            : 'https://via.placeholder.com/60x75';
+                                    } else {
+                                        $imageSrc = 'https://via.placeholder.com/60x75';
+                                    }
+                                @endphp
+                                <img src="{{ $imageSrc }}" alt="{{ $item['name'] }}">
                             </div>
                             <div class="item-details">
                                 <h4>{{ $item['name'] }}</h4>
-                                <p class="item-meta">Stock disponible: {{ $item['stock'] }}</p>
+                                <p class="item-meta">Stock disponible: {{ $item['stock'] ?? $item['stock_quantity'] ?? 0 }}</p>
                             </div>
                         </div>
                         <div class="item-price">${{ number_format($item['price'], 2) }}</div>
                         <div class="quantity-controls">
                             <button class="qty-btn" onclick="updateQty(this, -1)">−</button>
-                            <input type="number" value="{{ $item['quantity'] }}" min="1" max="{{ $item['stock'] }}" class="qty-input" onchange="qtyChanged(this)">
+                            <input type="number" value="{{ $item['quantity'] }}" min="1" max="{{ $item['stock'] ?? $item['stock_quantity'] ?? 999 }}" class="qty-input" onchange="qtyChanged(this)">
                             <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
                         </div>
                         <div class="item-total">${{ number_format($itemTotal, 2) }}</div>
-                        <form action="{{ route('cart.remove', $id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="remove-btn" onclick="return confirm('¿Eliminar este producto del carrito?')">×</button>
-                        </form>
+                        <button type="button" class="remove-btn" onclick="showRemoveModal({{ $id }})">×</button>
                     </div>
                 @endforeach
             @else
@@ -393,6 +519,21 @@
             <a href="{{ route('shop.index') }}" class="continue-shopping">
                 <i class="fas fa-arrow-left"></i> Continuar Comprando
             </a>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="removeModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-icon">
+            <i class="fas fa-trash-alt"></i>
+        </div>
+        <h3 class="modal-title">¿Eliminar producto?</h3>
+        <p class="modal-message">¿Estás seguro de que deseas eliminar este producto del carrito?</p>
+        <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" onclick="closeRemoveModal()">Cancelar</button>
+            <button class="modal-btn modal-btn-confirm" onclick="confirmRemove()">Eliminar</button>
         </div>
     </div>
 </div>
@@ -552,6 +693,59 @@ function removeItem(btn) {
         }
     }
 }
+
+// Modal functions
+let productToRemove = null;
+
+function showRemoveModal(productId) {
+    productToRemove = productId;
+    const modal = document.getElementById('removeModal');
+    modal.classList.add('active');
+}
+
+function closeRemoveModal() {
+    const modal = document.getElementById('removeModal');
+    modal.classList.remove('active');
+    productToRemove = null;
+}
+
+function confirmRemove() {
+    if (productToRemove) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/cart/remove/${productToRemove}`;
+        
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        
+        form.appendChild(csrfInput);
+        form.appendChild(methodInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('removeModal');
+    if (e.target === modal) {
+        closeRemoveModal();
+    }
+});
+
+// Close modal with ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeRemoveModal();
+    }
+});
 </script>
 @endpush
 @endsection
