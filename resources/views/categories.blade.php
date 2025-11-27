@@ -5,22 +5,37 @@
 @push('styles')
 <style>
     .categories-hero {
-        background: linear-gradient(135deg, #EE403D 0%, #E32020 100%);
+        background: linear-gradient(135deg, #F5F6F2 0%, #FAFAF9 100%);
         padding: 60px 20px;
         text-align: center;
-        color: white;
         font-family: 'Jost', sans-serif;
+        position: relative;
+    }
+
+    .categories-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #EE403D 0%, #E32020 100%);
     }
 
     .categories-hero h1 {
         font-size: 42px;
         font-weight: 700;
         margin-bottom: 12px;
+        color: #212529;
+    }
+
+    .categories-hero h1 .highlight {
+        color: #EE403D;
     }
 
     .categories-hero p {
         font-size: 17px;
-        opacity: 0.95;
+        color: #666;
     }
 
     .categories-container {
@@ -83,6 +98,7 @@
         font-weight: 600;
         font-family: 'Jost', sans-serif;
         backdrop-filter: blur(4px);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     .category-content {
@@ -195,7 +211,7 @@
 
 <!-- HERO SECTION -->
 <div class="categories-hero">
-    <h1>Explora Nuestras Categorías</h1>
+    <h1>Explora Nuestras <span class="highlight">Categorías</span></h1>
     <p>Encuentra exactamente lo que buscas en nuestra amplia selección</p>
 </div>
 

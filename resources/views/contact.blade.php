@@ -9,21 +9,36 @@
     }
 
     .contact-hero {
-        background: linear-gradient(135deg, #EE403D 0%, #E32020 100%);
+        background: linear-gradient(135deg, #F5F6F2 0%, #FAFAF9 100%);
         padding: 80px 20px;
         text-align: center;
-        color: white;
+        position: relative;
+    }
+
+    .contact-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #EE403D 0%, #E32020 100%);
     }
 
     .contact-hero h1 {
         font-size: 48px;
         font-weight: 700;
         margin-bottom: 16px;
+        color: #212529;
+    }
+
+    .contact-hero h1 .highlight {
+        color: #EE403D;
     }
 
     .contact-hero p {
         font-size: 18px;
-        opacity: 0.95;
+        color: #666;
     }
 
     .contact-container {
@@ -253,10 +268,23 @@
 @endpush
 
 @section('content')
+@include('layouts.navbar')
+
+<!-- BREADCRUMB -->
+<div style="background-color: #F8F8F8; padding: 20px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <nav style="font-family: 'Jost', sans-serif; font-size: 14px; color: #666;">
+            <a href="{{ route('home') }}" style="color: #666; text-decoration: none;">Inicio</a>
+            <span style="margin: 0 8px;">/</span>
+            <span style="color: #212529; font-weight: 500;">Contacto</span>
+        </nav>
+    </div>
+</div>
+
 <div class="contact-page">
     <!-- Hero Section -->
     <div class="contact-hero">
-        <h1>Contáctanos</h1>
+        <h1><span class="highlight">Contáctanos</span></h1>
         <p>Estamos aquí para ayudarte. Envíanos un mensaje y te responderemos pronto.</p>
     </div>
 
@@ -407,4 +435,6 @@
         </div>
     </div>
 </div>
+
+@include('layouts.footer')
 @endsection
