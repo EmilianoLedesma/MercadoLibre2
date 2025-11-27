@@ -13,20 +13,41 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Crear usuario administrador principal
-        if (! User::where('email', 'admin@mercadolibre.com')->exists()) {
-            User::create([
+        // Crear usuarios principales para testing (Sprint 3)
+        $mainUsers = [
+            [
                 'name' => 'Administrador MercadoLibre',
                 'email' => 'admin@mercadolibre.com',
-                'email_verified_at' => now(),
                 'password' => Hash::make('admin123'),
                 'phone' => '+54 11 1234-5678',
                 'role' => 'admin',
-                'is_active' => true,
-            ]);
+            ],
+            [
+                'name' => 'Vendedor MercadoLibre',
+                'email' => 'seller@mercadolibre.com',
+                'password' => Hash::make('seller123'),
+                'phone' => '+54 11 1234-5679',
+                'role' => 'seller',
+            ],
+            [
+                'name' => 'Cliente MercadoLibre',
+                'email' => 'customer@mercadolibre.com',
+                'password' => Hash::make('customer123'),
+                'phone' => '+54 11 1234-5680',
+                'role' => 'customer',
+            ],
+        ];
+
+        foreach ($mainUsers as $userData) {
+            if (! User::where('email', $userData['email'])->exists()) {
+                User::create(array_merge($userData, [
+                    'email_verified_at' => now(),
+                    'is_active' => true,
+                ]));
+            }
         }
 
-        // Crear usuarios de prueba con roles específicos
+        // Crear usuarios de prueba adicionales con roles específicos
         $testUsers = [
             // Administradores adicionales
             [

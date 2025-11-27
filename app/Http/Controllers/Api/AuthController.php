@@ -96,11 +96,18 @@ class AuthController extends Controller
                 return $this->unauthorizedResponse('Credenciales incorrectas');
             }
 
-            // Obtener usuario autenticado
-            $user = Auth::guard('api')->user();
+            // Obtener usuario autenticado usando JWTAuth
+            $user = JWTAuth::user();
+
+            // Verificar que se obtuvo el usuario
+            if (! $user) {
+                return $this->unauthorizedResponse('No se pudo obtener el usuario autenticado');
+            }
 
             // Verificar si el usuario está activo
             if (! $user->is_active) {
+                // Invalidar el token si el usuario está inactivo
+                JWTAuth::invalidate($token);
                 return $this->unauthorizedResponse('Usuario inactivo. Contacte al administrador.');
             }
 
