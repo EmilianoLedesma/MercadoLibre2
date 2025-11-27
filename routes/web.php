@@ -71,6 +71,11 @@ Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
+// Rastrear Pedido
+Route::get('/track-order', function () {
+    return view('track-order');
+})->name('track.order');
+
 // Tienda - Vistas públicas para clientes
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/shop/search', [ShopController::class, 'search'])->name('shop.search');
