@@ -1,0 +1,499 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "MercadoLibre2 API - Sprint 3",
+  "collectionId": "ml2-api-sprint3",
+  "dateExported": "2025-11-26",
+  "version": "1.2",
+  "folders": [
+    {
+      "id": "auth-folder",
+      "name": "🔐 Autenticación",
+      "containerId": "",
+      "created": "2025-11-26",
+      "sortNum": 10000
+    },
+    {
+      "id": "products-folder",
+      "name": "📦 Productos",
+      "containerId": "",
+      "created": "2025-11-26",
+      "sortNum": 20000
+    },
+    {
+      "id": "categories-folder",
+      "name": "📁 Categorías",
+      "containerId": "",
+      "created": "2025-11-26",
+      "sortNum": 30000
+    }
+  ],
+  "requests": [
+    {
+      "id": "health-check",
+      "name": "Health Check",
+      "url": "http://localhost:8000/api/health",
+      "method": "GET",
+      "sortNum": 5000,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "tests": []
+    },
+    {
+      "id": "login",
+      "colId": "ml2-api-sprint3",
+      "folderId": "auth-folder",
+      "name": "Login - Admin",
+      "url": "http://localhost:8000/api/auth/login",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"admin@mercadolibre.com\",\n  \"password\": \"admin123\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "set-env-var",
+          "custom": "json.data.access_token",
+          "action": "setto",
+          "value": "{{token}}"
+        }
+      ]
+    },
+    {
+      "id": "login-seller",
+      "colId": "ml2-api-sprint3",
+      "folderId": "auth-folder",
+      "name": "Login - Seller",
+      "url": "http://localhost:8000/api/auth/login",
+      "method": "POST",
+      "sortNum": 10100,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"seller@mercadolibre.com\",\n  \"password\": \"seller123\"\n}",
+        "form": []
+      }
+    },
+    {
+      "id": "login-customer",
+      "colId": "ml2-api-sprint3",
+      "folderId": "auth-folder",
+      "name": "Login - Customer",
+      "url": "http://localhost:8000/api/auth/login",
+      "method": "POST",
+      "sortNum": 10200,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"customer@mercadolibre.com\",\n  \"password\": \"customer123\"\n}",
+        "form": []
+      }
+    },
+    {
+      "id": "register",
+      "colId": "ml2-api-sprint3",
+      "folderId": "auth-folder",
+      "name": "Registro",
+      "url": "http://localhost:8000/api/auth/register",
+      "method": "POST",
+      "sortNum": 10300,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Usuario Nuevo\",\n  \"email\": \"nuevo@ejemplo.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"phone\": \"+52 442 123 4567\",\n  \"role\": \"customer\"\n}",
+        "form": []
+      }
+    },
+    {
+      "id": "me",
+      "colId": "ml2-api-sprint3",
+      "folderId": "auth-folder",
+      "name": "Mi Perfil",
+      "url": "http://localhost:8000/api/auth/me",
+      "method": "GET",
+      "sortNum": 10400,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "refresh",
+      "colId": "ml2-api-sprint3",
+      "folderId": "auth-folder",
+      "name": "Refresh Token",
+      "url": "http://localhost:8000/api/auth/refresh",
+      "method": "POST",
+      "sortNum": 10500,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "logout",
+      "colId": "ml2-api-sprint3",
+      "folderId": "auth-folder",
+      "name": "Logout",
+      "url": "http://localhost:8000/api/auth/logout",
+      "method": "POST",
+      "sortNum": 10600,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "get-products",
+      "colId": "ml2-api-sprint3",
+      "folderId": "products-folder",
+      "name": "Listar Productos",
+      "url": "http://localhost:8000/api/products",
+      "method": "GET",
+      "sortNum": 20000,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "get-products-filtered",
+      "colId": "ml2-api-sprint3",
+      "folderId": "products-folder",
+      "name": "Listar Productos (con filtros)",
+      "url": "http://localhost:8000/api/products?category_id=1&is_active=true&min_price=10&max_price=500&per_page=20",
+      "method": "GET",
+      "sortNum": 20100,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "search-products",
+      "colId": "ml2-api-sprint3",
+      "folderId": "products-folder",
+      "name": "Buscar Productos",
+      "url": "http://localhost:8000/api/products?search=laptop&per_page=10",
+      "method": "GET",
+      "sortNum": 20200,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "get-product",
+      "colId": "ml2-api-sprint3",
+      "folderId": "products-folder",
+      "name": "Ver Producto Específico",
+      "url": "http://localhost:8000/api/products/1",
+      "method": "GET",
+      "sortNum": 20300,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "create-product",
+      "colId": "ml2-api-sprint3",
+      "folderId": "products-folder",
+      "name": "Crear Producto (Admin/Seller)",
+      "url": "http://localhost:8000/api/products",
+      "method": "POST",
+      "sortNum": 20400,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Laptop Gaming ROG\",\n  \"sku\": \"LAP-ROG-001\",\n  \"price\": 1599.99,\n  \"sale_price\": 1399.99,\n  \"stock_quantity\": 8,\n  \"category_id\": 1,\n  \"description\": \"Laptop gaming de alto rendimiento con RTX 4070\",\n  \"is_active\": true,\n  \"is_featured\": true\n}",
+        "form": []
+      }
+    },
+    {
+      "id": "update-product",
+      "colId": "ml2-api-sprint3",
+      "folderId": "products-folder",
+      "name": "Actualizar Producto (Admin/Seller)",
+      "url": "http://localhost:8000/api/products/1",
+      "method": "PUT",
+      "sortNum": 20500,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"price\": 1299.99,\n  \"stock_quantity\": 15,\n  \"is_featured\": true\n}",
+        "form": []
+      }
+    },
+    {
+      "id": "delete-product",
+      "colId": "ml2-api-sprint3",
+      "folderId": "products-folder",
+      "name": "Eliminar Producto (Admin/Seller)",
+      "url": "http://localhost:8000/api/products/999",
+      "method": "DELETE",
+      "sortNum": 20600,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "get-categories",
+      "colId": "ml2-api-sprint3",
+      "folderId": "categories-folder",
+      "name": "Listar Categorías",
+      "url": "http://localhost:8000/api/categories",
+      "method": "GET",
+      "sortNum": 30000,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "get-category",
+      "colId": "ml2-api-sprint3",
+      "folderId": "categories-folder",
+      "name": "Ver Categoría Específica",
+      "url": "http://localhost:8000/api/categories/1",
+      "method": "GET",
+      "sortNum": 30100,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "create-category",
+      "colId": "ml2-api-sprint3",
+      "folderId": "categories-folder",
+      "name": "Crear Categoría (Solo Admin)",
+      "url": "http://localhost:8000/api/categories",
+      "method": "POST",
+      "sortNum": 30200,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Smartphones\",\n  \"description\": \"Teléfonos inteligentes y accesorios\",\n  \"is_active\": true\n}",
+        "form": []
+      }
+    },
+    {
+      "id": "update-category",
+      "colId": "ml2-api-sprint3",
+      "folderId": "categories-folder",
+      "name": "Actualizar Categoría (Solo Admin)",
+      "url": "http://localhost:8000/api/categories/1",
+      "method": "PUT",
+      "sortNum": 30300,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"description\": \"Descripción actualizada de la categoría\"\n}",
+        "form": []
+      }
+    },
+    {
+      "id": "delete-category",
+      "colId": "ml2-api-sprint3",
+      "folderId": "categories-folder",
+      "name": "Eliminar Categoría (Solo Admin)",
+      "url": "http://localhost:8000/api/categories/999",
+      "method": "DELETE",
+      "sortNum": 30400,
+      "created": "2025-11-26",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "headers": [],
+    "tests": [],
+    "envId": "ml2-env",
+    "options": {
+      "baseUrl": ""
+    }
+  }
+}

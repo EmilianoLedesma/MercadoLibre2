@@ -546,11 +546,10 @@
                 <i class="fas fa-search"></i>
             </button>
             @auth
-                <span style="color: #666; font-family: 'Jost', sans-serif;">Hola, {{ Auth::user()->name }}</span>
-                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                    @csrf
-                    <button type="submit" style="background: none; border: none; color: #666; cursor: pointer; font-family: 'Jost', sans-serif;">Salir</button>
-                </form>
+                <a href="{{ route('account') }}" style="color: #666; font-family: 'Jost', sans-serif; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-user"></i>
+                    Hola, {{ Auth::user()->name }}
+                </a>
             @else
                 <a href="{{ route('login') }}" style="color: #666; text-decoration: none;">
                     <i class="fas fa-user"></i>

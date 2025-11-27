@@ -270,6 +270,21 @@ class ProductController extends Controller
             }
 
             return back()->with('error', 'Error al eliminar producto: ' . $e->getMessage());
+
+            $product->delete();
+
+            return redirect()->route('products.index')
+                ->with('success', 'Producto eliminado correctamente.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Si hay un error de restricción de clave foránea (productos con pedidos)
+            if ($e->getCode() == 23000) {
+                return redirect()->route('products.index')
+                    ->with('error', 'No se puede eliminar este producto porque tiene pedidos asociados. Puedes desactivarlo en su lugar.');
+            }
+
+            // Otros errores de base de datos
+            return redirect()->route('products.index')
+                ->with('error', 'Error al eliminar el producto: ' . $e->getMessage());
         }
     }
 }

@@ -40,6 +40,9 @@ Route::put('/account', [MiCuentaController::class, 'update'])->middleware('auth'
 Route::post('/account/addresses', [MiCuentaController::class, 'saveAddresses'])->middleware('auth')->name('account.addresses.save');
 Route::delete('/account', [MiCuentaController::class, 'destroy'])->middleware('auth')->name('account.destroy');
 
+// Rutas para órdenes
+Route::get('/orders/{order}', [OrderController::class, 'show'])->middleware('auth')->name('orders.show');
+
 // Carrito
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart/add/{productId}', [CartController::class, 'add'])->name('cart.add');

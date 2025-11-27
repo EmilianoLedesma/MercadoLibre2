@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Address;
+use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,6 +29,10 @@ class MiCuentaController extends Controller
         $ordersCount = $orders->count();
 
         return view('account.index', compact('addresses', 'orders', 'ordersCount'));
+        // Obtener las órdenes del usuario
+        $orders = $user ? $user->orders()->with('items.product')->latest()->get() : collect();
+
+        return view('account.index', compact('addresses', 'orders'));
     }
 
     /** Actualizar datos simples del usuario (teléfono) */
