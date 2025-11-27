@@ -515,12 +515,17 @@
     <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
         <nav style="display: flex; gap: 24px;">
             <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Nosotros</a>
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Mi Cuenta</a>
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Wishlist</a>
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Rastreo</a>
+            <a href="<?php echo e(route('account')); ?>" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Mi Cuenta</a>
+            <a href="<?php echo e(route('wishlist.index')); ?>" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Favoritos</a>
+            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Rastrear Pedido</a>
+            <?php if(auth()->guard()->check()): ?>
+                <?php if(Auth::user()->role === 'seller'): ?>
+                    <a href="<?php echo e(route('seller.dashboard')); ?>" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Mi Dashboard</a>
+                <?php endif; ?>
+            <?php endif; ?>
         </nav>
         <div style="display: flex; gap: 16px; align-items: center;">
-            <span style="font-size: 14px; color: #666; font-family: 'Jost', sans-serif;">Necesitas ayuda? <strong>+0020 500</strong></span>
+            <span style="font-size: 14px; color: #666; font-family: 'Jost', sans-serif;">¿Necesitas ayuda? <strong>Llámanos: <a href="tel:+1234567890" style="color: #EE403D; text-decoration: none;">+ 0020 500</a></strong></span>
         </div>
     </div>
 </div>
@@ -544,11 +549,11 @@
                 <i class="fas fa-search"></i>
             </button>
             <?php if(auth()->guard()->check()): ?>
-                <span style="color: #666; font-family: 'Jost', sans-serif;">Hola, <?php echo e(Auth::user()->name); ?></span>
-                <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;">
-                    <?php echo csrf_field(); ?>
-                    <button type="submit" style="background: none; border: none; color: #666; cursor: pointer; font-family: 'Jost', sans-serif;">Salir</button>
-                </form>
+                <a href="<?php echo e(route('account')); ?>" style="color: #666; font-family: 'Jost', sans-serif; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-user"></i>
+                    Hola, <?php echo e(Auth::user()->name); ?>
+
+                </a>
             <?php else: ?>
                 <a href="<?php echo e(route('login')); ?>" style="color: #666; text-decoration: none;">
                     <i class="fas fa-user"></i>
@@ -739,7 +744,8 @@
             <div class="product-card" onclick="window.location.href='<?php echo e(route('shop.show', $product->slug)); ?>'">
                 <div class="product-image-container">
                     <?php
-                        $images = json_decode($product->images, true);
+                        // El cast 'json' en el modelo ya deserializa automáticamente
+                        $images = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
                         $imagePath = !empty($images) ? asset('storage/' . $images[0]) : 'https://via.placeholder.com/300x375';
                         $wishlist = session()->get('wishlist', []);
                         $inWishlist = isset($wishlist[$product->id]);

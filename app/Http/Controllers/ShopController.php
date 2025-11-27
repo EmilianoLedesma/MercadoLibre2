@@ -138,7 +138,8 @@ class ShopController extends Controller
             return response()->json([
                 'success' => true,
                 'products' => $products->map(function($product) {
-                    $images = json_decode($product->images, true);
+                    // El cast 'json' en el modelo ya deserializa automáticamente
+                    $images = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
                     return [
                         'id' => $product->id,
                         'name' => $product->name,

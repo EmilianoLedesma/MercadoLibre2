@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'Registro de Vendedores'); ?>
 
 <?php $__env->startPush('styles'); ?>

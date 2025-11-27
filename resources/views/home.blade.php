@@ -19,7 +19,7 @@
         <nav style="display: flex; gap: 20px;">
             <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Nosotros</a>
             <a href="{{ route('account') }}" style="color: #212529; text-decoration: none; transition: color 0.25s;">Mi Cuenta</a>
-            <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Favoritos</a>
+            <a href="{{ route('wishlist.index') }}" style="color: #212529; text-decoration: none; transition: color 0.25s;">Favoritos</a>
             <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Rastrear Pedido</a>
             @auth
                 @if(Auth::user()->role === 'seller')

@@ -189,7 +189,8 @@ class ProductController extends Controller
             $productData['slug'] = Str::slug($request->name);
 
             // Actualizar imágenes
-            $currentImages = json_decode($product->images, true) ?? [];
+            // El cast 'json' en el modelo ya deserializa automáticamente
+            $currentImages = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
 
             // Eliminar imágenes marcadas
             if ($request->has('delete_images')) {
@@ -245,7 +246,8 @@ class ProductController extends Controller
     {
         try {
             // Eliminar imágenes asociadas
-            $images = json_decode($product->images, true) ?? [];
+            // El cast 'json' en el modelo ya deserializa automáticamente
+            $images = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
             foreach ($images as $image) {
                 Storage::disk('public')->delete($image);
             }
@@ -261,6 +263,30 @@ class ProductController extends Controller
 
             return redirect()->route('products.index')
                 ->with('success', 'Producto eliminado correctamente.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Si hay un error de restricción de clave foránea (productos con pedidos)
+            if ($e->getCode() == 23000) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se puede eliminar este producto porque tiene pedidos asociados. Puedes desactivarlo en su lugar.',
+                    ], 400);
+                }
+
+                return redirect()->route('products.index')
+                    ->with('error', 'No se puede eliminar este producto porque tiene pedidos asociados. Puedes desactivarlo en su lugar.');
+            }
+
+            // Otros errores de base de datos
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al eliminar el producto: ' . $e->getMessage(),
+                ], 500);
+            }
+
+            return redirect()->route('products.index')
+                ->with('error', 'Error al eliminar el producto: ' . $e->getMessage());
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
                 return response()->json([
@@ -270,21 +296,6 @@ class ProductController extends Controller
             }
 
             return back()->with('error', 'Error al eliminar producto: ' . $e->getMessage());
-
-            $product->delete();
-
-            return redirect()->route('products.index')
-                ->with('success', 'Producto eliminado correctamente.');
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Si hay un error de restricción de clave foránea (productos con pedidos)
-            if ($e->getCode() == 23000) {
-                return redirect()->route('products.index')
-                    ->with('error', 'No se puede eliminar este producto porque tiene pedidos asociados. Puedes desactivarlo en su lugar.');
-            }
-
-            // Otros errores de base de datos
-            return redirect()->route('products.index')
-                ->with('error', 'Error al eliminar el producto: ' . $e->getMessage());
         }
     }
 }

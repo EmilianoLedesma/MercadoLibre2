@@ -159,7 +159,8 @@ class SellerProductController extends Controller
         $productData['is_featured'] = $request->has('is_featured') ? true : false;
 
         // Actualizar imágenes
-        $currentImages = json_decode($product->images, true) ?? [];
+        // El cast 'json' en el modelo ya deserializa automáticamente
+        $currentImages = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
 
         // Eliminar imágenes marcadas
         if ($request->has('delete_images')) {
@@ -202,7 +203,8 @@ class SellerProductController extends Controller
         $product = Product::where('user_id', $user->id)->findOrFail($id);
 
         // Eliminar imágenes asociadas
-        $images = json_decode($product->images, true) ?? [];
+        // El cast 'json' en el modelo ya deserializa automáticamente
+        $images = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
         foreach ($images as $image) {
             Storage::disk('public')->delete($image);
         }

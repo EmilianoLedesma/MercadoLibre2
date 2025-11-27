@@ -106,10 +106,5 @@ class User extends Authenticatable implements JWTSubject
     public function products()
     {
         return $this->hasMany(\App\Models\Product::class);
-     * Relación: usuario tiene muchas órdenes
-     */
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
     }
 }

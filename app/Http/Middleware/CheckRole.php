@@ -24,6 +24,17 @@ class CheckRole
 
         $user = auth()->user();
 
+        // Verificar si el usuario está activo
+        if (!$user->is_active) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Usuario inactivo. Contacte al administrador.',
+                ], 403);
+            }
+            abort(403, 'Usuario inactivo. Contacte al administrador.');
+        }
+
         if (!in_array($user->role, $roles)) {
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'No tienes permisos para acceder a este recurso'], 403);
