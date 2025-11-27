@@ -55,6 +55,11 @@ class AuthController extends Controller
             
             // Redirigir según el rol del usuario
             $user = Auth::user();
+            
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.products.index')->with('success', 'Bienvenido Administrador!');
+            }
+            
             if ($user->role === 'seller') {
                 return redirect()->route('seller.dashboard')->with('success', 'Bienvenido a tu panel de vendedor!');
             }

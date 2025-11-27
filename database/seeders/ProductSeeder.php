@@ -39,7 +39,20 @@ class ProductSeeder extends Seeder
         $jardin = Category::where('name', 'Jardín y Exterior')->first();
         $alimentos = Category::where('name', 'Alimentos y Bebidas')->first();
         
-        $users = User::all();
+        // Obtener SOLO usuarios con rol 'seller'
+        $sellers = User::where('role', 'seller')->get();
+        
+        // Si no hay vendedores, crear al menos uno
+        if ($sellers->count() === 0) {
+            $seller = User::create([
+                'name' => 'Vendedor Demo',
+                'email' => 'vendor@demo.com',
+                'password' => bcrypt('password123'),
+                'role' => 'seller',
+                'is_active' => true,
+            ]);
+            $sellers = collect([$seller]);
+        }
         
         // Productos de Tecnología (10 productos) - Precios en MXN
         $techProducts = [
@@ -262,7 +275,7 @@ class ProductSeeder extends Seeder
                     'price' => round($price, 2),
                     'stock_quantity' => $productData['stock_quantity'],
                     'category_id' => $category->id,
-                    'user_id' => $users->random()->id,
+                    'user_id' => $sellers->random()->id, // Asignar solo a vendedores
                     'images' => json_encode(['images/placeholder-product.svg']),
                     'is_active' => true,
                     'is_featured' => rand(1, 100) <= 20, // 20% de productos destacados

@@ -103,3 +103,14 @@ Route::middleware(['auth', 'role:admin,seller'])->group(function () {
     Route::resource('orders', OrderController::class)->except(['create', 'store']);
     Route::post('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 });
+
+// Rutas de Administración Suprema (solo Admin)
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Gestión de todos los productos
+    Route::get('/products', [App\Http\Controllers\Admin\AdminProductController::class, 'index'])->name('products.index');
+    Route::get('/products/{product}/edit', [App\Http\Controllers\Admin\AdminProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [App\Http\Controllers\Admin\AdminProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [App\Http\Controllers\Admin\AdminProductController::class, 'destroy'])->name('products.destroy');
+    Route::post('/products/{product}/toggle-status', [App\Http\Controllers\Admin\AdminProductController::class, 'toggleStatus'])->name('products.toggle-status');
+    Route::post('/products/{product}/toggle-featured', [App\Http\Controllers\Admin\AdminProductController::class, 'toggleFeatured'])->name('products.toggle-featured');
+});

@@ -77,6 +77,7 @@ class AdminProductController extends Controller
             'description' => 'required|string',
             'short_description' => 'nullable|string|max:500',
             'price' => 'required|numeric|min:0',
+            'sale_price' => 'nullable|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
             'user_id' => 'required|exists:users,id',
@@ -86,6 +87,8 @@ class AdminProductController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
+        $productData = $request->except(['images', 'delete_images']);
+        
         // Generar slug si el nombre cambió
         if ($product->name !== $validated['name']) {
             $baseSlug = Str::slug($validated['name']);
@@ -96,10 +99,10 @@ class AdminProductController extends Controller
                 $slug = $baseSlug . '-' . $counter;
                 $counter++;
             }
-            $validated['slug'] = $slug;
+            $productData['slug'] = $slug;
         }
 
-        // Procesar imágenes
+        // Procesar imágenes solo si se suben nuevas
         if ($request->hasFile('images')) {
             // Eliminar imágenes antiguas
             $oldImages = is_array($product->images) ? $product->images : json_decode($product->images, true);
@@ -115,18 +118,18 @@ class AdminProductController extends Controller
                 $path = $image->store('products', 'public');
                 $imagePaths[] = $path;
             }
-            $validated['images'] = json_encode($imagePaths);
+            $productData['images'] = json_encode($imagePaths);
         }
 
         // Generar short_description si no se proporcionó
-        if (empty($validated['short_description'])) {
-            $validated['short_description'] = Str::limit($validated['description'], 150);
+        if (empty($productData['short_description'])) {
+            $productData['short_description'] = Str::limit($validated['description'], 150);
         }
 
-        $validated['is_active'] = $request->has('is_active');
-        $validated['is_featured'] = $request->has('is_featured');
+        $productData['is_active'] = $request->has('is_active');
+        $productData['is_featured'] = $request->has('is_featured');
 
-        $product->update($validated);
+        $product->update($productData);
 
         return redirect()
             ->route('admin.products.index')

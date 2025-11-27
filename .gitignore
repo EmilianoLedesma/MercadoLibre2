@@ -50,15 +50,56 @@ coverage/
 .nyc_output/
 .phpunit.cache
 
-# Archivos temporales y de prueba
-diagnostico_*.php
-test-*.php
-test-*.html
-*.tmp
-*.temp
-.cache/
-
 # Composer
 composer.phar
 /vendor/
-composer.lock
+
+# ========================================
+# ARCHIVOS TEMPORALES Y DE DIAGNÓSTICO
+# ========================================
+
+# Scripts de diagnóstico temporales
+diagnostico_*.php
+test-*.php
+test-*.html
+check_*.php
+verify_*.php
+
+# Archivos temporales
+*.tmp
+*.temp
+.cache/
+temp/
+
+# ========================================
+# MANTENER ARCHIVOS IMPORTANTES
+# ========================================
+
+# Scripts útiles (NO ignorar)
+!fix_product_sellers.php
+!check_admin.php
+
+# Scripts de demostración (NO ignorar)
+!DEMO_ADMIN.ps1
+!INICIAR_DEMO.ps1
+!test-admin-products.ps1
+!test-api.ps1
+!test-login.ps1
+!test_login_session.ps1
+
+# Documentación (NO ignorar)
+!README.md
+!ADMIN_PRODUCTS_COMPLETED.md
+!CREDENCIALES_ADMIN.md
+!INICIO_ADMIN.md
+!REDIRECCION_COMPLETADA.md
+!VENDEDORES_CORREGIDOS.md
+!SOLUCIONADO.md
+!SPRINT3_SUMMARY.md
+!README_DEMO_SPRINT3.md
+!COMO_OBTENER_TOKEN_JWT.md
+!docs/*.md
+
+# Tools directory (NO ignorar)
+!tools/
+!tools/*.php

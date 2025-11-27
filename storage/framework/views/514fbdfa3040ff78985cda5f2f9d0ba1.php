@@ -17,7 +17,7 @@
         <nav style="display: flex; gap: 20px;">
             <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Nosotros</a>
             <a href="<?php echo e(route('account')); ?>" style="color: #212529; text-decoration: none; transition: color 0.25s;">Mi Cuenta</a>
-            <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Favoritos</a>
+            <a href="<?php echo e(route('wishlist.index')); ?>" style="color: #212529; text-decoration: none; transition: color 0.25s;">Favoritos</a>
             <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Rastrear Pedido</a>
             <?php if(auth()->guard()->check()): ?>
                 <?php if(Auth::user()->role === 'seller'): ?>
