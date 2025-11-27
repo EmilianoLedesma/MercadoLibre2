@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Search API</title>
+</head>
+<body>
+    <h1>Test Search API</h1>
+    <input type="text" id="searchQuery" placeholder="Escribe algo...">
+    <button onclick="testSearch()">Buscar</button>
+    <div id="result" style="margin-top: 20px; white-space: pre-wrap; font-family: monospace;"></div>
+
+    <script>
+        function testSearch() {
+            const query = document.getElementById('searchQuery').value;
+            const baseUrl = window.location.origin;
+            
+            fetch(`${baseUrl}/shop/search?q=${encodeURIComponent(query)}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                console.log('Status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data:', data);
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').textContent = 'Error: ' + error.message;
+            });
+        }
+    </script>
+</body>
+</html>

@@ -331,6 +331,17 @@
                 ¿No tienes una cuenta? <a href="{{ route('register') }}">Regístrate aquí</a>
             </div>
 
+            <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid #E5E5E5;">
+                <p style="font-size: 14px; color: #666; margin-bottom: 12px; font-family: 'Jost', sans-serif;">¿Quieres vender tus productos?</p>
+                <a href="{{ route('seller.register') }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background-color: white; color: #212529; text-decoration: none; border: 2px solid #E5E5E5; border-radius: 8px; font-weight: 500; font-family: 'Jost', sans-serif; transition: all 0.3s;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Vende con Nosotros
+                </a>
+            </div>
+
             <div class="back-home">
                 <a href="{{ route('home') }}">
                     <i class="fas fa-arrow-left"></i>

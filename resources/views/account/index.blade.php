@@ -89,6 +89,7 @@
                                 <i class="fas fa-shopping-cart" style="color: #EE403D; font-size: 24px;"></i>
                             </div>
                             <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Compras</div>
+                            <div style="font-size: 28px; font-weight: 700; color: #212529;">{{ $ordersCount ?? 0 }}</div>
                             <div style="font-size: 28px; font-weight: 700; color: #212529;">{{ isset($orders) ? $orders->count() : 0 }}</div>
                         </div>
 
@@ -151,16 +152,45 @@
                             <table style="width: 100%; border-collapse: collapse;">
                                 <thead>
                                     <tr style="border-bottom: 2px solid #E5E5E5;">
-                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Order</th>
-                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Date</th>
-                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Status</th>
+                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Pedido</th>
+                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Fecha</th>
+                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Estado</th>
                                         <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Total</th>
-                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Actions</th>
+                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if(isset($orders) && $orders->count() > 0)
                                         @foreach($orders as $order)
+                                        <tr style="border-bottom: 1px solid #F5F5F5;">
+                                            <td style="padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; color: #212529; font-weight: 600;">
+                                                #{{ $order->order_number }}
+                                            </td>
+                                            <td style="padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; color: #666;">
+                                                {{ $order->created_at->format('d M, Y') }}
+                                            </td>
+                                            <td style="padding: 16px;">
+                                                @if($order->status === 'pending')
+                                                    <span style="display: inline-block; padding: 6px 12px; background: #FEF3C7; color: #D97706; border-radius: 6px; font-size: 13px; font-weight: 500;">Pendiente</span>
+                                                @elseif($order->status === 'processing')
+                                                    <span style="display: inline-block; padding: 6px 12px; background: #DBEAFE; color: #2563EB; border-radius: 6px; font-size: 13px; font-weight: 500;">Procesando</span>
+                                                @elseif($order->status === 'completed')
+                                                    <span style="display: inline-block; padding: 6px 12px; background: #D1FAE5; color: #059669; border-radius: 6px; font-size: 13px; font-weight: 500;">Completado</span>
+                                                @elseif($order->status === 'cancelled')
+                                                    <span style="display: inline-block; padding: 6px 12px; background: #FEE2E2; color: #DC2626; border-radius: 6px; font-size: 13px; font-weight: 500;">Cancelado</span>
+                                                @else
+                                                    <span style="display: inline-block; padding: 6px 12px; background: #F3F4F6; color: #6B7280; border-radius: 6px; font-size: 13px; font-weight: 500;">{{ ucfirst($order->status) }}</span>
+                                                @endif
+                                            </td>
+                                            <td style="padding: 16px; font-family: 'Jost', sans-serif; font-size: 15px; color: #212529; font-weight: 600;">
+                                                ${{ number_format($order->total, 2) }}
+                                            </td>
+                                            <td style="padding: 16px;">
+                                                <a href="{{ route('checkout.confirmation', $order->id) }}" style="display: inline-block; padding: 8px 16px; background: #EE403D; color: white; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 500; transition: background 0.3s;" onmouseover="this.style.background='#E32020'" onmouseout="this.style.background='#EE403D'">
+                                                    Ver detalles
+                                                </a>
+                                            </td>
+                                        </tr>
                                             <tr style="border-bottom: 1px solid #F1F3F5;">
                                                 <td style="padding: 20px;">
                                                     <span style="font-family: 'Jost', sans-serif; font-weight: 600; color: #212529;">#{{ $order->order_number }}</span>

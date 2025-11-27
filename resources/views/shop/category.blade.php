@@ -302,6 +302,7 @@
         overflow: hidden;
         transition: transform 0.3s, box-shadow 0.3s;
         position: relative;
+        cursor: pointer;
     }
 
     .product-card:hover {
@@ -315,6 +316,50 @@
         padding-top: 125%;
         background-color: #F5F6F2;
         overflow: hidden;
+    }
+
+    .product-actions {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .product-card:hover .product-actions {
+        opacity: 1;
+    }
+
+    .action-btn {
+        width: 40px;
+        height: 40px;
+        background-color: white;
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+        z-index: 10;
+    }
+
+    .action-btn:hover {
+        background-color: #EE403D;
+        color: white;
+    }
+
+    .action-btn.in-wishlist {
+        background-color: #EE403D;
+        color: white;
+    }
+
+    .action-btn.in-wishlist i {
+        font-weight: 900;
     }
 
     .product-image {
@@ -459,7 +504,13 @@
             @endauth
             <a href="{{ route('cart') }}" style="color: #212529; text-decoration: none; position: relative;">
                 <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px;">3</span>
+                @php
+                    $cart = session()->get('cart', []);
+                    $cartCount = array_sum(array_column($cart, 'quantity'));
+                @endphp
+                @if($cartCount > 0)
+                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px;">{{ $cartCount }}</span>
+                @endif
             </a>
         </div>
     </div>
@@ -634,11 +685,13 @@
         <!-- Products Grid -->
         <div class="products-grid">
             @forelse($products as $product)
-            <div class="product-card">
+            <div class="product-card" onclick="window.location.href='{{ route('shop.show', $product->slug) }}'">
                 <div class="product-image-container">
                     @php
                         $images = json_decode($product->images, true);
                         $imagePath = !empty($images) ? asset('storage/' . $images[0]) : 'https://via.placeholder.com/300x375';
+                        $wishlist = session()->get('wishlist', []);
+                        $inWishlist = isset($wishlist[$product->id]);
                     @endphp
                     <img src="{{ $imagePath }}" alt="{{ $product->name }}" class="product-image">
 
@@ -651,12 +704,20 @@
                         <span class="badge badge-hot">HOT</span>
                     </div>
                     @endif
+
+                    <div class="product-actions">
+                        <button class="action-btn {{ $inWishlist ? 'in-wishlist' : '' }}" 
+                                title="{{ $inWishlist ? 'Quitar de wishlist' : 'Agregar a wishlist' }}"
+                                onclick="event.stopPropagation(); toggleWishlist({{ $product->id }}, this)">
+                            <i class="{{ $inWishlist ? 'fas' : 'far' }} fa-heart"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="product-info">
                     <p class="product-category">{{ $category->name }}</p>
                     <h3 class="product-title">
-                        <a href="{{ route('shop.show', $product->slug) }}">{{ $product->name }}</a>
+                        <a href="{{ route('shop.show', $product->slug) }}" onclick="event.stopPropagation()">{{ $product->name }}</a>
                     </h3>
                     <div class="product-price">
                         @if($product->sale_price)
@@ -717,6 +778,104 @@ function toggleCategory(categoryId) {
     toggle.classList.toggle('active');
     submenu.classList.toggle('active');
 }
+
+// Wishlist functionality
+async function toggleWishlist(productId, button) {
+    try {
+        const isInWishlist = button.classList.contains('in-wishlist');
+        const url = isInWishlist 
+            ? `/wishlist/remove/${productId}`
+            : `/wishlist/add/${productId}`;
+        
+        const method = isInWishlist ? 'DELETE' : 'POST';
+        
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Toggle button state
+            button.classList.toggle('in-wishlist');
+            const icon = button.querySelector('i');
+            
+            if (button.classList.contains('in-wishlist')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                button.title = 'Quitar de wishlist';
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                button.title = 'Agregar a wishlist';
+            }
+
+            // Show success message
+            showNotification(data.message, 'success');
+        } else {
+            showNotification(data.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error al actualizar wishlist', 'error');
+    }
+}
+
+// Show notification
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        padding: 16px 24px;
+        background-color: ${type === 'success' ? '#28A745' : '#EE403D'};
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 9999;
+        font-family: 'Jost', sans-serif;
+        animation: slideIn 0.3s ease-out;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Add CSS animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
 
 // Initialize - expand the active category
 document.addEventListener('DOMContentLoaded', function() {

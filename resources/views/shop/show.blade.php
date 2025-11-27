@@ -259,11 +259,23 @@
         border-radius: 4px;
         cursor: pointer;
         transition: all 0.3s;
+        font-family: 'Jost', sans-serif;
+        font-size: 16px;
     }
 
     .btn-wishlist:hover {
         border-color: #EE403D;
         color: #EE403D;
+    }
+
+    .btn-wishlist.in-wishlist {
+        background-color: #EE403D;
+        color: white;
+        border-color: #EE403D;
+    }
+
+    .btn-wishlist.in-wishlist i {
+        font-weight: 900;
     }
 
     .product-meta-info {
@@ -499,7 +511,13 @@
             @endauth
             <a href="{{ route('cart') }}" style="color: #212529; text-decoration: none; position: relative;">
                 <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: 'Jost', sans-serif;">3</span>
+                @php
+                    $cart = session()->get('cart', []);
+                    $cartCount = array_sum(array_column($cart, 'quantity'));
+                @endphp
+                @if($cartCount > 0)
+                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: 'Jost', sans-serif;">{{ $cartCount }}</span>
+                @endif
             </a>
         </div>
     </div>
@@ -744,11 +762,21 @@
 
             <!-- Actions -->
             <div class="product-actions">
-                <button class="btn-add-cart">
-                    <i class="fas fa-shopping-cart"></i> Agregar al Carrito
-                </button>
-                <button class="btn-wishlist">
-                    <i class="far fa-heart"></i>
+                <form action="{{ route('cart.add', $product->id) }}" method="POST" id="addToCartForm">
+                    @csrf
+                    <input type="hidden" name="quantity" id="quantityInput" value="1">
+                    <button type="submit" class="btn-add-cart">
+                        <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                    </button>
+                </form>
+                @php
+                    $wishlist = session()->get('wishlist', []);
+                    $inWishlist = isset($wishlist[$product->id]);
+                @endphp
+                <button class="btn-wishlist {{ $inWishlist ? 'in-wishlist' : '' }}" 
+                        onclick="toggleWishlist({{ $product->id }}, this)"
+                        title="{{ $inWishlist ? 'Quitar de wishlist' : 'Agregar a wishlist' }}">
+                    <i class="{{ $inWishlist ? 'fas' : 'far' }} fa-heart"></i>
                 </button>
             </div>
 
@@ -762,6 +790,18 @@
                     <span class="meta-label">Categoría:</span>
                     <span class="meta-value">{{ $product->category->name ?? 'Sin categoría' }}</span>
                 </div>
+                @if($product->user)
+                <div class="meta-item">
+                    <span class="meta-label">Vendedor:</span>
+                    <span class="meta-value" style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#28A745" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <strong style="color: #212529;">{{ $product->user->name }} {{ $product->user->last_name ?? '' }}</strong>
+                    </span>
+                </div>
+                @endif
                 <div class="meta-item">
                     <span class="meta-label">Stock:</span>
                     <span class="stock-status {{ $product->stock_quantity > 0 ? '' : 'out' }}">
@@ -866,6 +906,7 @@ function incrementQty() {
     const current = parseInt(input.value);
     if (current < max) {
         input.value = current + 1;
+        updateQuantityInput();
     }
 }
 
@@ -874,8 +915,18 @@ function decrementQty() {
     const current = parseInt(input.value);
     if (current > 1) {
         input.value = current - 1;
+        updateQuantityInput();
     }
 }
+
+function updateQuantityInput() {
+    const qtyInput = document.getElementById('qtyInput');
+    const quantityInput = document.getElementById('quantityInput');
+    quantityInput.value = qtyInput.value;
+}
+
+// Update hidden input when user types directly in the input
+document.getElementById('qtyInput').addEventListener('input', updateQuantityInput);
 
 // Option Buttons
 document.querySelectorAll('.option-btn').forEach(btn => {
@@ -893,5 +944,103 @@ function switchTab(tabName) {
     event.target.classList.add('active');
     document.getElementById(tabName).classList.add('active');
 }
+
+// Wishlist functionality
+async function toggleWishlist(productId, button) {
+    try {
+        const isInWishlist = button.classList.contains('in-wishlist');
+        const url = isInWishlist 
+            ? `/wishlist/remove/${productId}`
+            : `/wishlist/add/${productId}`;
+        
+        const method = isInWishlist ? 'DELETE' : 'POST';
+        
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Toggle button state
+            button.classList.toggle('in-wishlist');
+            const icon = button.querySelector('i');
+            
+            if (button.classList.contains('in-wishlist')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                button.title = 'Quitar de wishlist';
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                button.title = 'Agregar a wishlist';
+            }
+
+            // Show success message
+            showNotification(data.message, 'success');
+        } else {
+            showNotification(data.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error al actualizar wishlist', 'error');
+    }
+}
+
+// Show notification
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        padding: 16px 24px;
+        background-color: ${type === 'success' ? '#28A745' : '#EE403D'};
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 9999;
+        font-family: 'Jost', sans-serif;
+        animation: slideIn 0.3s ease-out;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Add CSS animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
 </script>
 @endsection

@@ -30,10 +30,10 @@
                     <thead>
                         <tr style="background: #FAFAFA; border-bottom: 2px solid #E5E5E5;">
                             <th style="padding: 20px; text-align: center; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666; width: 80px;"></th>
-                            <th style="padding: 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Product</th>
-                            <th style="padding: 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Unit Price</th>
+                            <th style="padding: 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Producto</th>
+                            <th style="padding: 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Precio</th>
                             <th style="padding: 20px; text-align: left; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Stock Status</th>
-                            <th style="padding: 20px; text-align: center; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666; width: 200px;">Action</th>
+                            <th style="padding: 20px; text-align: center; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666; width: 200px;">Acción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,7 +50,11 @@
                             <td style="padding: 20px;">
                                 <div style="display: flex; align-items: center; gap: 16px;">
                                     <a href="{{ route('shop.show', $item->slug) }}" style="flex-shrink: 0;">
-                                        <img src="{{ $item->image ?? '/images/placeholder.jpg' }}" alt="{{ $item->name }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #E5E5E5;">
+                                        @php
+                                            $images = is_string($item->images) ? json_decode($item->images, true) : $item->images;
+                                            $imagePath = !empty($images) ? asset('storage/' . $images[0]) : '/images/placeholder.jpg';
+                                        @endphp
+                                        <img src="{{ $imagePath }}" alt="{{ $item->name }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #E5E5E5;">
                                     </a>
                                     <div>
                                         <a href="{{ route('shop.show', $item->slug) }}" style="font-family: 'Jost', sans-serif; font-size: 16px; font-weight: 600; color: #212529; text-decoration: none; display: block; margin-bottom: 4px; transition: color 0.3s;" onmouseover="this.style.color='#EE403D'" onmouseout="this.style.color='#212529'">
@@ -66,13 +70,13 @@
                             <!-- Price -->
                             <td style="padding: 20px;">
                                 <div style="font-family: 'Jost', sans-serif; font-size: 18px; font-weight: 600; color: #EE403D;">
-                                    ${{ number_format($item->price, 2) }}
+                                    ${{ number_format($item->sale_price ?? $item->price, 2) }}
                                 </div>
                             </td>
 
                             <!-- Stock Status -->
                             <td style="padding: 20px;">
-                                @if($item->stock > 0)
+                                @if($item->stock_quantity > 0)
                                 <div style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #F0FDF4; border-radius: 20px; font-size: 13px; font-weight: 500; color: #10B981;">
                                     <i class="fas fa-check-circle"></i>
                                     <span>In Stock</span>
@@ -87,9 +91,9 @@
 
                             <!-- Add to Cart Button -->
                             <td style="padding: 20px; text-align: center;">
-                                @if($item->stock > 0)
+                                @if($item->stock_quantity > 0)
                                 <button onclick="moveToCart({{ $item->id }})" style="background: #EE403D; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Jost', sans-serif; font-size: 14px; transition: background 0.3s; white-space: nowrap;" onmouseover="this.style.background='#E32020'" onmouseout="this.style.background='#EE403D'">
-                                    <i class="fas fa-shopping-cart" style="margin-right: 6px;"></i>Add to Cart
+                                    <i class="fas fa-shopping-cart" style="margin-right: 6px;"></i>Añadir al carrito
                                 </button>
                                 @else
                                 <button disabled style="background: #E5E5E5; color: #999; border: none; padding: 10px 20px; border-radius: 8px; cursor: not-allowed; font-weight: 600; font-family: 'Jost', sans-serif; font-size: 14px; white-space: nowrap;">
@@ -110,19 +114,19 @@
             <form action="{{ route('wishlist.clear') }}" method="POST" onsubmit="return confirm('Are you sure you want to clear your entire wishlist?');">
                 @csrf
                 <button type="submit" style="background: white; color: #EF4444; border: 2px solid #EF4444; padding: 12px 28px; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Jost', sans-serif; font-size: 15px; transition: all 0.3s;" onmouseover="this.style.background='#FEF2F2'" onmouseout="this.style.background='white'">
-                    <i class="fas fa-trash" style="margin-right: 8px;"></i>Clear Wishlist
+                    <i class="fas fa-trash" style="margin-right: 8px;"></i>Limpiar Wishlist
                 </button>
             </form>
 
             <!-- Share Wishlist -->
             <div style="display: flex; gap: 12px; align-items: center;">
-                <span style="font-family: 'Jost', sans-serif; font-size: 15px; font-weight: 500; color: #666;">Share:</span>
+                <span style="font-family: 'Jost', sans-serif; font-size: 15px; font-weight: 500; color: #666;">Comparte en:</span>
                 <div style="display: flex; gap: 8px;">
                     <button onclick="shareWishlist('facebook')" style="width: 40px; height: 40px; border-radius: 50%; background: #1877F2; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                         <i class="fab fa-facebook-f"></i>
                     </button>
-                    <button onclick="shareWishlist('twitter')" style="width: 40px; height: 40px; border-radius: 50%; background: #1DA1F2; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-                        <i class="fab fa-twitter"></i>
+                    <button onclick="shareWishlist('twitter')" style="width: 40px; height: 40px; border-radius: 50%; background: #010507ff; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fab fa-x"></i>
                     </button>
                     <button onclick="shareWishlist('pinterest')" style="width: 40px; height: 40px; border-radius: 50%; background: #E60023; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                         <i class="fab fa-pinterest-p"></i>

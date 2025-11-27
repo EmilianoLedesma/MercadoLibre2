@@ -24,6 +24,11 @@ class MiCuentaController extends Controller
             ];
         })->toArray() : [];
 
+        // Get user's orders
+        $orders = $user ? $user->orders()->with('items.product')->latest()->get() : collect();
+        $ordersCount = $orders->count();
+
+        return view('account.index', compact('addresses', 'orders', 'ordersCount'));
         // Obtener las órdenes del usuario
         $orders = $user ? $user->orders()->with('items.product')->latest()->get() : collect();
 

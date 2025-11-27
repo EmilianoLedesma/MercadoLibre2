@@ -21,6 +21,11 @@
             <a href="{{ route('account') }}" style="color: #212529; text-decoration: none; transition: color 0.25s;">Mi Cuenta</a>
             <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Favoritos</a>
             <a href="#" style="color: #212529; text-decoration: none; transition: color 0.25s;">Rastrear Pedido</a>
+            @auth
+                @if(Auth::user()->role === 'seller')
+                    <a href="{{ route('seller.dashboard') }}" style="color: #212529; text-decoration: none; transition: color 0.25s;">Mi Dashboard</a>
+                @endif
+            @endauth
         </nav>
 
         <div style="display: flex; align-items: center; gap: 15px;">
@@ -51,7 +56,7 @@
         <!-- Header Actions -->
         <div style="display: flex; align-items: center; gap: 20px;">
             <!-- Search -->
-            <button style="background: none; border: none; cursor: pointer; padding: 8px;" aria-label="Buscar">
+            <button onclick="toggleSearch()" style="background: none; border: none; cursor: pointer; padding: 8px;" aria-label="Buscar">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"></circle>
                     <path d="m21 21-4.35-4.35"></path>
@@ -83,7 +88,13 @@
                     <circle cx="20" cy="21" r="1"></circle>
                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                 </svg>
-                <span style="position: absolute; top: 0; right: 0; background-color: #EE403D; color: white; font-size: 10px; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">3</span>
+                @php
+                    $cart = session()->get('cart', []);
+                    $cartCount = array_sum(array_column($cart, 'quantity'));
+                @endphp
+                @if($cartCount > 0)
+                <span style="position: absolute; top: 0; right: 0; background-color: #EE403D; color: white; font-size: 10px; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">{{ $cartCount }}</span>
+                @endif
             </a>
         </div>
     </div>
@@ -233,6 +244,9 @@
 
 <!-- ========== FOOTER ========== -->
 @include('layouts.footer')
+
+<!-- Search Modal -->
+@include('components.search-modal')
 
 <!-- Newsletter Popup -->
 @include('components.newsletter-popup')

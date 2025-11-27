@@ -25,6 +25,7 @@ class Product extends Model
         'stock_quantity',
         'category_id',
         'user_id',
+        'store_id',
         'images',
         'is_active',
         'is_featured'
@@ -58,5 +59,13 @@ class Product extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Obtener la tienda del producto.
+     */
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
     }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -14,12 +16,19 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $products = Product::with('category:id,name,slug')
             ->select('id', 'name', 'slug', 'price', 'stock_quantity', 'is_active', 'category_id', 'created_at')
             ->latest()
             ->paginate(10);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $products,
+            ]);
+        }
 
         return view('products.index', compact('products'));
     }
@@ -89,50 +98,63 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'short_description' => 'nullable|string|max:500',
-            'sku' => 'required|string|max:100|unique:products',
-            'price' => 'required|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'is_active' => 'boolean',
-            'is_featured' => 'boolean',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        try {
+            $productData = $request->validated();
+            $productData['slug'] = Str::slug($request->name);
 
-        $productData = $request->except('images');
-        $productData['slug'] = Str::slug($request->name);
+            // Asignar user_id: si hay usuario autenticado, usar su ID, sino usar ID 1 por defecto
+            $productData['user_id'] = Auth::id() ?? 1;
 
-        // Asignar user_id: si hay usuario autenticado, usar su ID, sino usar ID 1 por defecto
-        $productData['user_id'] = Auth::id() ?? 1;
-
-        // Procesar imágenes
-        $images = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('products', 'public');
-                $images[] = $path;
+            // Procesar imágenes
+            $images = [];
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('products', 'public');
+                    $images[] = $path;
+                }
             }
+            $productData['images'] = json_encode($images);
+
+            $product = Product::create($productData);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Producto creado correctamente',
+                    'data' => $product,
+                ], 201);
+            }
+
+            return redirect()->route('products.index')
+                ->with('success', 'Producto creado correctamente.');
+        } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al crear producto: ' . $e->getMessage(),
+                ], 500);
+            }
+
+            return back()->withInput()
+                ->with('error', 'Error al crear producto: ' . $e->getMessage());
         }
-        $productData['images'] = json_encode($images);
-
-        $product = Product::create($productData);
-
-        return redirect()->route('products.index')
-            ->with('success', 'Producto creado correctamente.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(Request $request, Product $product)
     {
         $product->load('category', 'user');
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $product,
+            ]);
+        }
 
         return view('products.show', compact('product'));
     }
@@ -160,61 +182,66 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'short_description' => 'nullable|string|max:500',
-            'sku' => 'required|string|max:100|unique:products,sku,'.$product->id,
-            'price' => 'required|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'is_active' => 'boolean',
-            'is_featured' => 'boolean',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'delete_images' => 'nullable|array',
-        ]);
+        try {
+            $productData = $request->validated();
+            $productData['slug'] = Str::slug($request->name);
 
-        $productData = $request->except(['images', 'delete_images']);
-        $productData['slug'] = Str::slug($request->name);
+            // Actualizar imágenes
+            $currentImages = json_decode($product->images, true) ?? [];
 
-        // Actualizar imágenes
-        $currentImages = json_decode($product->images, true) ?? [];
+            // Eliminar imágenes marcadas
+            if ($request->has('delete_images')) {
+                foreach ($request->delete_images as $index) {
+                    if (isset($currentImages[$index])) {
+                        // Eliminar del almacenamiento
+                        Storage::disk('public')->delete($currentImages[$index]);
+                        unset($currentImages[$index]);
+                    }
+                }
+                $currentImages = array_values($currentImages);
+            }
 
-        // Eliminar imágenes marcadas
-        if ($request->has('delete_images')) {
-            foreach ($request->delete_images as $index) {
-                if (isset($currentImages[$index])) {
-                    // Eliminar del almacenamiento
-                    Storage::disk('public')->delete($currentImages[$index]);
-                    unset($currentImages[$index]);
+            // Añadir nuevas imágenes
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('products', 'public');
+                    $currentImages[] = $path;
                 }
             }
-            $currentImages = array_values($currentImages);
-        }
 
-        // Añadir nuevas imágenes
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('products', 'public');
-                $currentImages[] = $path;
+            $productData['images'] = json_encode($currentImages);
+
+            $product->update($productData);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Producto actualizado correctamente',
+                    'data' => $product,
+                ]);
             }
+
+            return redirect()->route('products.index')
+                ->with('success', 'Producto actualizado correctamente.');
+        } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al actualizar producto: ' . $e->getMessage(),
+                ], 500);
+            }
+
+            return back()->withInput()
+                ->with('error', 'Error al actualizar producto: ' . $e->getMessage());
         }
-
-        $productData['images'] = json_encode($currentImages);
-
-        $product->update($productData);
-
-        return redirect()->route('products.index')
-            ->with('success', 'Producto actualizado correctamente.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(Request $request, Product $product)
     {
         try {
             // Eliminar imágenes asociadas
@@ -222,6 +249,27 @@ class ProductController extends Controller
             foreach ($images as $image) {
                 Storage::disk('public')->delete($image);
             }
+
+            $product->delete();
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Producto eliminado correctamente',
+                ]);
+            }
+
+            return redirect()->route('products.index')
+                ->with('success', 'Producto eliminado correctamente.');
+        } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al eliminar producto: ' . $e->getMessage(),
+                ], 500);
+            }
+
+            return back()->with('error', 'Error al eliminar producto: ' . $e->getMessage());
 
             $product->delete();
 

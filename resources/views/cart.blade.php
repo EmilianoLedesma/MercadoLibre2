@@ -159,6 +159,123 @@
         color: #EE403D;
     }
 
+    /* Confirmation Modal */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        animation: slideUp 0.3s ease;
+        position: relative;
+    }
+
+    .modal-icon {
+        width: 64px;
+        height: 64px;
+        background: #FEF2F2;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+
+    .modal-icon i {
+        font-size: 32px;
+        color: #EE403D;
+    }
+
+    .modal-title {
+        font-family: 'Jost', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: #212529;
+        text-align: center;
+        margin-bottom: 12px;
+    }
+
+    .modal-message {
+        font-family: 'Jost', sans-serif;
+        font-size: 15px;
+        color: #666;
+        text-align: center;
+        margin-bottom: 28px;
+        line-height: 1.6;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .modal-btn {
+        flex: 1;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-family: 'Jost', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+    }
+
+    .modal-btn-cancel {
+        background: white;
+        color: #666;
+        border: 2px solid #E5E5E5;
+    }
+
+    .modal-btn-cancel:hover {
+        background: #F5F6F2;
+        border-color: #D1D5DB;
+    }
+
+    .modal-btn-confirm {
+        background: #EE403D;
+        color: white;
+    }
+
+    .modal-btn-confirm:hover {
+        background: #E32020;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
     /* Cart Summary */
     .cart-summary {
         background: white;
@@ -285,58 +402,7 @@
 @endpush
 
 @section('content')
-<!-- TOP BANNER -->
-<div style="background-color: #EE403D; color: white; text-align: center; padding: 12px 0; font-family: 'Jost', sans-serif;">
-    <p style="margin: 0;">Envío gratis en compras mayores a $100</p>
-</div>
-
-<!-- SECONDARY HEADER -->
-<div style="background-color: #F5F6F2; padding: 12px 0;">
-    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
-        <nav style="display: flex; gap: 24px;">
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Nosotros</a>
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Mi Cuenta</a>
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Wishlist</a>
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Rastreo</a>
-        </nav>
-        <div style="display: flex; gap: 16px; align-items: center;">
-            <span style="font-size: 14px; color: #666; font-family: 'Jost', sans-serif;">Necesitas ayuda? <strong>+0020 500</strong></span>
-        </div>
-    </div>
-</div>
-
-<!-- MAIN HEADER -->
-<header style="background-color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 20px 0;">
-    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
-        <div style="flex-shrink: 0;">
-            <a href="{{ route('home') }}" style="font-size: 32px; font-weight: 700; color: #212529; text-decoration: none; font-family: 'Jost', sans-serif;">SEALS</a>
-        </div>
-
-        <nav style="display: flex; gap: 32px; align-items: center;">
-            <a href="{{ route('home') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Inicio</a>
-            <a href="{{ route('shop.index') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Shop</a>
-            <a href="{{ route('categories') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Categorías</a>
-            <a href="{{ route('contact') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Contacto</a>
-        </nav>
-
-        <div style="display: flex; gap: 16px; align-items: center;">
-            <button style="background: none; border: none; cursor: pointer; color: #212529; font-size: 20px;">
-                <i class="fas fa-search"></i>
-            </button>
-            @auth
-                <span style="color: #666; font-family: 'Jost', sans-serif;">Hola, {{ Auth::user()->name }}</span>
-            @else
-                <a href="{{ route('login') }}" style="color: #666; text-decoration: none;">
-                    <i class="fas fa-user"></i>
-                </a>
-            @endauth
-            <a href="{{ route('cart') }}" style="color: #EE403D; text-decoration: none; position: relative;">
-                <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: 'Jost', sans-serif;">3</span>
-            </a>
-        </div>
-    </div>
-</header>
+@include('layouts.navbar')
 
 <!-- BREADCRUMB -->
 <div style="background-color: #F8F8F8; padding: 20px 0;">
@@ -356,101 +422,100 @@
     <div class="cart-grid">
         <!-- Cart Items Table -->
         <div class="cart-table">
-            <div class="cart-table-header">
-                <div>Producto</div>
-                <div>Precio</div>
-                <div>Cantidad</div>
-                <div>Total</div>
-                <div></div>
-            </div>
+            @if(count($cart) > 0)
+                <div class="cart-table-header">
+                    <div>Producto</div>
+                    <div>Precio</div>
+                    <div>Cantidad</div>
+                    <div>Total</div>
+                    <div></div>
+                </div>
 
-            <!-- Cart Item 1 -->
-            <div class="cart-item">
-                <div class="item-product">
-                    <div class="item-image">
-                        <img src="https://via.placeholder.com/80x100" alt="Producto 1">
+                @php $subtotal = 0; @endphp
+                @foreach($cart as $id => $item)
+                    @php
+                        $itemTotal = $item['price'] * $item['quantity'];
+                        $subtotal += $itemTotal;
+                    @endphp
+                    <div class="cart-item" data-id="{{ $id }}">
+                        <div class="item-product">
+                            <div class="item-image">
+                                @php
+                                    // Handle both 'image' and 'images' keys for backward compatibility
+                                    if (isset($item['image'])) {
+                                        $imageSrc = $item['image'];
+                                    } elseif (isset($item['images'])) {
+                                        $images = is_string($item['images']) ? json_decode($item['images'], true) : $item['images'];
+                                        $imageSrc = is_array($images) && count($images) > 0 
+                                            ? asset('storage/' . $images[0]) 
+                                            : 'https://via.placeholder.com/60x75';
+                                    } else {
+                                        $imageSrc = 'https://via.placeholder.com/60x75';
+                                    }
+                                @endphp
+                                <img src="{{ $imageSrc }}" alt="{{ $item['name'] }}">
+                            </div>
+                            <div class="item-details">
+                                <h4>{{ $item['name'] }}</h4>
+                                <p class="item-meta">Stock disponible: {{ $item['stock'] ?? $item['stock_quantity'] ?? 0 }}</p>
+                            </div>
+                        </div>
+                        <div class="item-price">${{ number_format($item['price'], 2) }}</div>
+                        <div class="quantity-controls">
+                            <button class="qty-btn" onclick="updateQty(this, -1)">−</button>
+                            <input type="number" value="{{ $item['quantity'] }}" min="1" max="{{ $item['stock'] ?? $item['stock_quantity'] ?? 999 }}" class="qty-input" onchange="qtyChanged(this)">
+                            <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+                        </div>
+                        <div class="item-total">${{ number_format($itemTotal, 2) }}</div>
+                        <button type="button" class="remove-btn" onclick="showRemoveModal({{ $id }})">×</button>
                     </div>
-                    <div class="item-details">
-                        <h4>Bali Underwire Bra</h4>
-                        <p class="item-meta">Color: Negro | Talla: M</p>
-                    </div>
+                @endforeach
+            @else
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>Tu carrito está vacío</h3>
+                    <p>Agrega productos para continuar</p>
+                    <a href="{{ route('shop.index') }}" class="checkout-btn" style="display: inline-block; width: auto; margin-top: 24px; text-decoration: none;">
+                        Ir a la Tienda
+                    </a>
                 </div>
-                <div class="item-price">$99.00</div>
-                <div class="quantity-controls">
-                    <button class="qty-btn" onclick="updateQty(this, -1)">−</button>
-                    <input type="number" value="1" min="1" class="qty-input" onchange="calculateTotal()">
-                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
-                </div>
-                <div class="item-total">$99.00</div>
-                <button class="remove-btn" onclick="removeItem(this)">×</button>
-            </div>
-
-            <!-- Cart Item 2 -->
-            <div class="cart-item">
-                <div class="item-product">
-                    <div class="item-image">
-                        <img src="https://via.placeholder.com/80x100" alt="Producto 2">
-                    </div>
-                    <div class="item-details">
-                        <h4>Maidenform Bra</h4>
-                        <p class="item-meta">Color: Azul | Talla: L</p>
-                    </div>
-                </div>
-                <div class="item-price">$85.00</div>
-                <div class="quantity-controls">
-                    <button class="qty-btn" onclick="updateQty(this, -1)">−</button>
-                    <input type="number" value="2" min="1" class="qty-input" onchange="calculateTotal()">
-                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
-                </div>
-                <div class="item-total">$170.00</div>
-                <button class="remove-btn" onclick="removeItem(this)">×</button>
-            </div>
-
-            <!-- Cart Item 3 -->
-            <div class="cart-item">
-                <div class="item-product">
-                    <div class="item-image">
-                        <img src="https://via.placeholder.com/80x100" alt="Producto 3">
-                    </div>
-                    <div class="item-details">
-                        <h4>Champion Bra</h4>
-                        <p class="item-meta">Color: Blanco | Talla: S</p>
-                    </div>
-                </div>
-                <div class="item-price">$110.00</div>
-                <div class="quantity-controls">
-                    <button class="qty-btn" onclick="updateQty(this, -1)">−</button>
-                    <input type="number" value="1" min="1" class="qty-input" onchange="calculateTotal()">
-                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
-                </div>
-                <div class="item-total">$110.00</div>
-                <button class="remove-btn" onclick="removeItem(this)">×</button>
-            </div>
+            @endif
         </div>
 
         <!-- Cart Summary -->
         <div class="cart-summary">
             <h3 class="summary-title">Resumen del Pedido</h3>
 
-            <div class="summary-item">
-                <span>Subtotal</span>
-                <span id="subtotal">$379.00</span>
-            </div>
-            <div class="summary-item">
-                <span>Envío</span>
-                <span>$15.00</span>
-            </div>
-            <div class="summary-item">
-                <span>Impuestos</span>
-                <span id="tax">$39.40</span>
-            </div>
+            @if(count($cart) > 0)
+                @php
+                    $shipping = $subtotal >= 100 ? 0 : 15;
+                    $tax = $subtotal * 0.10;
+                    $total = $subtotal + $shipping + $tax;
+                @endphp
 
-            <div class="summary-total">
-                <span>Total</span>
-                <span id="total">$433.40</span>
-            </div>
+                <div class="summary-item">
+                    <span>Subtotal</span>
+                    <span id="subtotal">${{ number_format($subtotal, 2) }}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Envío</span>
+                    <span id="shipping">{{ $shipping == 0 ? 'Gratis' : '$' . number_format($shipping, 2) }}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Impuestos (10%)</span>
+                    <span id="tax">${{ number_format($tax, 2) }}</span>
+                </div>
 
-            <button class="checkout-btn">Proceder al Pago</button>
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span id="total">${{ number_format($total, 2) }}</span>
+                </div>
+
+                <a href="{{ route('checkout.index') }}" class="checkout-btn" style="text-decoration: none; text-align: center; display: block;">Proceder al Pago</a>
+            @else
+                <p style="text-align: center; color: #666; font-family: 'Jost', sans-serif; padding: 20px;">Tu carrito está vacío</p>
+            @endif
+
             <a href="{{ route('shop.index') }}" class="continue-shopping">
                 <i class="fas fa-arrow-left"></i> Continuar Comprando
             </a>
@@ -458,46 +523,75 @@
     </div>
 </div>
 
-<!-- FOOTER -->
-<footer style="background-color: #212529; color: white; padding: 60px 20px 20px; margin-top: 80px;">
-    <div style="max-width: 1200px; margin: 0 auto;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px;">
-            <div>
-                <h3 style="font-family: 'Jost', sans-serif; font-size: 24px; margin-bottom: 16px;">SEALS</h3>
-                <p style="color: #999; font-family: 'Jost', sans-serif; line-height: 1.6;">Tu tienda de moda en línea con los mejores productos y precios.</p>
-            </div>
-            <div>
-                <h4 style="font-family: 'Jost', sans-serif; font-size: 16px; margin-bottom: 16px;">Enlaces</h4>
-                <nav style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="{{ route('home') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Inicio</a>
-                    <a href="{{ route('shop.index') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Shop</a>
-                    <a href="{{ route('categories') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Categorías</a>
-                </nav>
-            </div>
+<!-- Confirmation Modal -->
+<div id="removeModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-icon">
+            <i class="fas fa-trash-alt"></i>
         </div>
-        <div style="border-top: 1px solid #333; padding-top: 20px; text-align: center; color: #666; font-family: 'Jost', sans-serif;">
-            <p>&copy; 2025 SEALS. Todos los derechos reservados.</p>
+        <h3 class="modal-title">¿Eliminar producto?</h3>
+        <p class="modal-message">¿Estás seguro de que deseas eliminar este producto del carrito?</p>
+        <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" onclick="closeRemoveModal()">Cancelar</button>
+            <button class="modal-btn modal-btn-confirm" onclick="confirmRemove()">Eliminar</button>
         </div>
     </div>
-</footer>
+</div>
 
+@include('layouts.footer')
+
+<!-- Toast container -->
+<div id="toast-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 9999;"></div>
+
+@push('scripts')
 <script>
+const CSRF_TOKEN = '{{ csrf_token() }}';
+
 // Update quantity
-function updateQty(btn, change) {
-    const input = btn.parentElement.querySelector('.qty-input');
+async function updateQty(btn, change) {
+    const itemEl = btn.closest('.cart-item');
+    const input = itemEl.querySelector('.qty-input');
     const currentValue = parseInt(input.value);
     const newValue = currentValue + change;
+    const productId = itemEl.getAttribute('data-id');
 
-    if (newValue >= 1) {
-        input.value = newValue;
-        updateItemTotal(btn.closest('.cart-item'));
-        calculateTotal();
+    if (newValue < 1) return;
+
+    // Optimistically set value
+    input.value = newValue;
+    // Try to persist on server
+    const ok = await sendQtyUpdate(productId, newValue);
+    if (!ok) {
+        // revert
+        input.value = currentValue;
+        return;
     }
+
+    updateItemTotal(itemEl);
+    calculateTotal();
 }
+
+    // Simple toast notification
+    function showToast(message, type = 'info', timeout = 4000) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = 'simple-toast ' + type;
+        toast.style = `background: ${type === 'error' ? '#ff4d4f' : '#333'}; color: white; padding: 12px 16px; margin-top: 8px; border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,0.12); font-family: 'Jost', sans-serif;`;
+        toast.textContent = message;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.transition = 'opacity 300ms ease';
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, timeout);
+    }
 
 // Update individual item total
 function updateItemTotal(item) {
-    const price = parseFloat(item.querySelector('.item-price').textContent.replace('$', ''));
+    const price = parseFloat(item.querySelector('.item-price').textContent.replace('$', '').replace(/,/g, ''));
     const qty = parseInt(item.querySelector('.qty-input').value);
     const total = price * qty;
     item.querySelector('.item-total').textContent = '$' + total.toFixed(2);
@@ -507,17 +601,74 @@ function updateItemTotal(item) {
 function calculateTotal() {
     let subtotal = 0;
     document.querySelectorAll('.cart-item').forEach(item => {
-        const total = parseFloat(item.querySelector('.item-total').textContent.replace('$', ''));
+        const total = parseFloat(item.querySelector('.item-total').textContent.replace('$', '').replace(/,/g, ''));
         subtotal += total;
     });
 
-    const shipping = 15.00;
+    // Match server-side: free shipping when subtotal >= 100
+    const shipping = subtotal >= 100 ? 0 : 15.00;
     const tax = subtotal * 0.10;
     const total = subtotal + shipping + tax;
 
     document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
     document.getElementById('tax').textContent = '$' + tax.toFixed(2);
     document.getElementById('total').textContent = '$' + total.toFixed(2);
+
+    // Update shipping display text
+    const shippingEl = document.getElementById('shipping');
+    if (shippingEl) {
+        shippingEl.textContent = shipping === 0 ? 'Gratis' : '$' + shipping.toFixed(2);
+    }
+}
+
+// Send quantity update to server and handle response (returns true if ok)
+async function sendQtyUpdate(productId, quantity) {
+    try {
+        const resp = await fetch(`/cart/update/${productId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ quantity })
+        });
+
+        if (!resp.ok) {
+            const data = await resp.json().catch(() => null);
+            showToast((data && data.error) ? data.error : 'No se pudo actualizar la cantidad', 'error');
+            return false;
+        }
+
+        return true;
+    } catch (err) {
+        showToast('Error de red al actualizar cantidad', 'error');
+        return false;
+    }
+}
+
+// Handler for manual input change
+async function qtyChanged(input) {
+    const itemEl = input.closest('.cart-item');
+    const productId = itemEl.getAttribute('data-id');
+    let newValue = parseInt(input.value) || 1;
+    const max = parseInt(input.max) || 999999;
+    if (newValue < 1) newValue = 1;
+    if (newValue > max) {
+        showToast('No puedes seleccionar más unidades que el stock disponible', 'error');
+        input.value = max;
+        newValue = max;
+    }
+
+    const ok = await sendQtyUpdate(productId, newValue);
+    if (!ok) {
+        // Optionally, reload to sync
+        location.reload();
+        return;
+    }
+
+    updateItemTotal(itemEl);
+    calculateTotal();
 }
 
 // Remove item
@@ -542,5 +693,59 @@ function removeItem(btn) {
         }
     }
 }
+
+// Modal functions
+let productToRemove = null;
+
+function showRemoveModal(productId) {
+    productToRemove = productId;
+    const modal = document.getElementById('removeModal');
+    modal.classList.add('active');
+}
+
+function closeRemoveModal() {
+    const modal = document.getElementById('removeModal');
+    modal.classList.remove('active');
+    productToRemove = null;
+}
+
+function confirmRemove() {
+    if (productToRemove) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/cart/remove/${productToRemove}`;
+        
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        
+        form.appendChild(csrfInput);
+        form.appendChild(methodInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('removeModal');
+    if (e.target === modal) {
+        closeRemoveModal();
+    }
+});
+
+// Close modal with ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeRemoveModal();
+    }
+});
 </script>
+@endpush
 @endsection

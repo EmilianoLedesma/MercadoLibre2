@@ -6,91 +6,94 @@
 <style>
     .categories-hero {
         background: linear-gradient(135deg, #EE403D 0%, #E32020 100%);
-        padding: 80px 20px;
+        padding: 60px 20px;
         text-align: center;
         color: white;
         font-family: 'Jost', sans-serif;
     }
 
     .categories-hero h1 {
-        font-size: 48px;
+        font-size: 42px;
         font-weight: 700;
-        margin-bottom: 16px;
+        margin-bottom: 12px;
     }
 
     .categories-hero p {
-        font-size: 18px;
+        font-size: 17px;
         opacity: 0.95;
     }
 
     .categories-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 80px 20px;
+        padding: 60px 20px;
     }
 
     .categories-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 32px;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
     }
 
     .category-card {
         background: white;
-        border-radius: 16px;
+        border: 1px solid #E5E5E5;
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        transition: all 0.3s;
+        transition: all 0.3s ease;
         cursor: pointer;
+        display: flex;
+        flex-direction: column;
     }
 
     .category-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        border-color: #EE403D;
     }
 
     .category-image {
         width: 100%;
-        padding-top: 75%;
+        height: 200px;
         position: relative;
         background: linear-gradient(135deg, #F5F6F2 0%, #E5E5E5 100%);
         overflow: hidden;
     }
 
     .category-image img {
-        position: absolute;
-        top: 0;
-        left: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s;
+        transition: transform 0.4s ease;
     }
 
     .category-card:hover .category-image img {
-        transform: scale(1.1);
+        transform: scale(1.08);
     }
 
     .category-badge {
         position: absolute;
-        top: 16px;
-        right: 16px;
-        background-color: #EE403D;
+        top: 12px;
+        right: 12px;
+        background: rgba(238, 64, 61, 0.95);
         color: white;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
         font-weight: 600;
         font-family: 'Jost', sans-serif;
+        backdrop-filter: blur(4px);
     }
 
     .category-content {
-        padding: 24px;
-        text-align: center;
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
     }
 
     .category-title {
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 600;
         color: #212529;
         margin-bottom: 8px;
@@ -103,36 +106,41 @@
         margin-bottom: 16px;
         font-family: 'Jost', sans-serif;
         line-height: 1.5;
+        flex: 1;
     }
 
     .category-link {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         color: #EE403D;
         text-decoration: none;
         font-weight: 600;
-        font-size: 15px;
+        font-size: 14px;
         font-family: 'Jost', sans-serif;
-        transition: gap 0.3s;
+        transition: gap 0.3s ease;
     }
 
     .category-link:hover {
-        gap: 12px;
+        gap: 10px;
+    }
+
+    .category-link i {
+        font-size: 12px;
     }
 
     .stats-section {
-        background-color: #F5F6F2;
-        padding: 60px 20px;
-        margin-top: 80px;
+        background: linear-gradient(135deg, #F5F6F2 0%, #FAFAF9 100%);
+        padding: 50px 20px;
+        margin-top: 60px;
     }
 
     .stats-container {
         max-width: 1200px;
         margin: 0 auto;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 40px;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 32px;
     }
 
     .stat-item {
@@ -140,15 +148,15 @@
     }
 
     .stat-number {
-        font-size: 48px;
+        font-size: 40px;
         font-weight: 700;
         color: #EE403D;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
         font-family: 'Jost', sans-serif;
     }
 
     .stat-label {
-        font-size: 16px;
+        font-size: 15px;
         color: #666;
         font-family: 'Jost', sans-serif;
     }
@@ -159,65 +167,31 @@
         }
 
         .categories-grid {
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            grid-template-columns: 1fr;
             gap: 20px;
+        }
+
+        .stats-container {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
         }
     }
 </style>
 @endpush
 
 @section('content')
-<!-- TOP BANNER -->
-<div style="background-color: #EE403D; color: white; text-align: center; padding: 12px 0; font-family: 'Jost', sans-serif;">
-    <p style="margin: 0;">Envío gratis en compras mayores a $100</p>
-</div>
+@include('layouts.navbar')
 
-<!-- SECONDARY HEADER -->
-<div style="background-color: #F5F6F2; padding: 12px 0;">
-    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
-        <nav style="display: flex; gap: 24px;">
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Nosotros</a>
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Mi Cuenta</a>
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Wishlist</a>
+<!-- BREADCRUMB -->
+<div style="background-color: #F8F8F8; padding: 20px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <nav style="font-family: 'Jost', sans-serif; font-size: 14px; color: #666;">
+            <a href="{{ route('home') }}" style="color: #666; text-decoration: none;">Inicio</a>
+            <span style="margin: 0 8px;">/</span>
+            <span style="color: #212529; font-weight: 500;">Categorías</span>
         </nav>
-        <div>
-            <span style="font-size: 14px; color: #666; font-family: 'Jost', sans-serif;">Necesitas ayuda? <strong>+0020 500</strong></span>
-        </div>
     </div>
 </div>
-
-<!-- MAIN HEADER -->
-<header style="background-color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 20px 0;">
-    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
-        <div>
-            <a href="{{ route('home') }}" style="font-size: 32px; font-weight: 700; color: #212529; text-decoration: none; font-family: 'Jost', sans-serif;">SEALS</a>
-        </div>
-
-        <nav style="display: flex; gap: 32px; align-items: center;">
-            <a href="{{ route('home') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Inicio</a>
-            <a href="{{ route('shop.index') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Shop</a>
-            <a href="{{ route('categories') }}" style="color: #EE403D; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Categorías</a>
-            <a href="{{ route('contact') }}" style="color: #666; text-decoration: none; font-size: 16px; font-weight: 500; font-family: 'Jost', sans-serif;">Contacto</a>
-        </nav>
-
-        <div style="display: flex; gap: 16px; align-items: center;">
-            <button style="background: none; border: none; cursor: pointer;">
-                <i class="fas fa-search"></i>
-            </button>
-            @auth
-                <span style="color: #666; font-family: 'Jost', sans-serif;">{{ Auth::user()->name }}</span>
-            @else
-                <a href="{{ route('login') }}" style="color: #666; text-decoration: none;">
-                    <i class="fas fa-user"></i>
-                </a>
-            @endauth
-            <a href="{{ route('cart') }}" style="color: #212529; text-decoration: none; position: relative;">
-                <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-                <span style="position: absolute; top: -8px; right: -8px; background-color: #EE403D; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px;">3</span>
-            </a>
-        </div>
-    </div>
-</header>
 
 <!-- HERO SECTION -->
 <div class="categories-hero">
@@ -228,101 +202,31 @@
 <!-- CATEGORIES GRID -->
 <div class="categories-container">
     <div class="categories-grid">
-        <!-- Women's Category -->
-        <div class="category-card" onclick="window.location.href='#'">
+        @forelse($categories as $category)
+        <a href="{{ route('shop.category', $category->slug) }}" class="category-card" style="text-decoration: none;">
             <div class="category-image">
-                <span class="category-badge">20 productos</span>
-                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=MUJER" alt="Para Mujer">
+                @if($category->image)
+                    <img loading="lazy" src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}">
+                @else
+                    <img loading="lazy" src="https://via.placeholder.com/400x300/F5F6F2/666?text={{ urlencode($category->name) }}" alt="{{ $category->name }}">
+                @endif
+                <span class="category-badge">{{ $category->products_count }} productos</span>
             </div>
             <div class="category-content">
-                <h3 class="category-title">Para Mujer</h3>
-                <p class="category-description">Moda femenina y accesorios exclusivos</p>
-                <a href="#" class="category-link">
+                <h3 class="category-title">{{ $category->name }}</h3>
+                <p class="category-description">{{ $category->description ?? 'Descubre nuestra selección de productos' }}</p>
+                <span class="category-link">
                     Ver Productos
                     <i class="fas fa-arrow-right"></i>
-                </a>
+                </span>
             </div>
+        </a>
+        @empty
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #666;">
+            <i class="fas fa-box-open" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+            <p style="font-family: 'Jost', sans-serif; font-size: 18px;">No hay categorías disponibles en este momento</p>
         </div>
-
-        <!-- Men's Category -->
-        <div class="category-card" onclick="window.location.href='#'">
-            <div class="category-image">
-                <span class="category-badge">33 productos</span>
-                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=HOMBRE" alt="Para Hombre">
-            </div>
-            <div class="category-content">
-                <h3 class="category-title">Para Hombre</h3>
-                <p class="category-description">Ropa y accesorios masculinos</p>
-                <a href="#" class="category-link">
-                    Ver Productos
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- Kids Category -->
-        <div class="category-card" onclick="window.location.href='#'">
-            <div class="category-image">
-                <span class="category-badge">25 productos</span>
-                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=NIÑOS" alt="Para Niños">
-            </div>
-            <div class="category-content">
-                <h3 class="category-title">Para Niños</h3>
-                <p class="category-description">Ropa y juguetes para los más pequeños</p>
-                <a href="#" class="category-link">
-                    Ver Productos
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- Accessories Category -->
-        <div class="category-card" onclick="window.location.href='#'">
-            <div class="category-image">
-                <span class="category-badge">33 productos</span>
-                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=ACCESORIOS" alt="Accesorios">
-            </div>
-            <div class="category-content">
-                <h3 class="category-title">Accesorios</h3>
-                <p class="category-description">Complementos para tu estilo</p>
-                <a href="#" class="category-link">
-                    Ver Productos
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- Shoes Category -->
-        <div class="category-card" onclick="window.location.href='#'">
-            <div class="category-image">
-                <span class="category-badge">28 productos</span>
-                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=CALZADO" alt="Calzado">
-            </div>
-            <div class="category-content">
-                <h3 class="category-title">Calzado</h3>
-                <p class="category-description">Zapatos para toda ocasión</p>
-                <a href="#" class="category-link">
-                    Ver Productos
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- Sports Category -->
-        <div class="category-card" onclick="window.location.href='#'">
-            <div class="category-image">
-                <span class="category-badge">45 productos</span>
-                <img src="https://via.placeholder.com/400x300/F5F6F2/666?text=DEPORTES" alt="Deportes">
-            </div>
-            <div class="category-content">
-                <h3 class="category-title">Deportes</h3>
-                <p class="category-description">Equipamiento deportivo y ropa fitness</p>
-                <a href="#" class="category-link">
-                    Ver Productos
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
+        @endforelse
     </div>
 </div>
 
@@ -330,16 +234,16 @@
 <div class="stats-section">
     <div class="stats-container">
         <div class="stat-item">
-            <div class="stat-number">500+</div>
+            <div class="stat-number">{{ $totalProducts }}+</div>
             <div class="stat-label">Productos</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number">6</div>
+            <div class="stat-number">{{ $totalCategories }}</div>
             <div class="stat-label">Categorías</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number">10K+</div>
-            <div class="stat-label">Clientes Felices</div>
+            <div class="stat-number">{{ $completedOrders }}+</div>
+            <div class="stat-label">Pedidos Completados</div>
         </div>
         <div class="stat-item">
             <div class="stat-number">24/7</div>
@@ -348,26 +252,5 @@
     </div>
 </div>
 
-<!-- FOOTER -->
-<footer style="background-color: #212529; color: white; padding: 60px 20px 20px; margin-top: 0;">
-    <div style="max-width: 1200px; margin: 0 auto;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px;">
-            <div>
-                <h3 style="font-family: 'Jost', sans-serif; font-size: 24px; margin-bottom: 16px;">SEALS</h3>
-                <p style="color: #999; font-family: 'Jost', sans-serif; line-height: 1.6;">Tu tienda de moda en línea con los mejores productos y precios.</p>
-            </div>
-            <div>
-                <h4 style="font-family: 'Jost', sans-serif; font-size: 16px; margin-bottom: 16px;">Enlaces</h4>
-                <nav style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="{{ route('home') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Inicio</a>
-                    <a href="{{ route('shop.index') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Shop</a>
-                    <a href="{{ route('categories') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Categorías</a>
-                </nav>
-            </div>
-        </div>
-        <div style="border-top: 1px solid #333; padding-top: 20px; text-align: center; color: #666; font-family: 'Jost', sans-serif;">
-            <p>&copy; 2025 SEALS. Todos los derechos reservados.</p>
-        </div>
-    </div>
-</footer>
+@include('layouts.footer')
 @endsection

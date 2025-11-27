@@ -21,6 +21,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
+        'last_name',
         'email',
         'password',
         'phone',
@@ -84,6 +85,27 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Relación: usuario tiene muchos pedidos
+     */
+    public function orders()
+    {
+        return $this->hasMany(\App\Models\Order::class);
+    }
+
+    /**
+     * Relación: vendedor puede tener una tienda
+     */
+    public function store()
+    {
+        return $this->hasOne(\App\Models\Store::class);
+    }
+
+    /**
+     * Relación: vendedor tiene muchos productos
+     */
+    public function products()
+    {
+        return $this->hasMany(\App\Models\Product::class);
      * Relación: usuario tiene muchas órdenes
      */
     public function orders()
