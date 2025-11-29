@@ -68,4 +68,39 @@ class Product extends Model
     {
         return $this->belongsTo(Store::class);
     }
+
+    /**
+     * Calcular el porcentaje de descuento.
+     */
+    public function getDiscountPercentageAttribute()
+    {
+        if ($this->sale_price && $this->sale_price < $this->price) {
+            return round((($this->price - $this->sale_price) / $this->price) * 100);
+        }
+        return 0;
+    }
+
+    /**
+     * Obtener el precio final (sale_price si existe, sino price).
+     */
+    public function getFinalPriceAttribute()
+    {
+        return $this->sale_price ?? $this->price;
+    }
+
+    /**
+     * Verificar si el producto es nuevo (creado en los últimos 30 días).
+     */
+    public function isNew()
+    {
+        return $this->created_at && $this->created_at->diffInDays(now()) <= 30;
+    }
+
+    /**
+     * Verificar si el producto tiene descuento.
+     */
+    public function hasDiscount()
+    {
+        return $this->sale_price && $this->sale_price < $this->price;
+    }
 }

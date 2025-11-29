@@ -14,10 +14,27 @@ use App\Http\Controllers\SellerProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
+use App\Models\Category;
+use App\Models\Product;
 
 // Página de inicio
 Route::get('/', function () {
-    return view('home');
+    // Obtener las primeras 4 categorías activas con el conteo de productos
+    $categories = Category::withCount('products')
+        ->where('is_active', true)
+        ->take(4)
+        ->get();
+    
+    // Obtener productos destacados (solo los marcados como featured por el administrador)
+    // Los productos conservan sus etiquetas (NEW, HOT, descuento) independientemente
+    $featuredProducts = Product::where('is_active', true)
+        ->where('is_featured', true)
+        ->with('category')
+        ->inRandomOrder()
+        ->take(4)
+        ->get();
+    
+    return view('home', compact('categories', 'featuredProducts'));
 })->name('home');
 
 // Rutas de autenticación
