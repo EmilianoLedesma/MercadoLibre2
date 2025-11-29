@@ -121,41 +121,22 @@
         <h3 style="text-align: center; font-size: 36px; font-weight: 700; color: #212529; margin: 0 0 50px 0;">Categorías Populares</h3>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
-            <!-- Category Card 1 -->
-            <div style="position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.25s;">
-                <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('https://via.placeholder.com/300x400/FFB6C1/FFFFFF?text=WOMEN') center/cover;"></div>
-                <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; color: white;">
-                    <p style="margin: 0 0 5px 0; font-size: 14px;"><span style="font-weight: 600;">20</span> <span style="opacity: 0.8;">items</span></p>
-                    <h4 style="margin: 0; font-size: 20px; font-weight: 700; text-transform: uppercase;">FOR WOMEN'S</h4>
+            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <!-- Category Card -->
+            <a href="<?php echo e(route('shop.index', ['category' => $category->id])); ?>" style="text-decoration: none; color: inherit;">
+                <div style="position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.25s;">
+                    <?php if($category->image): ?>
+                        <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('<?php echo e(asset('storage/' . $category->image)); ?>') center/cover;"></div>
+                    <?php else: ?>
+                        <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('<?php echo e(asset('images/placeholder-product.svg')); ?>') center/cover; background-color: #f0f0f0;"></div>
+                    <?php endif; ?>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; color: white;">
+                        <p style="margin: 0 0 5px 0; font-size: 14px;"><span style="font-weight: 600;"><?php echo e($category->products_count); ?></span> <span style="opacity: 0.8;">items</span></p>
+                        <h4 style="margin: 0; font-size: 20px; font-weight: 700; text-transform: uppercase;"><?php echo e($category->name); ?></h4>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Category Card 2 -->
-            <div style="position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.25s;">
-                <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('<?php echo e(asset('images/mens_clothes.jpg')); ?>') center/cover;"></div>
-                <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; color: white;">
-                    <p style="margin: 0 0 5px 0; font-size: 14px;"><span style="font-weight: 600;">33</span> <span style="opacity: 0.8;">items</span></p>
-                    <h4 style="margin: 0; font-size: 20px; font-weight: 700; text-transform: uppercase;">FOR MAN'S</h4>
-                </div>
-            </div>
-
-            <!-- Category Card 3 -->
-            <div style="position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.25s;">
-                <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('https://via.placeholder.com/300x400/FFD700/FFFFFF?text=KIDS') center/cover;"></div>
-                <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; color: white;">
-                    <p style="margin: 0 0 5px 0; font-size: 14px;"><span style="font-weight: 600;">25</span> <span style="opacity: 0.8;">items</span></p>
-                    <h4 style="margin: 0; font-size: 20px; font-weight: 700; text-transform: uppercase;">FOR KIDS</h4>
-                </div>
-            </div>
-
-            <!-- Category Card 4 -->
-            <div style="position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.25s;">
-                <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('https://via.placeholder.com/300x400/DDA0DD/FFFFFF?text=ACCESSORIES') center/cover;"></div>
-                <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; color: white;">
-                    <p style="margin: 0 0 5px 0; font-size: 14px;"><span style="font-weight: 600;">33</span> <span style="opacity: 0.8;">items</span></p>
-                    <h4 style="margin: 0; font-size: 20px; font-weight: 700; text-transform: uppercase;">ACCESORIES</h4>
-                </div>
-            </div>
+            </a>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
     </div>
 </section>
@@ -169,74 +150,57 @@
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
-            <!-- Product Card 1 -->
+            <?php $__currentLoopData = $featuredProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <!-- Product Card -->
             <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
-                    <span style="position: absolute; top: 12px; right: 12px; background-color: #28A745; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">NEW</span>
-                    <img src="https://via.placeholder.com/300x400/F0E68C/FFFFFF?text=Product+1" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    <?php
+                        $badgeTop = 12;
+                    ?>
+                    
+                    <?php if($product->hasDiscount()): ?>
+                        <span style="position: absolute; top: <?php echo e($badgeTop); ?>px; right: 12px; background-color: #E32020; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">-<?php echo e($product->discount_percentage); ?>%</span>
+                        <?php $badgeTop += 33; ?>
+                    <?php endif; ?>
+                    
+                    <?php if($product->isNew()): ?>
+                        <span style="position: absolute; top: <?php echo e($badgeTop); ?>px; right: 12px; background-color: #28A745; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">NEW</span>
+                        <?php $badgeTop += 33; ?>
+                    <?php endif; ?>
+                    
+                    <?php if($product->is_featured): ?>
+                        <span style="position: absolute; top: <?php echo e($badgeTop); ?>px; right: 12px; background-color: #EE403D; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">HOT</span>
+                    <?php endif; ?>
+                    
+                    <?php if($product->images && is_array($product->images) && count($product->images) > 0): ?>
+                        <img src="<?php echo e(asset('storage/' . $product->images[0])); ?>" alt="<?php echo e($product->name); ?>" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    <?php else: ?>
+                        <img src="<?php echo e(asset('images/placeholder-product.svg')); ?>" alt="<?php echo e($product->name); ?>" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    <?php endif; ?>
                 </div>
                 <div style="padding: 20px;">
-                    <h4 style="font-size: 16px; font-weight: 500; color: #212529; margin: 0 0 12px 0;">Producto Destacado 1</h4>
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-                        <span style="font-size: 20px; font-weight: 700; color: #404040;">$99.00</span>
-                    </div>
-                    <button style="width: 100%; background-color: transparent; color: #212529; border: 2px solid #212529; padding: 12px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: all 0.25s;">
-                        Agregar al Carrito
-                    </button>
+                    <h4 style="font-size: 16px; font-weight: 500; color: #212529; margin: 0 0 12px 0;"><?php echo e(Str::limit($product->name, 40)); ?></h4>
+                    
+                    <?php if($product->hasDiscount()): ?>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
+                            <span style="font-size: 14px; color: #999; text-decoration: line-through;">$<?php echo e(number_format($product->price, 2)); ?></span>
+                            <span style="font-size: 20px; font-weight: 700; color: #E32020;">$<?php echo e(number_format($product->sale_price, 2)); ?></span>
+                        </div>
+                    <?php else: ?>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                            <span style="font-size: 20px; font-weight: 700; color: #404040;">$<?php echo e(number_format($product->price, 2)); ?></span>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <form action="<?php echo e(route('cart.add', $product->id)); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <button type="submit" style="width: 100%; background-color: transparent; color: #212529; border: 2px solid #212529; padding: 12px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: all 0.25s;">
+                            Agregar al Carrito
+                        </button>
+                    </form>
                 </div>
             </div>
-
-            <!-- Product Card 2 -->
-            <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
-                    <span style="position: absolute; top: 12px; right: 12px; background-color: #E32020; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">-38%</span>
-                    <span style="position: absolute; top: 45px; right: 12px; background-color: #EE403D; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">HOT</span>
-                    <img src="https://via.placeholder.com/300x400/F08080/FFFFFF?text=Product+2" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
-                </div>
-                <div style="padding: 20px;">
-                    <h4 style="font-size: 16px; font-weight: 500; color: #212529; margin: 0 0 12px 0;">Producto en Oferta</h4>
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
-                        <span style="font-size: 14px; color: #999; text-decoration: line-through;">$120.00</span>
-                        <span style="font-size: 20px; font-weight: 700; color: #E32020;">$85.00</span>
-                    </div>
-                    <button style="width: 100%; background-color: transparent; color: #212529; border: 2px solid #212529; padding: 12px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: all 0.25s;">
-                        Agregar al Carrito
-                    </button>
-                </div>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
-                    <img src="https://via.placeholder.com/300x400/98FB98/FFFFFF?text=Product+3" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
-                </div>
-                <div style="padding: 20px;">
-                    <h4 style="font-size: 16px; font-weight: 500; color: #212529; margin: 0 0 12px 0;">Producto Regular</h4>
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-                        <span style="font-size: 20px; font-weight: 700; color: #404040;">$110.00</span>
-                    </div>
-                    <button style="width: 100%; background-color: transparent; color: #212529; border: 2px solid #212529; padding: 12px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: all 0.25s;">
-                        Agregar al Carrito
-                    </button>
-                </div>
-            </div>
-
-            <!-- Product Card 4 -->
-            <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
-                    <span style="position: absolute; top: 12px; right: 12px; background-color: #EE403D; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">HOT</span>
-                    <img src="https://via.placeholder.com/300x400/FFB6C1/FFFFFF?text=Product+4" alt="Producto" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
-                </div>
-                <div style="padding: 20px;">
-                    <h4 style="font-size: 16px; font-weight: 500; color: #212529; margin: 0 0 12px 0;">Producto Popular</h4>
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-                        <span style="font-size: 20px; font-weight: 700; color: #404040;">$95.00</span>
-                    </div>
-                    <button style="width: 100%; background-color: transparent; color: #212529; border: 2px solid #212529; padding: 12px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: all 0.25s;">
-                        Agregar al Carrito
-                    </button>
-                </div>
-            </div>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
     </div>
 </section>

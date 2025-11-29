@@ -517,7 +517,7 @@
             <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Nosotros</a>
             <a href="<?php echo e(route('account')); ?>" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Mi Cuenta</a>
             <a href="<?php echo e(route('wishlist.index')); ?>" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Favoritos</a>
-            <a href="#" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Rastrear Pedido</a>
+            <a href="<?php echo e(route('track.order')); ?>" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Rastrear Pedido</a>
             <?php if(auth()->guard()->check()): ?>
                 <?php if(Auth::user()->role === 'seller'): ?>
                     <a href="<?php echo e(route('seller.dashboard')); ?>" style="color: #666; text-decoration: none; font-size: 14px; font-family: 'Jost', sans-serif;">Mi Dashboard</a>
