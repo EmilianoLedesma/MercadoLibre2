@@ -247,11 +247,24 @@
                 <div class="swiper-slide">
                     <a href="{{ route('shop.index', ['category' => $category->id]) }}" style="text-decoration: none; display: block;">
                         <div style="position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';">
-                            @if($category->image)
-                                <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('{{ asset($category->image) }}') center/cover;"></div>
-                            @else
-                                <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('https://via.placeholder.com/400x350/CCCCCC/666666?text={{ urlencode($category->name) }}') center/cover; background-color: #f0f0f0;"></div>
-                            @endif
+                            @php
+                                $categoryImages = [
+                                    'Tecnología' => 'images/tecnologia.jpg',
+                                    'Electrodomésticos' => 'images/electrodomesticos.jpg',
+                                    'Hogar y Muebles' => 'images/muebles.jpg',
+                                    'Moda' => 'images/moda.jpg',
+                                    'Deportes y Fitness' => 'images/Deportes_y_fitness.jpg',
+                                    'Juguetes y Bebés' => 'images/Juguetes.jpg',
+                                    'Belleza y Cuidado Personal' => 'images/belleza_cuidado_personal.jpg',
+                                    'Herramientas' => 'images/herramientas.jpg',
+                                    'Libros y Entretenimiento' => 'images/entretenimiento.jpg',
+                                    'Automotriz' => 'images/Automotriz.jpg',
+                                    'Jardín y Exterior' => 'images/jardineria.jpg',
+                                    'Alimentos y Bebidas' => 'images/alimentos.jpg',
+                                ];
+                                $categoryImage = $categoryImages[$category->name] ?? 'images/placeholder-product.svg';
+                            @endphp
+                            <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('{{ asset($categoryImage) }}') center/cover;"></div>
                             <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;">
                                 <p style="margin: 0 0 5px 0; font-size: 14px; color: white;"><span style="font-weight: 600;">{{ $category->products_count }}</span> <span style="opacity: 0.8;">items</span></p>
                                 <h4 style="margin: 0; font-size: 20px; font-weight: 700; text-transform: uppercase; color: white;">{{ $category->name }}</h4>
