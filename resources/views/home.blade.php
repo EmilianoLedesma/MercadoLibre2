@@ -125,7 +125,7 @@
             @foreach($categories as $category)
             <!-- Category Card -->
             <a href="{{ route('shop.index', ['category' => $category->id]) }}" style="text-decoration: none; color: inherit;">
-                <div style="position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.25s;">
+                <div style="position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';">
                     @if($category->image)
                         <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('{{ asset('storage/' . $category->image) }}') center/cover;"></div>
                     @else
@@ -153,7 +153,7 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
             @foreach($featuredProducts as $product)
             <!-- Product Card -->
-            <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';" onclick="window.location.href='{{ route('products.show', $product->id) }}'">
                 <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
                     @php
                         $badgeTop = 12;
@@ -193,7 +193,7 @@
                         </div>
                     @endif
                     
-                    <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                    <form action="{{ route('cart.add', $product->id) }}" method="POST" onclick="event.stopPropagation();">
                         @csrf
                         <button type="submit" style="width: 100%; background-color: transparent; color: #212529; border: 2px solid #212529; padding: 12px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: all 0.25s;">
                             Agregar al Carrito

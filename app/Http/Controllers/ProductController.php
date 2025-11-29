@@ -149,14 +149,23 @@ class ProductController extends Controller
     {
         $product->load('category', 'user');
 
+        // Obtener productos relacionados (misma categoría, excluyendo el producto actual)
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', true)
+            ->inRandomOrder()
+            ->take(4)
+            ->get();
+
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
                 'data' => $product,
+                'related_products' => $relatedProducts,
             ]);
         }
 
-        return view('products.show', compact('product'));
+        return view('products.show', compact('product', 'relatedProducts'));
     }
 
     /**

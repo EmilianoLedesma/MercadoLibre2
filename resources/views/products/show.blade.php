@@ -226,6 +226,86 @@
     </div>
 </section>
 
+<!-- Related Products Section -->
+@if($relatedProducts->count() > 0)
+<section style="padding: 60px 20px; background-color: #F8F8F8;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <h2 style="font-size: 28px; font-weight: 700; color: #212529; margin: 0 0 40px 0; text-align: center;">Productos Relacionados</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+            @foreach($relatedProducts as $relatedProduct)
+            <!-- Related Product Card -->
+            <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';" onclick="window.location.href='{{ route('products.show', $relatedProduct->id) }}'">
+                <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
+                    @php
+                        $badgeTop = 12;
+                    @endphp
+                    
+                    @if($relatedProduct->hasDiscount())
+                        <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #E32020; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">-{{ $relatedProduct->discount_percentage }}%</span>
+                        @php $badgeTop += 33; @endphp
+                    @endif
+                    
+                    @if($relatedProduct->isNew())
+                        <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #28A745; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">NEW</span>
+                        @php $badgeTop += 33; @endphp
+                    @endif
+                    
+                    @if($relatedProduct->is_featured)
+                        <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #EE403D; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">HOT</span>
+                    @endif
+                    
+                    @php
+                        $relatedImages = is_string($relatedProduct->images) ? json_decode($relatedProduct->images, true) : $relatedProduct->images;
+                        $relatedImages = $relatedImages ?? [];
+                        
+                        if (count($relatedImages) > 0) {
+                            $relatedImage = $relatedImages[0];
+                            $relatedStoragePath = public_path('storage/' . $relatedImage);
+                            $relatedPublicPath = public_path($relatedImage);
+
+                            if (file_exists($relatedStoragePath)) {
+                                $relatedImageUrl = asset('storage/' . $relatedImage);
+                            } elseif (file_exists($relatedPublicPath)) {
+                                $relatedImageUrl = asset($relatedImage);
+                            } else {
+                                $relatedImageUrl = asset('images/placeholder-product.svg');
+                            }
+                        } else {
+                            $relatedImageUrl = asset('images/placeholder-product.svg');
+                        }
+                    @endphp
+                    
+                    <img src="{{ $relatedImageUrl }}" alt="{{ $relatedProduct->name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                </div>
+                <div style="padding: 20px;">
+                    <h4 style="font-size: 16px; font-weight: 500; color: #212529; margin: 0 0 12px 0;">{{ Str::limit($relatedProduct->name, 40) }}</h4>
+                    
+                    @if($relatedProduct->hasDiscount())
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
+                            <span style="font-size: 14px; color: #999; text-decoration: line-through;">${{ number_format($relatedProduct->price, 2) }}</span>
+                            <span style="font-size: 20px; font-weight: 700; color: #E32020;">${{ number_format($relatedProduct->sale_price, 2) }}</span>
+                        </div>
+                    @else
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                            <span style="font-size: 20px; font-weight: 700; color: #404040;">${{ number_format($relatedProduct->price, 2) }}</span>
+                        </div>
+                    @endif
+                    
+                    <form action="{{ route('cart.add', $relatedProduct->id) }}" method="POST" onclick="event.stopPropagation();">
+                        @csrf
+                        <button type="submit" style="width: 100%; background-color: transparent; color: #212529; border: 2px solid #212529; padding: 12px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: all 0.25s;">
+                            Agregar al Carrito
+                        </button>
+                    </form>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
 @include('layouts.footer')
 
 <!-- Delete Confirmation Modal -->
