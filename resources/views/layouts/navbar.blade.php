@@ -41,10 +41,34 @@
         </div>
 
         <!-- Main Navigation -->
-        <nav style="display: flex; gap: 32px; flex: 1; justify-content: center;">
+        <nav style="display: flex; gap: 32px; flex: 1; justify-content: center; align-items: center;">
             <a href="{{ route('home') }}" style="color: {{ request()->routeIs('home') ? '#EE403D' : '#212529' }}; font-weight: 500; text-decoration: none; transition: color 0.25s;">Inicio</a>
             <a href="{{ route('shop.index') }}" style="color: {{ request()->routeIs('shop.*') ? '#EE403D' : '#212529' }}; font-weight: 500; text-decoration: none; transition: color 0.25s;">Shop</a>
-            <a href="{{ route('categories') }}" style="color: {{ request()->routeIs('categories') ? '#EE403D' : '#212529' }}; font-weight: 500; text-decoration: none; transition: color 0.25s;">Categorías</a>
+            
+            <!-- Categorías con Dropdown -->
+            <div class="categories-dropdown">
+                <a href="{{ route('categories') }}" style="color: {{ request()->routeIs('categories') ? '#EE403D' : '#212529' }}; font-weight: 500; text-decoration: none; transition: color 0.25s; display: flex; align-items: center; gap: 6px;">
+                    Categorías
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </a>
+                
+                <!-- Dropdown Menu -->
+                <div class="dropdown-menu">
+                    <div style="display: grid; gap: 12px;">
+                        @php
+                            $navCategories = \App\Models\Category::where('is_active', true)->orderBy('name', 'asc')->get();
+                        @endphp
+                        @foreach($navCategories as $category)
+                        <a href="{{ route('shop.index', ['category' => $category->id]) }}" style="display: flex; align-items: center; padding: 12px 16px; border-radius: 6px; text-decoration: none; color: #212529; transition: all 0.25s; background-color: #F8F9FA;" onmouseover="this.style.backgroundColor='#EE403D'; this.style.color='white';" onmouseout="this.style.backgroundColor='#F8F9FA'; this.style.color='#212529';">
+                            <span style="font-weight: 500;">{{ $category->name }}</span>
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            
             <a href="{{ route('contact') }}" style="color: {{ request()->routeIs('contact') ? '#EE403D' : '#212529' }}; font-weight: 500; text-decoration: none; transition: color 0.25s;">Contacto</a>
         </nav>
 

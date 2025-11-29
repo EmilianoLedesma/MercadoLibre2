@@ -19,22 +19,27 @@ use App\Models\Product;
 
 // Página de inicio
 Route::get('/', function () {
-    // Obtener las primeras 4 categorías activas con el conteo de productos
+    // Obtener más categorías activas para el carousel (8 categorías)
     $categories = Category::withCount('products')
         ->where('is_active', true)
-        ->take(4)
+        ->take(8)
         ->get();
     
-    // Obtener productos destacados (solo los marcados como featured por el administrador)
-    // Los productos conservan sus etiquetas (NEW, HOT, descuento) independientemente
+    // Obtener TODAS las categorías para el menú desplegable con contador de productos
+    $allCategories = Category::withCount('products')
+        ->where('is_active', true)
+        ->orderBy('name', 'asc')
+        ->get();
+    
+    // Obtener más productos destacados para el carousel (8 productos)
     $featuredProducts = Product::where('is_active', true)
         ->where('is_featured', true)
         ->with('category')
         ->inRandomOrder()
-        ->take(4)
+        ->take(8)
         ->get();
     
-    return view('home', compact('categories', 'featuredProducts'));
+    return view('home', compact('categories', 'allCategories', 'featuredProducts'));
 })->name('home');
 
 // Rutas de autenticación
