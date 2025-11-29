@@ -88,6 +88,11 @@ Route::post('/wishlist/move-to-cart/{id}', [WishlistController::class, 'moveToCa
 // Categorías
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
 
+// Nosotros
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
 // Contacto
 Route::get('/contact', function () {
     return view('contact');

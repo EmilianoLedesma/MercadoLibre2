@@ -20,10 +20,75 @@
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 
     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+    
     <link rel="stylesheet" href="<?php echo e(asset('css/preloader.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('css/weiboo-design-system.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('css/footer.css')); ?>">
+
+    <style>
+        /* Estilos para el dropdown de categorías en el navbar */
+        .categories-dropdown {
+            position: relative;
+        }
+
+        .categories-dropdown .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 20px;
+            min-width: 280px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .categories-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+            pointer-events: auto;
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid white;
+        }
+
+        .categories-dropdown > a svg {
+            transition: transform 0.3s ease;
+        }
+
+        .categories-dropdown:hover > a svg {
+            transform: rotate(180deg);
+        }
+
+        .categories-dropdown:hover > a {
+            color: #EE403D !important;
+        }
+
+        /* Asegurar que los enlaces dentro del dropdown funcionen */
+        .dropdown-menu a {
+            pointer-events: auto;
+        }
+    </style>
 
     <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
@@ -280,6 +345,11 @@
             }
         });
     </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
 <?php /**PATH C:\Users\Emiliano\Documents\UPQ SISTEMAS\7mo_Cuatrimestre\Programación Web\ML2 Seals Edition\MercadoLibre2\resources\views/layouts/app.blade.php ENDPATH**/ ?>
