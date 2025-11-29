@@ -222,7 +222,7 @@
         <a href="{{ route('shop.category', $category->slug) }}" class="category-card" style="text-decoration: none;">
             <div class="category-image">
                 @if($category->image)
-                    <img loading="lazy" src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}">
+                    <img loading="lazy" src="{{ asset($category->image) }}" alt="{{ $category->name }}">
                 @else
                     <img loading="lazy" src="https://via.placeholder.com/400x300/F5F6F2/666?text={{ urlencode($category->name) }}" alt="{{ $category->name }}">
                 @endif

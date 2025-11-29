@@ -250,7 +250,7 @@
                             @if($category->image)
                                 <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('{{ asset($category->image) }}') center/cover;"></div>
                             @else
-                                <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('{{ asset('images/placeholder-product.svg') }}') center/cover; background-color: #f0f0f0;"></div>
+                                <div style="width: 100%; height: 350px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url('https://via.placeholder.com/400x350/CCCCCC/666666?text={{ urlencode($category->name) }}') center/cover; background-color: #f0f0f0;"></div>
                             @endif
                             <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;">
                                 <p style="margin: 0 0 5px 0; font-size: 14px; color: white;"><span style="font-weight: 600;">{{ $category->products_count }}</span> <span style="opacity: 0.8;">items</span></p>
