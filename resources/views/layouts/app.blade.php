@@ -96,11 +96,27 @@
         html {
             margin: 0;
             padding: 0;
+            height: 100%;
         }
         body {
             margin: 0 !important;
             padding: 0 !important;
-            background-color: #1a1f25;
+            background-color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        body > * {
+            flex-shrink: 0;
+        }
+        
+        main {
+            flex: 1 0 auto;
+        }
+        
+        .site-footer {
+            flex-shrink: 0;
         }
         
         /* Toast Notification Styles */

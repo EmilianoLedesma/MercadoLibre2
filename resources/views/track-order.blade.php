@@ -372,6 +372,30 @@
             <p class="track-form-subtitle">Ingresa el número de pedido que recibiste en tu correo de confirmación</p>
 
             <form id="trackForm">
+                @auth
+                <!-- Selector de pedidos para usuarios autenticados -->
+                <div class="form-group">
+                    <label for="orderSelector" class="form-label">Selecciona uno de tus pedidos</label>
+                    <select id="orderSelector" class="form-input" style="cursor: pointer;">
+                        <option value="">-- Selecciona un pedido --</option>
+                        @php
+                            $userOrders = \App\Models\Order::where('user_id', auth()->id())
+                                ->orderBy('created_at', 'desc')
+                                ->get();
+                        @endphp
+                        @foreach($userOrders as $order)
+                        <option value="{{ $order->order_number }}">
+                            Pedido #{{ $order->order_number }} - {{ $order->created_at->format('d/m/Y') }} - ${{ number_format($order->total, 2) }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div style="text-align: center; margin: 20px 0; color: #999; font-size: 14px;">
+                    <span>o ingresa manualmente</span>
+                </div>
+                @endauth
+
                 <div class="form-group">
                     <label for="orderNumber" class="form-label">Número de Pedido</label>
                     <input
@@ -487,6 +511,17 @@
 
 @push('scripts')
 <script>
+// Selector de pedidos (solo para usuarios autenticados)
+const orderSelector = document.getElementById('orderSelector');
+if (orderSelector) {
+    orderSelector.addEventListener('change', function() {
+        const orderNumber = this.value;
+        if (orderNumber) {
+            document.getElementById('orderNumber').value = orderNumber;
+        }
+    });
+}
+
 document.getElementById('trackForm').addEventListener('submit', function(e) {
     e.preventDefault();
     

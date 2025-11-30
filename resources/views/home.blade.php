@@ -126,19 +126,21 @@
 
 <!-- ========== HERO SECTION ========== -->
 <section style="background-color: #F8F9FA; padding: 0; margin-top: 0;">
-    <div style="max-width: 100%; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 0;">
+    <div style="max-width: 100%; margin: 0 auto; padding: 0 80px;">
+        <div style="display: grid; grid-template-columns: 280px 1fr; gap: 20px;">
         <!-- Sidebar de Categorías -->
-        <div style="background-color: white; border-right: 1px solid #E5E5E5;">
+        <div style="background-color: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
             <div style="background-color: white; color: #212529; padding: 18px 24px; font-size: 16px; font-weight: 600; border-bottom: 1px solid #E5E5E5;">
                 Categorías
             </div>
             
             <div style="padding: 8px 0;">
                 @php
-                    $heroCategories = \App\Models\Category::where('is_active', true)
+                    $heroCategories = \App\Models\Category::whereNull('parent_id')
+                        ->where('is_active', true)
                         ->withCount('products')
                         ->orderBy('name', 'asc')
-                        ->limit(10)
+                        ->limit(12)
                         ->get();
                 @endphp
                 
@@ -153,83 +155,129 @@
             </div>
         </div>
 
+        <div>
         <!-- Hero Banner -->
-        <div style="position: relative; height: 600px; overflow: hidden; background-color: white;">
-            <div class="swiper heroSwiper" style="height: 100%;">
-                <div class="swiper-wrapper">
-                    <!-- Slide 1 -->
-                    <div class="swiper-slide">
-                        <div style="height: 100%; background: linear-gradient(135deg, #FFF5F5 0%, #FFE8E8 100%); display: flex; align-items: center; padding: 0 80px;">
-                            <div style="max-width: 600px;">
-                                <div style="color: #EE403D; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px;">
-                                    NUEVA TEMPORADA
+        <div style="margin-bottom: 60px;">
+            <div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px; height: 450px;">
+                <!-- Main Slider -->
+                <div style="position: relative; overflow: hidden; border-radius: 16px;">
+                    <div class="swiper heroSwiper" style="height: 100%;">
+                        <div class="swiper-wrapper">
+                            <!-- Slide 1 -->
+                            <div class="swiper-slide">
+                                <div style="height: 100%; background: linear-gradient(135deg, #FFF5F5 0%, #FFE8E8 100%); display: flex; align-items: center; padding: 0 60px; position: relative;">
+                                    <div style="max-width: 500px; z-index: 2;">
+                                        <div style="color: #EE403D; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">
+                                            NUEVA TEMPORADA
+                                        </div>
+                                        <h1 style="font-size: 48px; font-weight: 700; color: #212529; margin: 0 0 16px 0; line-height: 1.1;">
+                                            Estilo que<br>te representa
+                                        </h1>
+                                        <p style="font-size: 14px; color: #666; margin-bottom: 24px; line-height: 1.6;">
+                                            Encuentra productos únicos de vendedores verificados.<br>Calidad garantizada en cada compra.
+                                        </p>
+                                        <a href="{{ route('shop.index') }}" style="display: inline-block; background-color: #EE403D; color: white; padding: 14px 32px; font-size: 13px; font-weight: 600; border-radius: 4px; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s;"
+                                           onmouseover="this.style.backgroundColor='#E32020'; this.style.transform='translateY(-2px)';"
+                                           onmouseout="this.style.backgroundColor='#EE403D'; this.style.transform='translateY(0)';">
+                                            Comprar Ahora
+                                        </a>
+                                    </div>
+                                    <div style="position: absolute; right: 40px; top: 50%; transform: translateY(-50%); width: 280px; height: 350px; background: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=500&fit=crop') center/cover; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);"></div>
                                 </div>
-                                <h1 style="font-size: 56px; font-weight: 700; color: #212529; margin: 0 0 24px 0; line-height: 1.1;">
-                                    Estilo que<br>te representa
-                                </h1>
-                                <p style="font-size: 16px; color: #666; margin-bottom: 32px; line-height: 1.6;">
-                                    Encuentra productos únicos de vendedores verificados.<br>Calidad garantizada en cada compra.
-                                </p>
-                                <a href="{{ route('shop.index') }}" style="display: inline-block; background-color: #EE403D; color: white; padding: 16px 40px; font-size: 14px; font-weight: 600; border-radius: 4px; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(238, 64, 61, 0.3);"
-                                   onmouseover="this.style.backgroundColor='#E32020'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(238, 64, 61, 0.4)';"
-                                   onmouseout="this.style.backgroundColor='#EE403D'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(238, 64, 61, 0.3)';">
-                                    Ver Productos
-                                </a>
                             </div>
-                            <div style="position: absolute; right: 80px; top: 50%; transform: translateY(-50%); width: 380px; height: 480px; background: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=500&fit=crop') center/cover; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);"></div>
-                        </div>
-                    </div>
 
-                    <!-- Slide 2 -->
-                    <div class="swiper-slide">
-                        <div style="height: 100%; background: linear-gradient(135deg, #F5F9FF 0%, #E8F2FF 100%); display: flex; align-items: center; padding: 0 80px;">
-                            <div style="max-width: 600px;">
-                                <div style="color: #2196F3; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px;">
-                                    OFERTAS ESPECIALES
+                            <!-- Slide 2 -->
+                            <div class="swiper-slide">
+                                <div style="height: 100%; background: linear-gradient(135deg, #F5F9FF 0%, #E8F2FF 100%); display: flex; align-items: center; padding: 0 60px; position: relative;">
+                                    <div style="max-width: 500px; z-index: 2;">
+                                        <div style="color: #2196F3; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">
+                                            OFERTAS ESPECIALES
+                                        </div>
+                                        <h1 style="font-size: 48px; font-weight: 700; color: #212529; margin: 0 0 16px 0; line-height: 1.1;">
+                                            Hasta 50%<br>de descuento
+                                        </h1>
+                                        <p style="font-size: 14px; color: #666; margin-bottom: 24px; line-height: 1.6;">
+                                            Aprovecha nuestras promociones en productos<br>seleccionados. ¡Solo por tiempo limitado!
+                                        </p>
+                                        <a href="{{ route('shop.index') }}" style="display: inline-block; background-color: #2196F3; color: white; padding: 14px 32px; font-size: 13px; font-weight: 600; border-radius: 4px; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s;"
+                                           onmouseover="this.style.backgroundColor='#1976D2'; this.style.transform='translateY(-2px)';"
+                                           onmouseout="this.style.backgroundColor='#2196F3'; this.style.transform='translateY(0)';">
+                                            Ver Ofertas
+                                        </a>
+                                    </div>
+                                    <div style="position: absolute; right: 40px; top: 50%; transform: translateY(-50%); width: 280px; height: 350px; background: url('https://images.unsplash.com/photo-1607082349566-187342175e2f?w=400&h=500&fit=crop') center/cover; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);"></div>
                                 </div>
-                                <h1 style="font-size: 56px; font-weight: 700; color: #212529; margin: 0 0 24px 0; line-height: 1.1;">
-                                    Hasta 50%<br>de descuento
-                                </h1>
-                                <p style="font-size: 16px; color: #666; margin-bottom: 32px; line-height: 1.6;">
-                                    Aprovecha nuestras promociones en productos<br>seleccionados. ¡Solo por tiempo limitado!
-                                </p>
-                                <a href="{{ route('shop.index') }}" style="display: inline-block; background-color: #2196F3; color: white; padding: 16px 40px; font-size: 14px; font-weight: 600; border-radius: 4px; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);"
-                                   onmouseover="this.style.backgroundColor='#1976D2'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(33, 150, 243, 0.4)';"
-                                   onmouseout="this.style.backgroundColor='#2196F3'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(33, 150, 243, 0.3)';">
-                                    Ver Ofertas
-                                </a>
                             </div>
-                            <div style="position: absolute; right: 80px; top: 50%; transform: translateY(-50%); width: 380px; height: 480px; background: url('https://images.unsplash.com/photo-1607082349566-187342175e2f?w=400&h=500&fit=crop') center/cover; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);"></div>
-                        </div>
-                    </div>
 
-                    <!-- Slide 3 -->
-                    <div class="swiper-slide">
-                        <div style="height: 100%; background: linear-gradient(135deg, #F5FFF9 0%, #E8FFE8 100%); display: flex; align-items: center; padding: 0 80px;">
-                            <div style="max-width: 600px;">
-                                <div style="color: #4CAF50; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px;">
-                                    TENDENCIAS 2025
+                            <!-- Slide 3 -->
+                            <div class="swiper-slide">
+                                <div style="height: 100%; background: linear-gradient(135deg, #F5FFF9 0%, #E8FFE8 100%); display: flex; align-items: center; padding: 0 60px; position: relative;">
+                                    <div style="max-width: 500px; z-index: 2;">
+                                        <div style="color: #4CAF50; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">
+                                            TENDENCIAS 2025
+                                        </div>
+                                        <h1 style="font-size: 48px; font-weight: 700; color: #212529; margin: 0 0 16px 0; line-height: 1.1;">
+                                            Lo más<br>popular
+                                        </h1>
+                                        <p style="font-size: 14px; color: #666; margin-bottom: 24px; line-height: 1.6;">
+                                            Descubre los productos favoritos de nuestra<br>comunidad. Calidad y estilo garantizados.
+                                        </p>
+                                        <a href="{{ route('shop.index') }}" style="display: inline-block; background-color: #4CAF50; color: white; padding: 14px 32px; font-size: 13px; font-weight: 600; border-radius: 4px; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s;"
+                                           onmouseover="this.style.backgroundColor='#388E3C'; this.style.transform='translateY(-2px)';"
+                                           onmouseout="this.style.backgroundColor='#4CAF50'; this.style.transform='translateY(0)';">
+                                            Explorar
+                                        </a>
+                                    </div>
+                                    <div style="position: absolute; right: 40px; top: 50%; transform: translateY(-50%); width: 280px; height: 350px; background: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=500&fit=crop') center/cover; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);"></div>
                                 </div>
-                                <h1 style="font-size: 56px; font-weight: 700; color: #212529; margin: 0 0 24px 0; line-height: 1.1;">
-                                    Lo más<br>popular
-                                </h1>
-                                <p style="font-size: 16px; color: #666; margin-bottom: 32px; line-height: 1.6;">
-                                    Descubre los productos favoritos de nuestra<br>comunidad. Calidad y estilo garantizados.
-                                </p>
-                                <a href="{{ route('shop.index') }}" style="display: inline-block; background-color: #4CAF50; color: white; padding: 16px 40px; font-size: 14px; font-weight: 600; border-radius: 4px; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);"
-                                   onmouseover="this.style.backgroundColor='#388E3C'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(76, 175, 80, 0.4)';"
-                                   onmouseout="this.style.backgroundColor='#4CAF50'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(76, 175, 80, 0.3)';">
-                                    Explorar
-                                </a>
                             </div>
-                            <div style="position: absolute; right: 80px; top: 50%; transform: translateY(-50%); width: 380px; height: 480px; background: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=500&fit=crop') center/cover; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);"></div>
                         </div>
+
+                        <!-- Pagination -->
+                        <div class="swiper-pagination hero-pagination"></div>
                     </div>
                 </div>
 
-                <!-- Pagination -->
-                <div class="swiper-pagination hero-pagination"></div>
+                <!-- Side Banners -->
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- Top Banner -->
+                    <a href="{{ route('shop.index', ['category' => 2]) }}" style="position: relative; display: block; height: 215px; background: linear-gradient(135deg, #FFE8E8 0%, #FFD4D4 100%); border-radius: 12px; overflow: hidden; text-decoration: none; transition: all 0.3s;"
+                       onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.12)';"
+                       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <div style="position: absolute; top: 20px; left: 20px; z-index: 2;">
+                            <div style="color: #EE403D; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">
+                                ELECTRODOMÉSTICOS
+                            </div>
+                            <h3 style="font-size: 20px; font-weight: 700; color: #212529; margin: 0 0 8px 0; line-height: 1.2;">
+                                Para tu<br>hogar
+                            </h3>
+                            <span style="color: #EE403D; font-size: 12px; font-weight: 600;">
+                                Ver más →
+                            </span>
+                        </div>
+                        <div style="position: absolute; bottom: -10px; right: -10px; width: 140px; height: 140px; background: url('https://images.unsplash.com/photo-1626806819282-2c1dc01a5e0c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=200&h=200&fit=crop') center/cover; border-radius: 50%; opacity: 0.9;"></div>
+                    </a>
+
+                    <!-- Bottom Banner -->
+                    <a href="{{ route('shop.index', ['category' => 1]) }}" style="position: relative; display: block; height: 215px; background: linear-gradient(135deg, #E8F2FF 0%, #D4E6FF 100%); border-radius: 12px; overflow: hidden; text-decoration: none; transition: all 0.3s;"
+                       onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.12)';"
+                       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <div style="position: absolute; top: 20px; left: 20px; z-index: 2;">
+                            <div style="color: #2196F3; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">
+                                ELECTRÓNICA
+                            </div>
+                            <h3 style="font-size: 20px; font-weight: 700; color: #212529; margin: 0 0 8px 0; line-height: 1.2;">
+                                Lo último<br>en tech
+                            </h3>
+                            <span style="color: #2196F3; font-size: 12px; font-weight: 600;">
+                                Descubrir →
+                            </span>
+                        </div>
+                        <div style="position: absolute; bottom: -10px; right: -10px; width: 140px; height: 140px; background: url('https://images.unsplash.com/photo-1498049794561-7780e7231661?w=200&h=200&fit=crop') center/cover; border-radius: 50%; opacity: 0.9;"></div>
+                    </a>
+                </div>
             </div>
+        </div>
         </div>
     </div>
 </section>
@@ -363,7 +411,7 @@
                 @foreach($featuredProducts as $product)
                 <!-- Product Card -->
                 <div class="swiper-slide">
-                    <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; height: 100%;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';" onclick="window.location.href='{{ route('shop.show', $product->slug) }}'">>
+                    <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; height: 100%;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';" onclick="window.location.href='{{ route('shop.show', $product->slug) }}'">
                         <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
                             @php
                                 $badgeTop = 12;
