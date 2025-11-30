@@ -196,7 +196,6 @@
     </div>
 </section>
 
-@include('layouts.footer')
 @endsection
 
 <style>

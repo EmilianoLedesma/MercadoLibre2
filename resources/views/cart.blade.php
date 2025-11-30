@@ -527,7 +527,6 @@
     </div>
 </div>
 
-@include('layouts.footer')
 
 <!-- Toast container -->
 <div id="toast-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 9999;"></div>

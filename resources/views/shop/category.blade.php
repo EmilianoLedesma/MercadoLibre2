@@ -1191,6 +1191,5 @@ document.addEventListener('DOMContentLoaded', function() {
 @include('components.search-modal')
 
 <!-- FOOTER -->
-@include('layouts.footer')
 
 @endsection

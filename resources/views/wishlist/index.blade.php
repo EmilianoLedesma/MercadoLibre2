@@ -167,7 +167,6 @@
     </div>
 </section>
 
-@include('layouts.footer')
 
 @push('styles')
 <style>

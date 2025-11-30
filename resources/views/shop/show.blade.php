@@ -1155,6 +1155,5 @@ document.head.appendChild(style);
 </script>
 
 <!-- FOOTER -->
-@include('layouts.footer')
 
 @endsection
