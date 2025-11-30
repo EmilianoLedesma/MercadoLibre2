@@ -28,19 +28,25 @@
         width: 100%;
         padding-top: 125%;
         position: relative;
-        background-color: #F5F6F2;
+        background-color: #FFFFFF;
         border-radius: 8px;
         overflow: hidden;
         margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .main-image {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 90%;
+        max-height: 90%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
     }
 
     .image-thumbnails {
@@ -549,7 +555,10 @@
             @php
                 // El cast 'json' en el modelo ya deserializa automáticamente
                 $images = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
-                $mainImage = !empty($images) ? asset('storage/' . $images[0]) : 'https://via.placeholder.com/600x750';
+                // Si la imagen es una URL externa, usarla directamente; si no, usar asset storage
+                $mainImage = !empty($images) 
+                    ? (filter_var($images[0], FILTER_VALIDATE_URL) ? $images[0] : asset('storage/' . $images[0]))
+                    : 'https://via.placeholder.com/600x750';
             @endphp
             <div class="main-image-container">
                 <img src="{{ $mainImage }}" alt="{{ $product->name }}" class="main-image" id="mainImage">
@@ -557,8 +566,11 @@
             @if(count($images) > 1)
             <div class="image-thumbnails">
                 @foreach($images as $index => $image)
-                <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" onclick="changeImage('{{ asset('storage/' . $image) }}', this)">
-                    <img src="{{ asset('storage/' . $image) }}" alt="Thumbnail {{ $index + 1 }}">
+                @php
+                    $imagePath = filter_var($image, FILTER_VALIDATE_URL) ? $image : asset('storage/' . $image);
+                @endphp
+                <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" onclick="changeImage('{{ $imagePath }}', this)">
+                    <img src="{{ $imagePath }}" alt="Thumbnail {{ $index + 1 }}">
                 </div>
                 @endforeach
             </div>
@@ -962,8 +974,11 @@
             <div class="product-card">
                 <div class="product-image-container">
                     @php
-                        $relatedImages = json_decode($relatedProduct->images, true);
-                        $relatedImagePath = !empty($relatedImages) ? asset('storage/' . $relatedImages[0]) : 'https://via.placeholder.com/300x375';
+                        $relatedImages = is_array($relatedProduct->images) ? $relatedProduct->images : (is_string($relatedProduct->images) ? json_decode($relatedProduct->images, true) : []);
+                        // Si la imagen es una URL externa, usarla directamente; si no, usar asset storage
+                        $relatedImagePath = !empty($relatedImages) 
+                            ? (filter_var($relatedImages[0], FILTER_VALIDATE_URL) ? $relatedImages[0] : asset('storage/' . $relatedImages[0]))
+                            : 'https://via.placeholder.com/300x375';
                     @endphp
                     <img src="{{ $relatedImagePath }}" alt="{{ $relatedProduct->name }}" class="product-image">
                 </div>

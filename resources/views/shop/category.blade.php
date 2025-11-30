@@ -393,17 +393,23 @@
         position: relative;
         width: 100%;
         padding-top: 125%;
-        background-color: #F5F6F2;
+        background-color: #FFFFFF;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .product-image {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 90%;
+        max-height: 90%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
     }
 
     .product-badges {
@@ -970,7 +976,10 @@
                     @php
                         // El cast 'json' en el modelo ya deserializa automáticamente
                         $images = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
-                        $imagePath = !empty($images) ? asset('storage/' . $images[0]) : 'https://via.placeholder.com/300x375';
+                        // Si la imagen es una URL externa, usarla directamente; si no, usar asset storage
+                        $imagePath = !empty($images) 
+                            ? (filter_var($images[0], FILTER_VALIDATE_URL) ? $images[0] : asset('storage/' . $images[0]))
+                            : 'https://via.placeholder.com/300x375';
                         $wishlist = session()->get('wishlist', []);
                         $inWishlist = isset($wishlist[$product->id]);
                     @endphp

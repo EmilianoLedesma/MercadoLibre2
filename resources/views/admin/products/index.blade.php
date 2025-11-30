@@ -116,9 +116,10 @@
                                             @php
                                                 $images = is_array($product->images) ? $product->images : json_decode($product->images, true);
                                                 $firstImage = !empty($images) ? $images[0] : null;
+                                                $imageUrl = $firstImage ? (filter_var($firstImage, FILTER_VALIDATE_URL) ? $firstImage : asset('storage/' . $firstImage)) : null;
                                             @endphp
-                                            @if($firstImage)
-                                                <img src="{{ asset('storage/' . $firstImage) }}" alt="{{ $product->name }}" 
+                                            @if($imageUrl)
+                                                <img src="{{ $imageUrl }}" alt="{{ $product->name }}" 
                                                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #E5E5E5;">
                                             @else
                                                 <div style="width: 50px; height: 50px; background: #F5F5F5; border-radius: 6px; display: flex; align-items: center; justify-content: center;">

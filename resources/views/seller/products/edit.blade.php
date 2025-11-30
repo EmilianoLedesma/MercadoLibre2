@@ -135,7 +135,7 @@
                 
                 <!-- Imágenes Actuales -->
                 @php
-                    $currentImages = json_decode($product->images, true) ?? [];
+                    $currentImages = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
                 @endphp
                 
                 @if(count($currentImages) > 0)

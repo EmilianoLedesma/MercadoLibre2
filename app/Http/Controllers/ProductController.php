@@ -111,11 +111,20 @@ class ProductController extends Controller
             $images = [];
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
-                    $path = $image->store('products', 'public');
-                    $images[] = $path;
+                    if ($image->isValid()) {
+                        $path = $image->store('products', 'public');
+                        $images[] = $path;
+                    }
                 }
             }
-            $productData['images'] = json_encode($images);
+            
+            // Si no hay imágenes, usar placeholder
+            if (empty($images)) {
+                $images = ['images/placeholder-product.svg'];
+            }
+            
+            // NO codificar a JSON, el modelo lo hará automáticamente
+            $productData['images'] = $images;
 
             $product = Product::create($productData);
 
@@ -198,15 +207,22 @@ class ProductController extends Controller
             $productData['slug'] = Str::slug($request->name);
 
             // Actualizar imágenes
-            // El cast 'json' en el modelo ya deserializa automáticamente
+            // Obtener imágenes actuales
             $currentImages = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
+            
+            // Asegurarse de que sea un array
+            if (!is_array($currentImages)) {
+                $currentImages = [];
+            }
 
             // Eliminar imágenes marcadas
-            if ($request->has('delete_images')) {
+            if ($request->has('delete_images') && is_array($request->delete_images)) {
                 foreach ($request->delete_images as $index) {
                     if (isset($currentImages[$index])) {
-                        // Eliminar del almacenamiento
-                        Storage::disk('public')->delete($currentImages[$index]);
+                        // Eliminar del almacenamiento si no es placeholder
+                        if ($currentImages[$index] !== 'images/placeholder-product.svg') {
+                            Storage::disk('public')->delete($currentImages[$index]);
+                        }
                         unset($currentImages[$index]);
                     }
                 }
@@ -216,12 +232,20 @@ class ProductController extends Controller
             // Añadir nuevas imágenes
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
-                    $path = $image->store('products', 'public');
-                    $currentImages[] = $path;
+                    if ($image->isValid()) {
+                        $path = $image->store('products', 'public');
+                        $currentImages[] = $path;
+                    }
                 }
             }
 
-            $productData['images'] = json_encode($currentImages);
+            // Si no hay imágenes, agregar placeholder
+            if (empty($currentImages)) {
+                $currentImages = ['images/placeholder-product.svg'];
+            }
+
+            // NO codificar a JSON, el modelo lo hará automáticamente por el cast
+            $productData['images'] = $currentImages;
 
             $product->update($productData);
 
@@ -236,6 +260,9 @@ class ProductController extends Controller
             return redirect()->route('products.index')
                 ->with('success', 'Producto actualizado correctamente.');
         } catch (\Exception $e) {
+            \Log::error('Error al actualizar producto: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
