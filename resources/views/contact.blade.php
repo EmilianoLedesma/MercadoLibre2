@@ -10,7 +10,7 @@
 
     .contact-hero {
         background: linear-gradient(135deg, #F5F6F2 0%, #FAFAF9 100%);
-        padding: 80px 20px;
+        padding: 100px 20px;
         text-align: center;
         position: relative;
     }
@@ -44,16 +44,17 @@
     .contact-container {
         max-width: 1200px;
         margin: -60px auto 0;
-        padding: 0 20px 80px;
+        padding: 0 20px 120px;
         position: relative;
         z-index: 2;
+        min-height: calc(100vh - 450px);
     }
 
     .contact-grid {
         display: grid;
         grid-template-columns: 1fr 1.5fr;
         gap: 40px;
-        margin-bottom: 80px;
+        margin-bottom: 100px;
     }
 
     .contact-info-card {

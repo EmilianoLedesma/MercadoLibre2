@@ -19,11 +19,24 @@ use App\Models\Product;
 
 // Página de inicio
 Route::get('/', function () {
-    // Obtener más categorías activas para el carousel (8 categorías)
-    $categories = Category::withCount('products')
-        ->where('is_active', true)
+    // Obtener categorías activas con contador de productos incluyendo subcategorías
+    $categories = Category::where('is_active', true)
+        ->whereNull('parent_id') // Solo categorías padre
         ->take(8)
-        ->get();
+        ->get()
+        ->map(function ($category) {
+            // Obtener IDs de subcategorías
+            $subcategoryIds = Category::where('parent_id', $category->id)->pluck('id');
+            
+            // Contar productos de la categoría padre y sus subcategorías
+            $productsCount = Product::where(function($query) use ($category, $subcategoryIds) {
+                $query->where('category_id', $category->id)
+                      ->orWhereIn('category_id', $subcategoryIds);
+            })->count();
+            
+            $category->products_count = $productsCount;
+            return $category;
+        });
     
     // Obtener TODAS las categorías para el menú desplegable con contador de productos
     $allCategories = Category::withCount('products')
@@ -109,6 +122,47 @@ Route::get('/contact', function () {
 Route::get('/track-order', function () {
     return view('track-order');
 })->name('track.order');
+
+// API para rastrear pedido
+Route::get('/api/track-order/{orderNumber}', function ($orderNumber) {
+    try {
+        $order = \App\Models\Order::where('order_number', $orderNumber)->first();
+        
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró ningún pedido con ese número'
+            ], 404);
+        }
+        
+        // Calculate items count
+        $itemsCount = $order->items->sum('quantity');
+        
+        return response()->json([
+            'success' => true,
+            'order' => [
+                'order_number' => $order->order_number,
+                'created_at' => $order->created_at->format('d/m/Y'),
+                'status' => $order->status,
+                'shipping_name' => $order->shipping_name,
+                'shipping_address' => $order->shipping_address,
+                'shipping_city' => $order->shipping_city,
+                'shipping_state' => $order->shipping_state,
+                'shipping_zip' => $order->shipping_zip,
+                'shipping_phone' => $order->shipping_phone,
+                'subtotal' => number_format($order->subtotal, 2),
+                'shipping_cost' => $order->shipping_cost,
+                'total' => number_format($order->total, 2),
+                'items_count' => $itemsCount
+            ]
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al buscar el pedido'
+        ], 500);
+    }
+});
 
 // Tienda - Vistas públicas para clientes
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');

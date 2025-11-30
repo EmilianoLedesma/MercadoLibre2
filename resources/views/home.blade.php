@@ -330,7 +330,7 @@
 </section>
 
 <!-- ========== DEAL OF THE WEEK SECTION ========== -->
-<section style="padding: 60px 0; background-color: #F8F8F8;">
+<section style="padding: 80px 0; background-color: #F8F8F8;">
     <div style="max-width: 100%; margin: 0 auto; padding: 0 80px;">
         <div style="background-color: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); display: grid; grid-template-columns: 1fr 1fr; min-height: 500px;">
             <!-- Image Side -->
@@ -398,7 +398,8 @@
 </section>
 
 <!-- ========== FEATURED PRODUCTS SECTION ========== -->
-<section style="padding: 80px 0; background-color: #F8F8F8;">
+<section style="padding: 100px 0 120px; background-color: #F8F8F8;">
+>
     <div style="max-width: 100%; margin: 0 auto; padding: 0 40px;">
         <div style="text-align: center; margin-bottom: 50px;">
             <span style="display: inline-block; background-color: #F5F6F2; padding: 8px 20px; border-radius: 4px; font-size: 14px; font-weight: 600; color: #777; margin-bottom: 10px;">Featured</span>

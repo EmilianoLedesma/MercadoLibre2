@@ -43,10 +43,11 @@
 
     .track-container {
         max-width: 900px;
-        margin: -60px auto 80px;
+        margin: -60px auto 120px;
         padding: 0 20px;
         position: relative;
         z-index: 2;
+        min-height: calc(100vh - 500px);
     }
 
     .track-form-card {
@@ -321,6 +322,101 @@
         text-decoration: underline;
     }
 
+    .order-not-found {
+        display: none;
+        background: white;
+        border-radius: 16px;
+        padding: 60px 40px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    .order-not-found.show {
+        display: block;
+    }
+
+    .not-found-icon {
+        font-size: 120px;
+        color: #E5E5E5;
+        margin-bottom: 24px;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .not-found-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #212529;
+        margin-bottom: 12px;
+    }
+
+    .not-found-message {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 32px;
+        line-height: 1.6;
+    }
+
+    .not-found-suggestions {
+        background: #F5F6F2;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 32px;
+        text-align: left;
+    }
+
+    .not-found-suggestions h4 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 16px;
+        text-align: center;
+    }
+
+    .not-found-suggestions ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .not-found-suggestions li {
+        padding: 8px 0;
+        color: #666;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .not-found-suggestions li i {
+        color: #EE403D;
+        font-size: 12px;
+    }
+
+    .btn-try-again {
+        display: inline-block;
+        padding: 14px 32px;
+        background-color: #EE403D;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+
+    .btn-try-again:hover {
+        background-color: #E32020;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(238, 64, 61, 0.3);
+    }
+
     @media (max-width: 768px) {
         .track-hero h1 {
             font-size: 32px;
@@ -413,6 +509,51 @@
                     Rastrear Pedido
                 </button>
             </form>
+        </div>
+
+        <!-- Order Not Found (Initially Hidden) -->
+        <div id="orderNotFound" class="order-not-found">
+            <div class="not-found-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h2 class="not-found-title">¡Oops! Pedido no encontrado</h2>
+            <p class="not-found-message">
+                No pudimos encontrar ningún pedido con el número que ingresaste.<br>
+                ¿Tal vez un paquete perdido en el espacio-tiempo? 
+            </p>
+            
+            <div class="not-found-suggestions">
+                <h4><i class="" style="color: #FFC107; margin-right: 8px;"></i>Sugerencias</h4>
+                <ul>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>Verifica que hayas ingresado el número correctamente</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>Revisa tu correo de confirmación para el número exacto</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>El formato correcto es: ORD-2024-XXXXXX</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>Si acabas de hacer el pedido, intenta en unos minutos</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <button class="btn-try-again" onclick="tryAgain()">
+                <i class="fas fa-redo"></i>
+                Intentar de Nuevo
+            </button>
+            
+            <div style="margin-top: 24px;">
+                <a href="{{ route('contact') }}" style="color: #EE403D; text-decoration: none; font-weight: 600;">
+                    ¿Necesitas ayuda? Contáctanos →
+                </a>
+            </div>
         </div>
 
         <!-- Order Result (Initially Hidden) -->
@@ -522,48 +663,90 @@ if (orderSelector) {
     });
 }
 
-document.getElementById('trackForm').addEventListener('submit', function(e) {
+document.getElementById('trackForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const orderNumber = document.getElementById('orderNumber').value.trim();
     const btn = this.querySelector('.btn-track');
+    const resultDiv = document.getElementById('orderResult');
+    
+    if (!orderNumber) {
+        showToast('Por favor ingresa un número de pedido', 'error');
+        return;
+    }
     
     // Disable button
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+    resultDiv.classList.remove('show');
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+        const response = await fetch(`/api/track-order/${orderNumber}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            document.getElementById('orderNotFound').classList.remove('show');
+            showOrderResult(data.order);
+        } else {
+            document.getElementById('orderResult').classList.remove('show');
+            showOrderNotFound();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('orderResult').classList.remove('show');
+        showOrderNotFound('Hubo un problema al buscar tu pedido. Por favor intenta de nuevo.');
+    } finally {
         // Reset button
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-search"></i> Rastrear Pedido';
-        
-        // Show result
-        showOrderResult(orderNumber);
-    }, 1500);
+    }
 });
 
-function showOrderResult(orderNumber) {
+function showOrderResult(order) {
     // Update order details
-    document.getElementById('displayOrderNumber').textContent = orderNumber;
-    document.getElementById('displayOrderDate').textContent = '27 de Noviembre, 2024';
-    document.getElementById('statusBadge').textContent = 'En Camino';
-    document.getElementById('statusBadge').className = 'order-status-badge status-shipped';
+    document.getElementById('displayOrderNumber').textContent = order.order_number;
+    document.getElementById('displayOrderDate').textContent = order.created_at;
     
+    // Status mapping
+    const statusMap = {
+        'pending': { text: 'Pendiente', class: 'status-pending' },
+        'processing': { text: 'En Proceso', class: 'status-processing' },
+        'shipped': { text: 'Enviado', class: 'status-shipped' },
+        'delivered': { text: 'Entregado', class: 'status-delivered' },
+        'cancelled': { text: 'Cancelado', class: 'status-cancelled' }
+    };
+    
+    const status = statusMap[order.status] || { text: order.status, class: 'status-pending' };
+    document.getElementById('statusBadge').textContent = status.text;
+    document.getElementById('statusBadge').className = `order-status-badge ${status.class}`;
+    
+    // Shipping address
     document.getElementById('displayShippingAddress').innerHTML = `
-        <strong>Juan Pérez</strong><br>
-        Calle Principal #123<br>
-        Colonia Centro<br>
-        Ciudad de México, CDMX 01234<br>
-        Tel: +52 55 9876 5432
+        <strong>${order.shipping_name}</strong><br>
+        ${order.shipping_address}<br>
+        ${order.shipping_city}, ${order.shipping_state} ${order.shipping_zip}<br>
+        Tel: ${order.shipping_phone}
     `;
     
+    // Order summary
+    const shipping = order.shipping_cost > 0 ? `$${order.shipping_cost}` : 'Gratis';
     document.getElementById('displayOrderSummary').innerHTML = `
-        <strong>3 artículos</strong><br>
-        Subtotal: $1,250.00<br>
-        Envío: Gratis<br>
-        <strong>Total: $1,250.00</strong>
+        <strong>${order.items_count} artículo(s)</strong><br>
+        Subtotal: $${order.subtotal}<br>
+        Envío: ${shipping}<br>
+        <strong>Total: $${order.total}</strong>
     `;
+    
+    // Update timeline based on status
+    updateTimeline(order.status);
     
     // Show result and scroll to it
     const resultDiv = document.getElementById('orderResult');
@@ -572,6 +755,57 @@ function showOrderResult(orderNumber) {
     setTimeout(() => {
         resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
+}
+
+function updateTimeline(status) {
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    
+    // Remove active class from all
+    timelineItems.forEach(item => item.classList.remove('active'));
+    
+    // Map status to timeline index
+    const statusIndex = {
+        'pending': 0,
+        'processing': 1,
+        'shipped': 2,
+        'delivered': 3,
+        'cancelled': 0
+    };
+    
+    const activeIndex = statusIndex[status] || 0;
+    
+    // Activate items up to current status
+    for (let i = 0; i <= activeIndex; i++) {
+        if (timelineItems[i]) {
+            timelineItems[i].classList.add('active');
+        }
+    }
+}
+
+function showOrderNotFound(customMessage = null) {
+    const notFoundDiv = document.getElementById('orderNotFound');
+    
+    if (customMessage) {
+        const messageEl = notFoundDiv.querySelector('.not-found-message');
+        if (messageEl) {
+            messageEl.innerHTML = customMessage;
+        }
+    }
+    
+    notFoundDiv.classList.add('show');
+    
+    setTimeout(() => {
+        notFoundDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+}
+
+function tryAgain() {
+    document.getElementById('orderNotFound').classList.remove('show');
+    document.getElementById('orderNumber').value = '';
+    document.getElementById('orderNumber').focus();
+    
+    // Scroll back to form
+    document.querySelector('.track-form-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 </script>
 @endpush

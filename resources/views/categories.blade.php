@@ -6,7 +6,7 @@
 <style>
     .categories-hero {
         background: linear-gradient(135deg, #F5F6F2 0%, #FAFAF9 100%);
-        padding: 60px 20px;
+        padding: 80px 20px;
         text-align: center;
         font-family: 'Jost', sans-serif;
         position: relative;
@@ -41,13 +41,14 @@
     .categories-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 60px 20px;
+        padding: 80px 20px 100px;
+        min-height: calc(100vh - 500px);
     }
 
     .categories-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 28px;
+        gap: 32px;
     }
 
     .category-card {
@@ -69,7 +70,7 @@
 
     .category-image {
         width: 100%;
-        height: 200px;
+        height: 240px;
         position: relative;
         background: linear-gradient(135deg, #F5F6F2 0%, #E5E5E5 100%);
         overflow: hidden;
@@ -102,7 +103,7 @@
     }
 
     .category-content {
-        padding: 20px;
+        padding: 24px;
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -147,8 +148,8 @@
 
     .stats-section {
         background: linear-gradient(135deg, #F5F6F2 0%, #FAFAF9 100%);
-        padding: 50px 20px;
-        margin-top: 60px;
+        padding: 70px 20px;
+        margin-top: 80px;
     }
 
     .stats-container {

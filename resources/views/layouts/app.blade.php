@@ -97,6 +97,7 @@
             margin: 0;
             padding: 0;
             height: 100%;
+            background-color: white;
         }
         body {
             margin: 0 !important;
@@ -108,14 +109,6 @@
         }
         
         body > * {
-            flex-shrink: 0;
-        }
-        
-        main {
-            flex: 1 0 auto;
-        }
-        
-        .site-footer {
             flex-shrink: 0;
         }
         

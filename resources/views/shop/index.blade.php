@@ -7,10 +7,11 @@
     .shop-container {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 40px 20px;
+        padding: 60px 20px 80px;
         display: grid;
         grid-template-columns: 300px 1fr;
         gap: 32px;
+        min-height: calc(100vh - 400px);
     }
 
     /* Sidebar Filters */
@@ -342,7 +343,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 32px;
+        margin-bottom: 40px;
         flex-wrap: wrap;
         gap: 16px;
     }
@@ -371,8 +372,8 @@
     .products-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
-        margin-bottom: 48px;
+        gap: 28px;
+        margin-bottom: 60px;
     }
 
     .product-card {
