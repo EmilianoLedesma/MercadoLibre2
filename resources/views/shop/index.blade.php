@@ -370,16 +370,17 @@
 
     .products-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 32px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
         margin-bottom: 48px;
     }
 
     .product-card {
         background: white;
+        border: 1px solid #E5E5E5;
         border-radius: 8px;
         overflow: hidden;
-        transition: transform 0.3s, box-shadow 0.3s;
+        transition: all 0.3s;
         position: relative;
         cursor: pointer;
     }
@@ -627,8 +628,15 @@
         }
 
         .products-grid {
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .products-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
         }
     }
 </style>

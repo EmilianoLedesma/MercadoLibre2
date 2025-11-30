@@ -46,8 +46,8 @@
 
     .categories-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 24px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
     }
 
     .category-card {
@@ -175,6 +175,13 @@
         font-size: 15px;
         color: #666;
         font-family: 'Jost', sans-serif;
+    }
+
+    @media (max-width: 1024px) {
+        .categories-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
     }
 
     @media (max-width: 768px) {
