@@ -397,16 +397,19 @@
         position: relative;
         width: 100%;
         padding-top: 125%;
-        background-color: #F5F6F2;
+        background-color: #FFFFFF;
     }
 
     .product-image {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 90%;
+        max-height: 90%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
     }
 
     .product-info {
