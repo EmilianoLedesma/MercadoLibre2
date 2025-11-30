@@ -137,24 +137,29 @@ Route::get('/track-order', function () {
 Route::get('/api/track-order/{orderNumber}', function ($orderNumber) {
     try {
         $order = \App\Models\Order::where('order_number', $orderNumber)->first();
-        
+
         if (!$order) {
             return response()->json([
                 'success' => false,
                 'message' => 'No se encontró ningún pedido con ese número'
             ], 404);
         }
-        
+
         // Calculate items count
         $itemsCount = $order->items->sum('quantity');
-        
+
+        // Calculate estimated delivery date (2 days after order creation)
+        $estimatedDelivery = $order->created_at->copy()->addDays(2)->format('d/m/Y');
+
         return response()->json([
             'success' => true,
             'order' => [
                 'order_number' => $order->order_number,
                 'created_at' => $order->created_at->format('d/m/Y'),
+                'created_at_full' => $order->created_at->format('d M Y, H:i'),
+                'estimated_delivery' => $estimatedDelivery,
                 'status' => $order->status,
-                'shipping_name' => $order->shipping_name,
+                'shipping_name' => $order->shipping_first_name ? ($order->shipping_first_name . ' ' . ($order->shipping_last_name ?? '')) : 'No especificado',
                 'shipping_address' => $order->shipping_address,
                 'shipping_city' => $order->shipping_city,
                 'shipping_state' => $order->shipping_state,

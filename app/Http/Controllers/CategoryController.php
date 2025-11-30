@@ -14,10 +14,22 @@ class CategoryController extends Controller
     {
         // Cache categories for 1 hour - solo categorías principales
         $categories = Cache::remember('categories_active_with_count', 3600, function () {
-            return Category::withCount('products')
-                ->where('is_active', true)
+            return Category::where('is_active', true)
                 ->whereNull('parent_id') // Solo categorías principales
-                ->get();
+                ->get()
+                ->map(function ($category) {
+                    // Obtener IDs de subcategorías
+                    $subcategoryIds = Category::where('parent_id', $category->id)->pluck('id');
+
+                    // Contar productos de la categoría padre y sus subcategorías
+                    $productsCount = Product::where('is_active', true)->where(function($query) use ($category, $subcategoryIds) {
+                        $query->where('category_id', $category->id)
+                              ->orWhereIn('category_id', $subcategoryIds);
+                    })->count();
+
+                    $category->products_count = $productsCount;
+                    return $category;
+                });
         });
 
         // Cache stats for 1 hour

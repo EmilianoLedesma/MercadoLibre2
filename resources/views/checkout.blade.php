@@ -609,7 +609,7 @@
                         @endphp
                         <div class="summary-item">
                             <div class="summary-item-image">
-                                <img src="{{ $item['image'] ?? 'https://via.placeholder.com/60x75' }}" alt="{{ $item['name'] }}">
+                                <img src="{{ (isset($item['image']) && (str_starts_with($item['image'], 'http://') || str_starts_with($item['image'], 'https://'))) ? $item['image'] : asset('images/product-placeholder.png') }}" alt="{{ $item['name'] }}">
                             </div>
                             <div class="summary-item-details">
                                 <div class="summary-item-name">{{ $item['name'] }}</div>

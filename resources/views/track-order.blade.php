@@ -582,7 +582,7 @@
                     </div>
                     <div class="timeline-content">
                         <h3>Pedido Confirmado</h3>
-                        <div class="timeline-date">27 Nov 2024, 10:30 AM</div>
+                        <div id="confirmed-date" class="timeline-date">Fecha de compra</div>
                         <p>Tu pedido ha sido recibido y confirmado exitosamente.</p>
                     </div>
                 </div>
@@ -593,7 +593,7 @@
                     </div>
                     <div class="timeline-content">
                         <h3>En Preparación</h3>
-                        <div class="timeline-date">27 Nov 2024, 2:15 PM</div>
+                        <div id="preparation-date" class="timeline-date" style="display: none;"></div>
                         <p>Estamos preparando tu pedido con mucho cuidado.</p>
                     </div>
                 </div>
@@ -604,7 +604,7 @@
                     </div>
                     <div class="timeline-content">
                         <h3>En Camino</h3>
-                        <div class="timeline-date">27 Nov 2024, 6:45 PM</div>
+                        <div id="shipped-date" class="timeline-date" style="display: none;"></div>
                         <p>Tu pedido está en camino a la dirección de entrega.</p>
                     </div>
                 </div>
@@ -615,7 +615,7 @@
                     </div>
                     <div class="timeline-content">
                         <h3>Entregado</h3>
-                        <div class="timeline-date">Estimado: 29 Nov 2024</div>
+                        <div id="delivered-date" class="timeline-date">Fecha estimada</div>
                         <p>Llegaremos pronto a tu dirección.</p>
                     </div>
                 </div>
@@ -714,7 +714,7 @@ function showOrderResult(order) {
     // Update order details
     document.getElementById('displayOrderNumber').textContent = order.order_number;
     document.getElementById('displayOrderDate').textContent = order.created_at;
-    
+
     // Status mapping
     const statusMap = {
         'pending': { text: 'Pendiente', class: 'status-pending' },
@@ -723,11 +723,11 @@ function showOrderResult(order) {
         'delivered': { text: 'Entregado', class: 'status-delivered' },
         'cancelled': { text: 'Cancelado', class: 'status-cancelled' }
     };
-    
+
     const status = statusMap[order.status] || { text: order.status, class: 'status-pending' };
     document.getElementById('statusBadge').textContent = status.text;
     document.getElementById('statusBadge').className = `order-status-badge ${status.class}`;
-    
+
     // Shipping address
     document.getElementById('displayShippingAddress').innerHTML = `
         <strong>${order.shipping_name}</strong><br>
@@ -735,7 +735,7 @@ function showOrderResult(order) {
         ${order.shipping_city}, ${order.shipping_state} ${order.shipping_zip}<br>
         Tel: ${order.shipping_phone}
     `;
-    
+
     // Order summary
     const shipping = order.shipping_cost > 0 ? `$${order.shipping_cost}` : 'Gratis';
     document.getElementById('displayOrderSummary').innerHTML = `
@@ -744,25 +744,35 @@ function showOrderResult(order) {
         Envío: ${shipping}<br>
         <strong>Total: $${order.total}</strong>
     `;
-    
-    // Update timeline based on status
-    updateTimeline(order.status);
-    
+
+    // Update timeline based on status and order data
+    updateTimeline(order.status, order);
+
     // Show result and scroll to it
     const resultDiv = document.getElementById('orderResult');
     resultDiv.classList.add('show');
-    
+
     setTimeout(() => {
         resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
 }
 
-function updateTimeline(status) {
+function updateTimeline(status, order) {
     const timelineItems = document.querySelectorAll('.timeline-item');
-    
+
     // Remove active class from all
     timelineItems.forEach(item => item.classList.remove('active'));
-    
+
+    // Hide all dates by default
+    document.getElementById('preparation-date').style.display = 'none';
+    document.getElementById('shipped-date').style.display = 'none';
+
+    // Set purchase date (always shown)
+    document.getElementById('confirmed-date').textContent = order.created_at_full;
+
+    // Set estimated delivery date (always shown)
+    document.getElementById('delivered-date').textContent = 'Estimado: ' + order.estimated_delivery;
+
     // Map status to timeline index
     const statusIndex = {
         'pending': 0,
@@ -771,9 +781,9 @@ function updateTimeline(status) {
         'delivered': 3,
         'cancelled': 0
     };
-    
+
     const activeIndex = statusIndex[status] || 0;
-    
+
     // Activate items up to current status
     for (let i = 0; i <= activeIndex; i++) {
         if (timelineItems[i]) {

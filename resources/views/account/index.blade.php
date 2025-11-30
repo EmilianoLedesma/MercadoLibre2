@@ -184,14 +184,10 @@
                                 <div style="display: grid; gap: 12px; margin-bottom: 16px;">
                                     @foreach($order->items as $item)
                                         @if($item->product)
-                                        <div style="display: grid; grid-template-columns: 80px 1fr auto; gap: 16px; padding: 12px; border-radius: 8px; background: #F8F9FA;">
+                                        <div style="display: grid; grid-template-columns: 90px 1fr auto; gap: 16px; padding: 16px; border-radius: 8px; background: #F8F9FA;">
                                             <!-- Product Image -->
-                                            <div style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; background: white;">
-                                                @if($item->product->images && is_array($item->product->images) && count($item->product->images) > 0)
-                                                    <img src="{{ asset('storage/' . $item->product->images[0]) }}" alt="{{ $item->product->name }}" style="width: 100%; height: 100%; object-fit: cover;">
-                                                @else
-                                                    <img src="{{ asset('images/placeholder-product.svg') }}" alt="{{ $item->product->name }}" style="width: 100%; height: 100%; object-fit: cover;">
-                                                @endif
+                                            <div style="width: 90px; height: 90px; border-radius: 8px; overflow: hidden; background: white; flex-shrink: 0;">
+                                                <img src="{{ getProductImage($item->product->images, 'https://via.placeholder.com/90x90') }}" alt="{{ $item->product->name }}" style="width: 100%; height: 100%; object-fit: contain; padding: 8px;">
                                             </div>
                                             
                                             <!-- Product Info -->

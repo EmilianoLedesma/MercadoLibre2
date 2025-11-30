@@ -972,7 +972,7 @@
                         $wishlist = session()->get('wishlist', []);
                         $inWishlist = isset($wishlist[$product->id]);
                     @endphp
-                    <img src="{{ $imagePath }}" alt="{{ $product->name }}" class="product-image" loading="lazy">
+                    <img src="{{ getProductImage($product->images) }}" alt="{{ $product->name }}" class="product-image" loading="lazy">
 
                     @if($product->sale_price)
                     <div class="product-badges">

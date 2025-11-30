@@ -440,20 +440,9 @@
                     <div class="cart-item" data-id="{{ $id }}">
                         <div class="item-product">
                             <div class="item-image">
-                                @php
-                                    // Handle both 'image' and 'images' keys for backward compatibility
-                                    if (isset($item['image'])) {
-                                        $imageSrc = $item['image'];
-                                    } elseif (isset($item['images'])) {
-                                        $images = is_string($item['images']) ? json_decode($item['images'], true) : $item['images'];
-                                        $imageSrc = is_array($images) && count($images) > 0 
-                                            ? asset('storage/' . $images[0]) 
-                                            : 'https://via.placeholder.com/60x75';
-                                    } else {
-                                        $imageSrc = 'https://via.placeholder.com/60x75';
-                                    }
-                                @endphp
-                                <img src="{{ $imageSrc }}" alt="{{ $item['name'] }}">
+                                {{-- Current image value: {{ $item['image'] ?? 'NO IMAGE' }} --}}
+                                {{-- Condition result: {{ isset($item['image']) && (str_starts_with($item['image'], 'http://') || str_starts_with($item['image'], 'https://')) ? 'USE DIRECT' : 'USE FALLBACK' }} --}}
+                                <img src="{{ (isset($item['image']) && (str_starts_with($item['image'], 'http://') || str_starts_with($item['image'], 'https://'))) ? $item['image'] : asset('images/product-placeholder.png') }}" alt="{{ $item['name'] }}" style="border: 2px solid {{ (isset($item['image']) && (str_starts_with($item['image'], 'http://') || str_starts_with($item['image'], 'https://'))) ? 'green' : 'red' }};">
                             </div>
                             <div class="item-details">
                                 <h4>{{ $item['name'] }}</h4>
@@ -544,7 +533,18 @@
 <div id="toast-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 9999;"></div>
 
 @push('scripts')
+@if(!isset($CSRF_TOKEN_DECLARED))
+@php $CSRF_TOKEN_DECLARED = true; @endphp
 <script>
+@endpush
+
+@else
+@push('scripts')
+<script>
+@endpush
+@endif
+
+@push('scripts')
 const CSRF_TOKEN = '{{ csrf_token() }}';
 
 // Update quantity
