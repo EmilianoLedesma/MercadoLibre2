@@ -20,30 +20,40 @@ use App\Models\Product;
 // Página de inicio
 Route::get('/', function () {
     // Obtener categorías activas con contador de productos incluyendo subcategorías
-    $categories = Category::where('is_active', true)
-        ->whereNull('parent_id') // Solo categorías padre
-        ->take(8)
-        ->get()
-        ->map(function ($category) {
-            // Obtener IDs de subcategorías
-            $subcategoryIds = Category::where('parent_id', $category->id)->pluck('id');
-            
-            // Contar productos de la categoría padre y sus subcategorías
-            $productsCount = Product::where(function($query) use ($category, $subcategoryIds) {
-                $query->where('category_id', $category->id)
-                      ->orWhereIn('category_id', $subcategoryIds);
-            })->count();
-            
+    $categories = collect();
+
+    // Obtener todas las categorías padre
+    $parentCategories = Category::where('is_active', true)
+        ->whereNull('parent_id')
+        ->get();
+
+    foreach ($parentCategories as $category) {
+        // Obtener IDs de subcategorías
+        $subcategoryIds = Category::where('parent_id', $category->id)->pluck('id');
+
+        // Contar productos de la categoría padre y sus subcategorías
+        $productsCount = Product::where('is_active', true)->where(function($query) use ($category, $subcategoryIds) {
+            $query->where('category_id', $category->id)
+                  ->orWhereIn('category_id', $subcategoryIds);
+        })->count();
+
+        if ($productsCount > 0) {
             $category->products_count = $productsCount;
-            return $category;
-        });
-    
+            $categories->push($category);
+        }
+
+        // Limitar a 8 categorías que tienen productos
+        if ($categories->count() >= 8) {
+            break;
+        }
+    }
+
     // Obtener TODAS las categorías para el menú desplegable con contador de productos
     $allCategories = Category::withCount('products')
         ->where('is_active', true)
         ->orderBy('name', 'asc')
         ->get();
-    
+
     // Obtener más productos destacados para el carousel (8 productos)
     $featuredProducts = Product::where('is_active', true)
         ->where('is_featured', true)
@@ -51,7 +61,7 @@ Route::get('/', function () {
         ->inRandomOrder()
         ->take(8)
         ->get();
-    
+
     return view('home', compact('categories', 'allCategories', 'featuredProducts'));
 })->name('home');
 
