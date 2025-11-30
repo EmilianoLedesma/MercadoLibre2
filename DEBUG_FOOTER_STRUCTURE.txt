@@ -1,0 +1,17 @@
+Ejecuta esto en la consola del navegador para ver qué hay después del footer:
+
+const footer = document.querySelector('footer.site-footer');
+console.log('Footer:', footer);
+console.log('Footer parent:', footer.parentElement);
+console.log('Footer parent tag:', footer.parentElement.tagName);
+console.log('Next sibling after footer:', footer.nextElementSibling);
+
+// Ver todos los hijos del main
+const main = document.querySelector('main');
+console.log('Main children:', main ? main.children : 'No main found');
+
+// Ver la estructura completa del body
+console.log('Body children:', document.body.children);
+Array.from(document.body.children).forEach((child, i) => {
+    console.log(i + ':', child.tagName, child.className, child.id);
+});

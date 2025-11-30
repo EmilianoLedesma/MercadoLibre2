@@ -1,0 +1,11 @@
+Para debuggear el espacio en blanco:
+
+1. Abre el navegador en la página con el problema
+2. Presiona F12 para abrir DevTools
+3. Haz clic en el ícono de "Inspeccionar elemento" (flecha en la esquina superior izquierda)
+4. Haz clic en el espacio en blanco DEBAJO del footer
+5. Mira en el panel Elements qué elemento tiene ese espacio
+6. Copia el HTML aquí o dime qué elemento es
+
+O ejecuta esto en la consola del navegador:
+document.querySelector('footer.site-footer').nextElementSibling

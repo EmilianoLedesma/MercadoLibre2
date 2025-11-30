@@ -19,6 +19,7 @@ class Product extends Model
         'slug',
         'description',
         'short_description',
+        'specifications',
         'sku',
         'price',
         'sale_price',
@@ -43,6 +44,7 @@ class Product extends Model
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
         'images' => 'json',
+        'specifications' => 'json',
     ];
 
     /**
@@ -67,6 +69,22 @@ class Product extends Model
     public function store()
     {
         return $this->belongsTo(Store::class);
+    }
+
+    /**
+     * Obtener las reseñas del producto.
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Calcular el rating promedio del producto.
+     */
+    public function getAverageRatingAttribute()
+    {
+        return $this->reviews()->avg('rating') ?? 0;
     }
 
     /**

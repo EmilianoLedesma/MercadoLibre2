@@ -24,15 +24,30 @@ class MiCuentaController extends Controller
             ];
         })->toArray() : [];
 
-        // Get user's orders
-        $orders = $user ? $user->orders()->with('items.product')->latest()->get() : collect();
+        // Get user's orders with products
+        $orders = $user ? $user->orders()->with(['items.product'])->latest()->get() : collect();
         $ordersCount = $orders->count();
 
-        return view('account.index', compact('addresses', 'orders', 'ordersCount'));
-        // Obtener las órdenes del usuario
-        $orders = $user ? $user->orders()->with('items.product')->latest()->get() : collect();
+        // Get all purchased products with review status
+        $purchasedProducts = collect();
+        if ($user) {
+            foreach ($orders as $order) {
+                foreach ($order->items as $item) {
+                    if ($item->product) {
+                        $existingReview = $item->product->reviews()->where('user_id', $user->id)->first();
+                        $purchasedProducts->push([
+                            'product' => $item->product,
+                            'order_id' => $order->id,
+                            'order_number' => $order->order_number,
+                            'has_review' => $existingReview !== null,
+                            'review' => $existingReview,
+                        ]);
+                    }
+                }
+            }
+        }
 
-        return view('account.index', compact('addresses', 'orders'));
+        return view('account.index', compact('addresses', 'orders', 'ordersCount', 'purchasedProducts'));
     }
 
     /** Actualizar datos simples del usuario (teléfono) */

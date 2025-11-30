@@ -567,15 +567,26 @@
 
         <!-- Product Info -->
         <div class="product-detail-info">
+            @php
+                $avgRating = $product->reviews()->avg('rating') ?? 0;
+                $reviewCount = $product->reviews()->count();
+            @endphp
+            
             <div class="product-meta">
+                @if($product->is_featured)
+                <span style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #000; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                    <i class="fas fa-star"></i> DESTACADO
+                </span>
+                @endif
+                
+                @if($reviewCount > 0)
                 <div class="product-rating">
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star empty">★</span>
+                    @for($i = 1; $i <= 5; $i++)
+                        <span class="star {{ $i <= round($avgRating) ? '' : 'empty' }}">★</span>
+                    @endfor
                 </div>
-                <span class="reviews-count">(24 reseñas)</span>
+                <span class="reviews-count">({{ $reviewCount }} {{ $reviewCount == 1 ? 'reseña' : 'reseñas' }})</span>
+                @endif
             </div>
 
             <h1 class="product-detail-title">{{ $product->name }}</h1>
@@ -823,7 +834,7 @@
         <div class="tabs-header">
             <button class="tab-btn active" onclick="switchTab('description')">Descripción</button>
             <button class="tab-btn" onclick="switchTab('info')">Información Adicional</button>
-            <button class="tab-btn" onclick="switchTab('reviews')">Reseñas (24)</button>
+            <button class="tab-btn" onclick="switchTab('reviews')">Reseñas ({{ $product->reviews()->count() }})</button>
         </div>
 
         <div class="tab-content active" id="description">
@@ -831,24 +842,114 @@
         </div>
 
         <div class="tab-content" id="info">
-            <table style="width: 100%; border-collapse: collapse;">
-                <tr style="border-bottom: 1px solid #E5E5E5;">
-                    <td style="padding: 12px 0; font-weight: 600;">Peso</td>
-                    <td style="padding: 12px 0;">0.5 kg</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #E5E5E5;">
-                    <td style="padding: 12px 0; font-weight: 600;">Dimensiones</td>
-                    <td style="padding: 12px 0;">20 × 15 × 5 cm</td>
-                </tr>
-                <tr>
-                    <td style="padding: 12px 0; font-weight: 600;">Material</td>
-                    <td style="padding: 12px 0;">Algodón 100%</td>
-                </tr>
-            </table>
+            @if($product->specifications && is_array($product->specifications) && count($product->specifications) > 0)
+                <table style="width: 100%; border-collapse: collapse;">
+                    @foreach($product->specifications as $key => $value)
+                    <tr style="border-bottom: 1px solid #E5E5E5;">
+                        <td style="padding: 12px 0; font-weight: 600; width: 30%;">{{ ucfirst($key) }}</td>
+                        <td style="padding: 12px 0;">{{ $value }}</td>
+                    </tr>
+                    @endforeach
+                </table>
+            @else
+                <p style="color: #666; text-align: center; padding: 40px 0;">No hay información adicional disponible para este producto.</p>
+            @endif
         </div>
 
         <div class="tab-content" id="reviews">
-            <p>Las reseñas de clientes aparecerán aquí.</p>
+            @php
+                $productReviews = $product->reviews()->with('user')->latest()->get();
+                $averageRating = $productReviews->avg('rating') ?? 0;
+                $totalReviews = $productReviews->count();
+            @endphp
+
+            <div style="margin-bottom: 32px;">
+                <div style="display: flex; gap: 40px; padding: 24px; background: #F8F9FA; border-radius: 12px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; font-weight: 700; color: #212529; margin-bottom: 8px;">
+                            {{ number_format($averageRating, 1) }}
+                        </div>
+                        <div style="display: flex; gap: 4px; justify-content: center; margin-bottom: 8px;">
+                            @for($i = 1; $i <= 5; $i++)
+                                <span style="color: {{ $i <= round($averageRating) ? '#F59E0B' : '#E5E5E5' }}; font-size: 24px;">★</span>
+                            @endfor
+                        </div>
+                        <div style="font-size: 14px; color: #666;">
+                            {{ $totalReviews }} {{ $totalReviews == 1 ? 'reseña' : 'reseñas' }}
+                        </div>
+                    </div>
+                    
+                    <div style="flex: 1;">
+                        @for($rating = 5; $rating >= 1; $rating--)
+                            @php
+                                $ratingCount = $productReviews->where('rating', $rating)->count();
+                                $ratingPercentage = $totalReviews > 0 ? ($ratingCount / $totalReviews) * 100 : 0;
+                            @endphp
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <div style="display: flex; gap: 2px; width: 80px;">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <span style="color: {{ $i <= $rating ? '#F59E0B' : '#E5E5E5' }}; font-size: 14px;">★</span>
+                                    @endfor
+                                </div>
+                                <div style="flex: 1; background: #E5E5E5; height: 8px; border-radius: 4px; overflow: hidden;">
+                                    <div style="background: #F59E0B; height: 100%; width: {{ $ratingPercentage }}%; transition: width 0.3s;"></div>
+                                </div>
+                                <div style="width: 40px; text-align: right; font-size: 13px; color: #666;">
+                                    {{ $ratingCount }}
+                                </div>
+                            </div>
+                        @endfor
+                    </div>
+                </div>
+            </div>
+
+            @if($productReviews->count() > 0)
+                <div style="display: grid; gap: 20px;">
+                    @foreach($productReviews as $review)
+                    <div style="padding: 20px; border: 1px solid #E5E5E5; border-radius: 12px; background: white;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #EE403D 0%, #E32020 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px;">
+                                        {{ strtoupper(substr($review->user->name, 0, 1)) }}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: #212529; font-size: 15px;">
+                                            {{ $review->user->name }}
+                                        </div>
+                                        <div style="font-size: 12px; color: #999;">
+                                            {{ $review->created_at->format('d M, Y') }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 2px; margin-bottom: 8px;">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <span style="color: {{ $i <= $review->rating ? '#F59E0B' : '#E5E5E5' }}; font-size: 16px;">★</span>
+                                    @endfor
+                                </div>
+                            </div>
+                            @if($review->is_verified_purchase)
+                                <span style="background: #D1FAE5; color: #059669; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 500;">
+                                    ✓ Compra verificada
+                                </span>
+                            @endif
+                        </div>
+                        @if($review->comment)
+                        <p style="color: #666; line-height: 1.6; margin: 0;">
+                            {{ $review->comment }}
+                        </p>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+            @else
+                <div style="text-align: center; padding: 40px 0; color: #999;">
+                    <p style="font-size: 16px; margin-bottom: 16px;">Este producto aún no tiene reseñas.</p>
+                    @auth
+                        <p style="font-size: 14px;">¿Ya compraste este producto? <a href="{{ route('account') }}" style="color: #EE403D; text-decoration: none; font-weight: 500;">Deja tu reseña</a></p>
+                    @endauth
+                </div>
+            @endif
         </div>
     </div>
 
@@ -881,21 +982,6 @@
     </div>
     @endif
 </div>
-
-<!-- FOOTER -->
-<footer style="background-color: #212529; color: white; padding: 60px 20px 20px; margin-top: 80px;">
-    <div style="max-width: 1200px; margin: 0 auto;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px;">
-            <div>
-                <h3 style="font-family: 'Jost', sans-serif; font-size: 24px; margin-bottom: 16px;">SEALS</h3>
-                <p style="color: #999; font-family: 'Jost', sans-serif; line-height: 1.6;">Tu tienda de moda en línea con los mejores productos y precios.</p>
-            </div>
-        </div>
-        <div style="border-top: 1px solid #333; padding-top: 20px; text-align: center; color: #666; font-family: 'Jost', sans-serif;">
-            <p>&copy; 2025 SEALS. Todos los derechos reservados.</p>
-        </div>
-    </div>
-</footer>
 
 <script>
 // Image Gallery
@@ -1049,4 +1135,8 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 </script>
+
+<!-- FOOTER -->
+@include('layouts.footer')
+
 @endsection

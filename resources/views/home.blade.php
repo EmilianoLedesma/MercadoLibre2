@@ -363,7 +363,7 @@
                 @foreach($featuredProducts as $product)
                 <!-- Product Card -->
                 <div class="swiper-slide">
-                    <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; height: 100%;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';" onclick="window.location.href='{{ route('products.show', $product->id) }}'">
+                    <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; height: 100%;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';" onclick="window.location.href='{{ route('shop.show', $product->slug) }}'">>
                         <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
                             @php
                                 $badgeTop = 12;
@@ -420,15 +420,6 @@
         </div>
     </div>
 </section>
-
-<!-- ========== FOOTER ========== -->
-@include('layouts.footer')
-
-<!-- Search Modal -->
-@include('components.search-modal')
-
-<!-- Newsletter Popup -->
-@include('components.newsletter-popup')
 
 @push('styles')
 <style>
@@ -654,5 +645,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
+
+<!-- ========== FOOTER ========== -->
+@include('layouts.footer')
+
+<!-- Search Modal -->
+@include('components.search-modal')
+
+<!-- Newsletter Popup -->
+@include('components.newsletter-popup')
 
 @endsection

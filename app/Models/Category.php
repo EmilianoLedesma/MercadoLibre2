@@ -55,4 +55,21 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    /**
+     * Obtener todos los productos incluyendo los de subcategorías.
+     */
+    public function allProducts()
+    {
+        $productIds = $this->products()->pluck('id');
+        
+        // Si tiene subcategorías, agregar sus productos
+        $subcategoryIds = $this->children()->pluck('id');
+        if ($subcategoryIds->isNotEmpty()) {
+            $subcategoryProducts = Product::whereIn('category_id', $subcategoryIds)->pluck('id');
+            $productIds = $productIds->merge($subcategoryProducts);
+        }
+        
+        return Product::whereIn('id', $productIds);
+    }
 }

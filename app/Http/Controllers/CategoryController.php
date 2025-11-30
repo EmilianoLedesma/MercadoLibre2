@@ -12,10 +12,11 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        // Cache categories for 1 hour
+        // Cache categories for 1 hour - solo categorías principales
         $categories = Cache::remember('categories_active_with_count', 3600, function () {
             return Category::withCount('products')
                 ->where('is_active', true)
+                ->whereNull('parent_id') // Solo categorías principales
                 ->get();
         });
 

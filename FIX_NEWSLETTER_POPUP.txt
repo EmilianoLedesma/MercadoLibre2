@@ -1,0 +1,13 @@
+Para solucionar el problema del newsletter popup:
+
+1. Abre la consola del navegador (F12)
+2. Ve a la pestaña "Application" o "Almacenamiento"
+3. En el panel izquierdo, busca "Local Storage"
+4. Haz clic en tu dominio (http://127.0.0.1:8000)
+5. Busca la clave 'newsletterPopupDismissed'
+6. Si existe, bórrala haciendo clic derecho > Delete
+7. Recarga la página
+
+O ejecuta esto en la consola del navegador:
+localStorage.removeItem('newsletterPopupDismissed');
+location.reload();

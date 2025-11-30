@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', isset($category) ? $category->name : 'Shop')
+@section('title', 'Shop')
 
 @push('styles')
 <style>
@@ -542,75 +542,31 @@
     .pagination {
         display: flex;
         justify-content: center;
-        align-items: center;
-        gap: 4px;
+        gap: 8px;
         margin-top: 48px;
-        font-family: 'Jost', sans-serif;
-    }
-
-    .pagination nav {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    .pagination .flex {
-        display: flex;
-        align-items: center;
-        gap: 4px;
     }
 
     .pagination a,
     .pagination span {
-        min-width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 12px;
+        padding: 8px 16px;
         border: 1px solid #E5E5E5;
         border-radius: 4px;
-        color: #3483FA;
-        background-color: white;
+        color: #212529;
         text-decoration: none;
-        font-size: 14px;
-        font-weight: 400;
-        transition: all 0.2s;
+        font-family: 'Jost', sans-serif;
+        transition: all 0.3s;
     }
 
     .pagination a:hover {
-        background-color: #FFEBEA;
-        border-color: #EE403D;
-    }
-
-    .pagination span[aria-current="page"] {
         background-color: #EE403D;
         color: white;
         border-color: #EE403D;
-        font-weight: 600;
     }
 
-    .pagination .disabled {
-        color: #999;
-        cursor: not-allowed;
-        background-color: #F5F5F5;
-        border-color: #E5E5E5;
-    }
-
-    .pagination .disabled:hover {
-        background-color: #F5F5F5;
-        border-color: #E5E5E5;
-    }
-
-    /* Ocultar texto de anterior/siguiente */
-    .pagination .relative {
-        display: flex;
-        gap: 4px;
-    }
-
-    .pagination svg {
-        width: 16px;
-        height: 16px;
+    .pagination .active {
+        background-color: #EE403D;
+        color: white;
+        border-color: #EE403D;
     }
 
     @media (max-width: 1024px) {
@@ -732,30 +688,10 @@
         <nav style="font-family: 'Jost', sans-serif; font-size: 14px; color: #666;">
             <a href="{{ route('home') }}" style="color: #666; text-decoration: none;">Inicio</a>
             <span style="margin: 0 8px;">/</span>
-            <a href="{{ route('shop.index') }}" style="color: #666; text-decoration: none;">Shop</a>
-            @if(isset($category))
-            <span style="margin: 0 8px;">/</span>
-            <span style="color: #212529; font-weight: 500;">{{ $category->name }}</span>
-            @endif
+            <span style="color: #212529; font-weight: 500;">Shop</span>
         </nav>
     </div>
 </div>
-
-<!-- CATEGORY TITLE -->
-@if(isset($category))
-<div style="background-color: white; padding: 32px 0;">
-    <div style="max-width: 1400px; margin: 0 auto; padding: 0 20px;">
-        <h1 style="font-family: 'Jost', sans-serif; font-size: 42px; font-weight: 700; color: #212529; margin: 0;">
-            {{ $category->name }}
-        </h1>
-        @if($category->description)
-        <p style="font-family: 'Jost', sans-serif; font-size: 16px; color: #666; margin: 12px 0 0 0; max-width: 800px;">
-            {{ $category->description }}
-        </p>
-        @endif
-    </div>
-</div>
-@endif
 
 <!-- SHOP CONTAINER -->
 <div class="shop-container">
@@ -768,41 +704,16 @@
 
                 @foreach($categories as $category)
                 <div>
-                    @php
-                        // Contar productos de la categoría principal y sus subcategorías
-                        $subcategoryIds = \App\Models\Category::where('parent_id', $category->id)->pluck('id');
-                        $totalProducts = \App\Models\Product::where('category_id', $category->id)
-                            ->orWhereIn('category_id', $subcategoryIds)
-                            ->count();
-                    @endphp
                     <div class="category-toggle" onclick="toggleCategory('cat_{{ $category->id }}')">
-                        <span>{{ $category->name }} ({{ $totalProducts }})</span>
+                        <span>{{ $category->name }} ({{ $category->products_count ?? 0 }})</span>
                         <span class="toggle-icon">▶</span>
                     </div>
                     <div class="category-submenu" id="submenu_cat_{{ $category->id }}">
-                        @php
-                            $subcategories = \App\Models\Category::where('parent_id', $category->id)
-                                ->where('is_active', true)
-                                ->withCount('products')
-                                ->get();
-                        @endphp
-                        
-                        @if($subcategories->count() > 0)
-                            @foreach($subcategories as $subcategory)
-                            <div class="filter-option">
-                                <input type="radio" name="category" value="{{ $subcategory->id }}" id="subcat_{{ $subcategory->id }}"
-                                    {{ request('category') == $subcategory->id ? 'checked' : '' }}
-                                    onchange="document.getElementById('filterForm').submit()">
-                                <label for="subcat_{{ $subcategory->id }}">{{ $subcategory->name }} ({{ $subcategory->products_count }})</label>
-                            </div>
-                            @endforeach
-                        @endif
-                        
                         <div class="filter-option">
-                            <input type="radio" name="category" value="{{ $category->id }}" id="cat_{{ $category->id }}"
-                                {{ request('category') == $category->id ? 'checked' : '' }}
-                                onchange="document.getElementById('filterForm').submit()">
-                            <label for="cat_{{ $category->id }}">Ver todo en {{ $category->name }}</label>
+                            <a href="{{ route('shop.category', $category->slug) }}" 
+                               style="color: {{ request()->route('slug') == $category->slug ? '#EE403D' : '#666' }}; text-decoration: none; font-weight: {{ request()->route('slug') == $category->slug ? '600' : '400' }};">
+                                Ver todos en {{ $category->name }}
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -829,33 +740,6 @@
                         <input type="number" name="max_price" placeholder="10000" value="{{ request('max_price', 10000) }}" style="width: 70px;">
                     </div>
                 </div>
-            </div>
-
-            <!-- FILTER BY RATING -->
-            <div class="filter-section">
-                <h3 class="filter-title">CALIFICACIÓN</h3>
-                <div class="filter-option">
-                    <input type="radio" name="rating" value="" id="rating_all"
-                        {{ !request('rating') ? 'checked' : '' }}
-                        onchange="document.getElementById('filterForm').submit()">
-                    <label for="rating_all">Todas</label>
-                </div>
-                
-                @for($stars = 5; $stars >= 1; $stars--)
-                <div class="filter-option">
-                    <input type="radio" name="rating" value="{{ $stars }}" id="rating_{{ $stars }}"
-                        {{ request('rating') == $stars ? 'checked' : '' }}
-                        onchange="document.getElementById('filterForm').submit()">
-                    <label for="rating_{{ $stars }}" style="display: flex; align-items: center; gap: 8px;">
-                        <div style="display: flex; gap: 2px;">
-                            @for($i = 1; $i <= 5; $i++)
-                                <span style="color: {{ $i <= $stars ? '#F59E0B' : '#E5E5E5' }}; font-size: 16px;">★</span>
-                            @endfor
-                        </div>
-                        <span>y más</span>
-                    </label>
-                </div>
-                @endfor
             </div>
 
             <!-- FILTER BY COLOR -->
@@ -957,7 +841,6 @@
                     <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Precio: Menor a Mayor</option>
                     <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
                     <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Nombre A-Z</option>
-                    <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Mejor Calificados</option>
                 </select>
             </div>
         </div>
@@ -998,21 +881,13 @@
                 <div class="product-info">
                     <p class="product-category">{{ $product->category->name ?? 'Sin categoría' }}</p>
 
-                    @php
-                        $avgRating = $product->reviews()->avg('rating') ?? 0;
-                        $reviewCount = $product->reviews()->count();
-                    @endphp
-                    
-                    @if($reviewCount > 0)
-                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-                        <div style="display: flex; gap: 2px;">
-                            @for($i = 1; $i <= 5; $i++)
-                                <span style="color: {{ $i <= round($avgRating) ? '#F59E0B' : '#E5E5E5' }}; font-size: 14px;">★</span>
-                            @endfor
-                        </div>
-                        <span style="font-size: 12px; color: #666;">({{ $reviewCount }})</span>
+                    <div class="product-rating">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star empty">★</span>
                     </div>
-                    @endif
 
                     <h3 class="product-title">
                         <a href="{{ route('shop.show', $product->slug) }}" onclick="event.stopPropagation()">{{ $product->name }}</a>
@@ -1038,10 +913,33 @@
 
         <!-- Pagination -->
         <div class="pagination">
-            {{ $products->links('vendor.pagination.custom') }}
+            {{ $products->links() }}
         </div>
     </main>
 </div>
+
+<!-- FOOTER -->
+<footer style="background-color: #212529; color: white; padding: 60px 20px 20px; margin-top: 80px;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px;">
+            <div>
+                <h3 style="font-family: 'Jost', sans-serif; font-size: 24px; margin-bottom: 16px;">SEALS</h3>
+                <p style="color: #999; font-family: 'Jost', sans-serif; line-height: 1.6;">Tu tienda de moda en línea con los mejores productos y precios.</p>
+            </div>
+            <div>
+                <h4 style="font-family: 'Jost', sans-serif; font-size: 16px; margin-bottom: 16px;">Enlaces</h4>
+                <nav style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="{{ route('home') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Inicio</a>
+                    <a href="{{ route('shop.index') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Shop</a>
+                    <a href="{{ route('categories') }}" style="color: #999; text-decoration: none; font-family: 'Jost', sans-serif;">Categorías</a>
+                </nav>
+            </div>
+        </div>
+        <div style="border-top: 1px solid #333; padding-top: 20px; text-align: center; color: #666; font-family: 'Jost', sans-serif;">
+            <p>&copy; 2025 SEALS. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
 
 <script>
 // Auto-submit form when sort changes
@@ -1180,8 +1078,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Search Modal -->
 @include('components.search-modal')
-
-<!-- FOOTER -->
-@include('layouts.footer')
 
 @endsection

@@ -1,0 +1,10 @@
+Para confirmar el problema, ejecuta en la consola:
+
+// Ver si el espacio es parte del body
+document.body.style.backgroundColor = 'red';
+
+// Si se vuelve rojo, es el body. Entonces ejecuta:
+document.body.style.backgroundColor = '#1a1f25'; // Color del footer
+
+// Esto hará que el fondo del body sea del mismo color que el footer
+// y el espacio "desaparecerá" visualmente

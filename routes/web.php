@@ -85,6 +85,13 @@ Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'remove'])->n
 Route::post('/wishlist/clear', [WishlistController::class, 'clear'])->name('wishlist.clear');
 Route::post('/wishlist/move-to-cart/{id}', [WishlistController::class, 'moveToCart'])->name('wishlist.moveToCart');
 
+// Reviews (Reseñas)
+Route::middleware(['auth'])->group(function () {
+    Route::post('/products/{product}/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/reviews/{review}', [\App\Http\Controllers\ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review}', [\App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
+});
+
 // Categorías
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
 

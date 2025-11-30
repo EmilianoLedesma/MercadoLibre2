@@ -1,0 +1,25 @@
+Abre la consola del navegador (F12) y ejecuta esto:
+
+// Verificar si hay elementos después del footer
+const footer = document.querySelector('footer.site-footer');
+console.log('Footer element:', footer);
+console.log('Next sibling:', footer.nextElementSibling);
+console.log('Parent:', footer.parentElement);
+
+// Obtener la altura total del body vs viewport
+console.log('Body height:', document.body.scrollHeight);
+console.log('Viewport height:', window.innerHeight);
+console.log('Difference:', document.body.scrollHeight - window.innerHeight);
+
+// Verificar estilos del body
+const bodyStyles = window.getComputedStyle(document.body);
+console.log('Body margin:', bodyStyles.margin);
+console.log('Body padding:', bodyStyles.padding);
+console.log('Body height:', bodyStyles.height);
+console.log('Body min-height:', bodyStyles.minHeight);
+
+// Verificar si el footer tiene altura mínima extraña
+const footerStyles = window.getComputedStyle(footer);
+console.log('Footer height:', footerStyles.height);
+console.log('Footer margin:', footerStyles.margin);
+console.log('Footer padding:', footerStyles.padding);

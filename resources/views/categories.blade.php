@@ -219,7 +219,7 @@
 <div class="categories-container">
     <div class="categories-grid">
         @forelse($categories as $category)
-        <a href="{{ route('shop.category', $category->slug) }}" class="category-card" style="text-decoration: none;">
+        <a href="{{ route('shop.index', ['category' => $category->id]) }}" class="category-card" style="text-decoration: none;">
             <div class="category-image">
                 @if($category->image)
                     <img loading="lazy" src="{{ asset($category->image) }}" alt="{{ $category->name }}">

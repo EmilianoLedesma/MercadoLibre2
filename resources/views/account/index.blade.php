@@ -147,60 +147,109 @@
                             Mis compras
                         </h2>
 
-                        <div style="overflow-x: auto;">
-                            <table style="width: 100%; border-collapse: collapse;">
-                                <thead>
-                                    <tr style="border-bottom: 2px solid #E5E5E5;">
-                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Pedido</th>
-                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Fecha</th>
-                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Estado</th>
-                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Total</th>
-                                        <th style="text-align: left; padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #666;">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if(isset($orders) && $orders->count() > 0)
-                                        @foreach($orders as $order)
-                                        <tr style="border-bottom: 1px solid #F5F5F5;">
-                                            <td style="padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; color: #212529; font-weight: 600;">
-                                                #{{ $order->order_number }}
-                                            </td>
-                                            <td style="padding: 16px; font-family: 'Jost', sans-serif; font-size: 14px; color: #666;">
-                                                {{ $order->created_at->format('d M, Y') }}
-                                            </td>
-                                            <td style="padding: 16px;">
-                                                @if($order->status === 'pending')
-                                                    <span style="display: inline-block; padding: 6px 12px; background: #FEF3C7; color: #D97706; border-radius: 6px; font-size: 13px; font-weight: 500;">Pendiente</span>
-                                                @elseif($order->status === 'processing')
-                                                    <span style="display: inline-block; padding: 6px 12px; background: #DBEAFE; color: #2563EB; border-radius: 6px; font-size: 13px; font-weight: 500;">Procesando</span>
-                                                @elseif($order->status === 'completed')
-                                                    <span style="display: inline-block; padding: 6px 12px; background: #D1FAE5; color: #059669; border-radius: 6px; font-size: 13px; font-weight: 500;">Completado</span>
-                                                @elseif($order->status === 'cancelled')
-                                                    <span style="display: inline-block; padding: 6px 12px; background: #FEE2E2; color: #DC2626; border-radius: 6px; font-size: 13px; font-weight: 500;">Cancelado</span>
+                        @if(isset($orders) && $orders->count() > 0)
+                            @foreach($orders as $order)
+                            <div style="border: 1px solid #E5E5E5; border-radius: 12px; padding: 24px; margin-bottom: 20px;">
+                                <!-- Order Header -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #F5F5F5;">
+                                    <div>
+                                        <div style="font-family: 'Jost', sans-serif; font-size: 16px; font-weight: 700; color: #212529; margin-bottom: 4px;">
+                                            Pedido #{{ $order->order_number }}
+                                        </div>
+                                        <div style="font-size: 13px; color: #666;">
+                                            {{ $order->created_at->format('d M, Y') }}
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="margin-bottom: 8px;">
+                                            @if($order->status === 'pending')
+                                                <span style="display: inline-block; padding: 6px 12px; background: #FEF3C7; color: #D97706; border-radius: 6px; font-size: 13px; font-weight: 500;">Pendiente</span>
+                                            @elseif($order->status === 'processing')
+                                                <span style="display: inline-block; padding: 6px 12px; background: #DBEAFE; color: #2563EB; border-radius: 6px; font-size: 13px; font-weight: 500;">Procesando</span>
+                                            @elseif($order->status === 'completed')
+                                                <span style="display: inline-block; padding: 6px 12px; background: #D1FAE5; color: #059669; border-radius: 6px; font-size: 13px; font-weight: 500;">Completado</span>
+                                            @elseif($order->status === 'cancelled')
+                                                <span style="display: inline-block; padding: 6px 12px; background: #FEE2E2; color: #DC2626; border-radius: 6px; font-size: 13px; font-weight: 500;">Cancelado</span>
+                                            @else
+                                                <span style="display: inline-block; padding: 6px 12px; background: #F3F4F6; color: #6B7280; border-radius: 6px; font-size: 13px; font-weight: 500;">{{ ucfirst($order->status) }}</span>
+                                            @endif
+                                        </div>
+                                        <div style="font-size: 16px; font-weight: 700; color: #212529;">
+                                            ${{ number_format($order->total, 2) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Order Items -->
+                                <div style="display: grid; gap: 12px; margin-bottom: 16px;">
+                                    @foreach($order->items as $item)
+                                        @if($item->product)
+                                        <div style="display: grid; grid-template-columns: 80px 1fr auto; gap: 16px; padding: 12px; border-radius: 8px; background: #F8F9FA;">
+                                            <!-- Product Image -->
+                                            <div style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; background: white;">
+                                                @if($item->product->images && is_array($item->product->images) && count($item->product->images) > 0)
+                                                    <img src="{{ asset('storage/' . $item->product->images[0]) }}" alt="{{ $item->product->name }}" style="width: 100%; height: 100%; object-fit: cover;">
                                                 @else
-                                                    <span style="display: inline-block; padding: 6px 12px; background: #F3F4F6; color: #6B7280; border-radius: 6px; font-size: 13px; font-weight: 500;">{{ ucfirst($order->status) }}</span>
+                                                    <img src="{{ asset('images/placeholder-product.svg') }}" alt="{{ $item->product->name }}" style="width: 100%; height: 100%; object-fit: cover;">
                                                 @endif
-                                            </td>
-                                            <td style="padding: 16px; font-family: 'Jost', sans-serif; font-size: 15px; color: #212529; font-weight: 600;">
-                                                ${{ number_format($order->total, 2) }}
-                                            </td>
-                                            <td style="padding: 16px;">
-                                                <a href="{{ route('checkout.confirmation', $order->id) }}" style="display: inline-block; padding: 8px 16px; background: #EE403D; color: white; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 500; transition: background 0.3s;" onmouseover="this.style.background='#E32020'" onmouseout="this.style.background='#EE403D'">
-                                                    Ver detalles
+                                            </div>
+                                            
+                                            <!-- Product Info -->
+                                            <div>
+                                                <a href="{{ route('shop.show', $item->product->slug) }}" style="font-weight: 600; color: #212529; text-decoration: none; display: block; margin-bottom: 4px; font-size: 15px;">
+                                                    {{ $item->product->name }}
                                                 </a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    @else
-                                        <tr>
-                                            <td colspan="5" style="text-align: center; padding: 48px 16px; color: #999; font-size: 15px;">
-                                                Sin compras. <a href="{{ route('shop.index') }}" style="color: #EE403D; text-decoration: none; font-weight: 500;">Empieza a comprar</a>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                </tbody>
-                            </table>
-                        </div>
+                                                <div style="font-size: 13px; color: #999; margin-bottom: 4px;">
+                                                    Cantidad: {{ $item->quantity }} × ${{ number_format($item->price, 2) }}
+                                                </div>
+                                                @php
+                                                    $existingReview = $item->product->reviews()->where('user_id', Auth::id())->first();
+                                                @endphp
+                                                @if($existingReview)
+                                                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                                                        <div style="display: flex; gap: 2px;">
+                                                            @for($i = 1; $i <= 5; $i++)
+                                                                <span style="color: {{ $i <= $existingReview->rating ? '#F59E0B' : '#E5E5E5' }}; font-size: 14px;">★</span>
+                                                            @endfor
+                                                        </div>
+                                                        <span style="font-size: 12px; color: #666;">Tu reseña</span>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            
+                                            <!-- Review Button -->
+                                            <div style="display: flex; align-items: center;">
+                                                @php
+                                                    $existingReview = $item->product->reviews()->where('user_id', Auth::id())->first();
+                                                @endphp
+                                                @if(!$existingReview)
+                                                    <button onclick="openReviewModal({{ $item->product->id }}, '{{ addslashes($item->product->name) }}', {{ $order->id }})" style="background: #10B981; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 13px; white-space: nowrap; transition: background 0.3s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
+                                                        Dejar Reseña
+                                                    </button>
+                                                @else
+                                                    <button onclick="editReviewModal({{ $item->product->id }}, '{{ addslashes($item->product->name) }}', {{ $existingReview->id }}, {{ $existingReview->rating }}, '{{ addslashes($existingReview->comment ?? '') }}')" style="background: #3B82F6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 13px; white-space: nowrap;">
+                                                        Editar Reseña
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+
+                                <!-- View Details Button -->
+                                <div style="text-align: right;">
+                                    <a href="{{ route('checkout.confirmation', $order->id) }}" style="display: inline-block; padding: 10px 20px; background: #EE403D; color: white; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 500; transition: background 0.3s;" onmouseover="this.style.background='#E32020'" onmouseout="this.style.background='#EE403D'">
+                                        Ver Detalles del Pedido
+                                    </a>
+                                </div>
+                            </div>
+                            @endforeach
+                        @else
+                            <div style="text-align: center; padding: 48px 16px; color: #999; font-size: 15px;">
+                                Sin compras. <a href="{{ route('shop.index') }}" style="color: #EE403D; text-decoration: none; font-weight: 500;">Empieza a comprar</a>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -539,8 +588,114 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.remove-address').forEach(btn => btn.addEventListener('click', function () {
         this.closest('.address-item')?.remove();
     }));
+
+    // Review Modal Functions
+    function openReviewModal(productId, productName, orderId) {
+        const modal = document.getElementById('reviewModal');
+        const form = document.getElementById('reviewForm');
+        const title = document.getElementById('reviewModalTitle');
+        
+        title.textContent = `Reseñar: ${productName}`;
+        form.action = `/products/${productId}/reviews`;
+        form.querySelector('[name="order_id"]').value = orderId;
+        form.querySelector('[name="rating"]').value = '5';
+        form.querySelector('[name="comment"]').value = '';
+        form.querySelector('[name="_method"]')?.remove();
+        
+        updateStars(5);
+        modal.style.display = 'flex';
+    }
+
+    function editReviewModal(productId, productName, reviewId, rating, comment) {
+        const modal = document.getElementById('reviewModal');
+        const form = document.getElementById('reviewForm');
+        const title = document.getElementById('reviewModalTitle');
+        
+        title.textContent = `Editar reseña: ${productName}`;
+        form.action = `/reviews/${reviewId}`;
+        form.querySelector('[name="rating"]').value = rating;
+        form.querySelector('[name="comment"]').value = comment;
+        
+        if (!form.querySelector('[name="_method"]')) {
+            const methodField = document.createElement('input');
+            methodField.type = 'hidden';
+            methodField.name = '_method';
+            methodField.value = 'PUT';
+            form.appendChild(methodField);
+        }
+        
+        updateStars(rating);
+        modal.style.display = 'flex';
+    }
+
+    function closeReviewModal() {
+        document.getElementById('reviewModal').style.display = 'none';
+    }
+
+    function setRating(rating) {
+        document.querySelector('[name="rating"]').value = rating;
+        updateStars(rating);
+    }
+
+    function updateStars(rating) {
+        for (let i = 1; i <= 5; i++) {
+            const star = document.getElementById(`star-${i}`);
+            if (star) {
+                star.style.color = i <= rating ? '#F59E0B' : '#E5E5E5';
+            }
+        }
+    }
+
+    window.openReviewModal = openReviewModal;
+    window.editReviewModal = editReviewModal;
+    window.closeReviewModal = closeReviewModal;
+    window.setRating = setRating;
 });
 </script>
+
+<!-- Review Modal -->
+<div id="reviewModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 12px; padding: 32px; max-width: 500px; width: 90%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h3 id="reviewModalTitle" style="font-family: 'Jost', sans-serif; font-size: 20px; font-weight: 700; color: #212529; margin: 0;">
+                Dejar Reseña
+            </h3>
+            <button onclick="closeReviewModal()" style="background: none; border: none; font-size: 24px; color: #999; cursor: pointer;">×</button>
+        </div>
+        
+        <form id="reviewForm" method="POST">
+            @csrf
+            <input type="hidden" name="order_id" value="">
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 12px; color: #212529;">Calificación</label>
+                <div style="display: flex; gap: 8px; font-size: 32px;">
+                    <span id="star-1" onclick="setRating(1)" style="cursor: pointer; color: #F59E0B;">★</span>
+                    <span id="star-2" onclick="setRating(2)" style="cursor: pointer; color: #F59E0B;">★</span>
+                    <span id="star-3" onclick="setRating(3)" style="cursor: pointer; color: #F59E0B;">★</span>
+                    <span id="star-4" onclick="setRating(4)" style="cursor: pointer; color: #F59E0B;">★</span>
+                    <span id="star-5" onclick="setRating(5)" style="cursor: pointer; color: #F59E0B;">★</span>
+                </div>
+                <input type="hidden" name="rating" value="5">
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #212529;">Comentario (opcional)</label>
+                <textarea name="comment" rows="4" placeholder="Cuéntanos sobre tu experiencia con este producto..." style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E5E5; font-family: 'Jost', sans-serif; font-size: 15px; resize: vertical;"></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" onclick="closeReviewModal()" style="background: #F3F4F6; color: #666; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 500;">
+                    Cancelar
+                </button>
+                <button type="submit" style="background: #10B981; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 500;">
+                    Enviar Reseña
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endpush
 
 @endsection

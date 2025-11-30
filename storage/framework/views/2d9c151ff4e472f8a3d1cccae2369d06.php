@@ -83,5 +83,4 @@
     <div class="container copyright">
         <p>&copy; <?php echo e(date('Y')); ?> SEALS. Todos los derechos reservados.</p>
     </div>
-</footer>
-<?php /**PATH C:\Users\Emiliano\Documents\UPQ SISTEMAS\7mo_Cuatrimestre\Programación Web\ML2 Seals Edition\MercadoLibre2\resources\views/layouts/footer.blade.php ENDPATH**/ ?>
+</footer><?php /**PATH C:\Users\Emiliano\Documents\UPQ SISTEMAS\7mo_Cuatrimestre\Programación Web\ML2 Seals Edition\MercadoLibre2\resources\views/layouts/footer.blade.php ENDPATH**/ ?>

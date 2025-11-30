@@ -19,7 +19,18 @@ class ShopController extends Controller
 
         // Filter by category
         if ($request->has('category') && $request->category != '') {
-            $query->where('category_id', $request->category);
+            $categoryId = $request->category;
+            
+            // Verificar si la categoría tiene subcategorías
+            $subcategoryIds = Category::where('parent_id', $categoryId)->pluck('id');
+            
+            if ($subcategoryIds->isNotEmpty()) {
+                // Si tiene subcategorías, incluir la categoría principal y todas sus subcategorías
+                $query->whereIn('category_id', $subcategoryIds->push($categoryId));
+            } else {
+                // Si es una subcategoría o no tiene hijos, filtrar solo por ella
+                $query->where('category_id', $categoryId);
+            }
         }
 
         // Filter by price range
@@ -28,6 +39,15 @@ class ShopController extends Controller
         }
         if ($request->has('max_price')) {
             $query->where('price', '<=', $request->max_price);
+        }
+
+        // Filter by rating
+        if ($request->has('rating') && $request->rating != '') {
+            $minRating = (int) $request->rating;
+            $query->whereHas('reviews', function($q) use ($minRating) {
+                // Solo incluir productos que tengan al menos una reseña
+            })->withAvg('reviews', 'rating')
+              ->having('reviews_avg_rating', '>=', $minRating);
         }
 
         // Search by name
@@ -47,6 +67,10 @@ class ShopController extends Controller
             case 'name':
                 $query->orderBy('name', 'asc');
                 break;
+            case 'rating':
+                $query->withAvg('reviews', 'rating')
+                      ->orderBy('reviews_avg_rating', 'desc');
+                break;
             default:
                 $query->latest();
         }
@@ -56,6 +80,7 @@ class ShopController extends Controller
         // Cache categories for 1 hour
         $categories = cache()->remember('active_categories_with_count', 3600, function () {
             return Category::where('is_active', true)
+                ->whereNull('parent_id') // Solo categorías principales
                 ->select('id', 'name', 'slug')
                 ->withCount('products')
                 ->get();
@@ -95,7 +120,12 @@ class ShopController extends Controller
             ->select('id', 'name', 'slug', 'description')
             ->firstOrFail();
 
-        $products = Product::where('category_id', $category->id)
+        // Obtener IDs de la categoría y sus subcategorías
+        $categoryIds = Category::where('parent_id', $category->id)
+            ->pluck('id')
+            ->push($category->id);
+
+        $products = Product::whereIn('category_id', $categoryIds)
             ->where('is_active', true)
             ->select('id', 'name', 'slug', 'price', 'sale_price', 'images', 'is_featured', 'category_id')
             ->paginate(12);

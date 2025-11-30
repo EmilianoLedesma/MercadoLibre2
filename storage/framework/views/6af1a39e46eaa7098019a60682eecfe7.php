@@ -91,43 +91,19 @@
     </style>
 
     <?php echo $__env->yieldPushContent('styles'); ?>
-</head>
-<body style="font-family: 'Jost', sans-serif; margin: 0; padding: 0; color: #212529;">
-    
-    <div class="preloader-wrapper" id="preloader">
-        <div class="preloader-new">
-            <svg class="cart_preloader" role="img" aria-label="Shopping cart preloader line animation" viewBox="0 0 128 128" width="128px" height="128px" xmlns="http://www.w3.org/2000/svg">
-                <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
-                    <g class="cart__track" stroke="hsla(0,10%,10%,0.1)">
-                        <polyline points="4,4 21,4 26,22 124,22 112,64 35,64 39,80 106,80"></polyline>
-                        <circle cx="43" cy="111" r="13"></circle>
-                        <circle cx="102" cy="111" r="13"></circle>
-                    </g>
-                    <g class="cart__lines" stroke="currentColor">
-                        <polyline class="cart__top" points="4,4 21,4 26,22 124,22 112,64 35,64 39,80 106,80" stroke-dasharray="338 338" stroke-dashoffset="-338"></polyline>
-                        <g class="cart__wheel1" transform="rotate(-90,43,111)">
-                            <circle class="cart__wheel-stroke" cx="43" cy="111" r="13" stroke-dasharray="81.68 81.68" stroke-dashoffset="81.68"></circle>
-                        </g>
-                        <g class="cart__wheel2" transform="rotate(90,102,111)">
-                            <circle class="cart__wheel-stroke" cx="102" cy="111" r="13" stroke-dasharray="81.68 81.68" stroke-dashoffset="81.68"></circle>
-                        </g>
-                    </g>
-                </g>
-            </svg>
-        </div>
-    </div>
-
-    
-    <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
-
-    
-    <?php echo $__env->yieldContent('content'); ?>
-
-    
-    <?php echo $__env->yieldPushContent('scripts'); ?>
-
     
     <style>
+        html {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background-color: #1a1f25;
+        }
+        
+        /* Toast Notification Styles */
         .toast {
             min-width: 300px;
             max-width: 400px;
@@ -248,7 +224,42 @@
             animation: slideOut 0.3s ease-in forwards;
         }
     </style>
+</head>
+<body style="font-family: 'Jost', sans-serif; margin: 0; padding: 0; color: #212529;">
+    
+    <div class="preloader-wrapper" id="preloader">
+        <div class="preloader-new">
+            <svg class="cart_preloader" role="img" aria-label="Shopping cart preloader line animation" viewBox="0 0 128 128" width="128px" height="128px" xmlns="http://www.w3.org/2000/svg">
+                <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
+                    <g class="cart__track" stroke="hsla(0,10%,10%,0.1)">
+                        <polyline points="4,4 21,4 26,22 124,22 112,64 35,64 39,80 106,80"></polyline>
+                        <circle cx="43" cy="111" r="13"></circle>
+                        <circle cx="102" cy="111" r="13"></circle>
+                    </g>
+                    <g class="cart__lines" stroke="currentColor">
+                        <polyline class="cart__top" points="4,4 21,4 26,22 124,22 112,64 35,64 39,80 106,80" stroke-dasharray="338 338" stroke-dashoffset="-338"></polyline>
+                        <g class="cart__wheel1" transform="rotate(-90,43,111)">
+                            <circle class="cart__wheel-stroke" cx="43" cy="111" r="13" stroke-dasharray="81.68 81.68" stroke-dashoffset="81.68"></circle>
+                        </g>
+                        <g class="cart__wheel2" transform="rotate(90,102,111)">
+                            <circle class="cart__wheel-stroke" cx="102" cy="111" r="13" stroke-dasharray="81.68 81.68" stroke-dashoffset="81.68"></circle>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+    </div>
 
+    
+    <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
+    
+    <?php echo $__env->yieldContent('content'); ?>
+
+    
+    <?php echo $__env->yieldPushContent('scripts'); ?>
+
+    
     <script>
         function showToast(message, type = 'success', title = '') {
             const container = document.getElementById('toast-container');

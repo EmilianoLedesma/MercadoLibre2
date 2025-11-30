@@ -266,15 +266,22 @@ class ProductSeeder extends Seeder
                     $price = $price / 100.0;
                 }
 
+                // Generar especificaciones según la categoría
+                $specifications = $this->generateSpecifications($category->name, $productData['name']);
+
+                // Asignar a la subcategoría correcta basándose en el nombre del producto
+                $assignedCategoryId = $this->getCorrectSubcategory($category, $productData['name']);
+
                 Product::create([
                     'name' => $productData['name'],
                     'slug' => $slug,
                     'description' => $productData['description'],
                     'short_description' => substr($productData['description'], 0, 150),
+                    'specifications' => $specifications,
                     'sku' => $sku,
                     'price' => round($price, 2),
                     'stock_quantity' => $productData['stock_quantity'],
-                    'category_id' => $category->id,
+                    'category_id' => $assignedCategoryId,
                     'user_id' => $sellers->random()->id, // Asignar solo a vendedores
                     'images' => json_encode(['images/placeholder-product.svg']),
                     'is_active' => true,
@@ -283,5 +290,277 @@ class ProductSeeder extends Seeder
             }
         }
     }
+
+    private function generateSpecifications($categoryName, $productName)
+    {
+        $specs = [];
+
+        switch($categoryName) {
+            case 'Tecnología':
+                if (str_contains($productName, 'Laptop') || str_contains($productName, 'MacBook')) {
+                    $specs = [
+                        'Procesador' => ['Intel Core i5', 'Intel Core i7', 'AMD Ryzen 5', 'Apple M1', 'Apple M2'][rand(0, 4)],
+                        'RAM' => ['8GB', '16GB', '32GB'][rand(0, 2)],
+                        'Almacenamiento' => ['256GB SSD', '512GB SSD', '1TB SSD'][rand(0, 2)],
+                        'Pantalla' => ['13.3"', '14"', '15.6"', '16"'][rand(0, 3)],
+                        'Peso' => rand(12, 22) / 10 . ' kg',
+                    ];
+                } elseif (str_contains($productName, 'Phone') || str_contains($productName, 'Galaxy') || str_contains($productName, 'iPhone')) {
+                    $specs = [
+                        'Pantalla' => ['6.1"', '6.4"', '6.7"'][rand(0, 2)] . ' AMOLED',
+                        'Cámara Principal' => ['48MP', '50MP', '64MP', '108MP'][rand(0, 3)],
+                        'Batería' => rand(4000, 5500) . ' mAh',
+                        'Almacenamiento' => ['64GB', '128GB', '256GB', '512GB'][rand(0, 3)],
+                        'RAM' => ['4GB', '6GB', '8GB', '12GB'][rand(0, 3)],
+                    ];
+                } elseif (str_contains($productName, 'TV')) {
+                    $specs = [
+                        'Tamaño' => ['43"', '50"', '55"', '65"'][rand(0, 3)],
+                        'Resolución' => ['Full HD 1080p', '4K UHD', '8K'][rand(0, 2)],
+                        'Tecnología' => ['LED', 'QLED', 'OLED'][rand(0, 2)],
+                        'Smart TV' => 'Sí',
+                        'Conectividad' => 'WiFi, Bluetooth, HDMI x3, USB x2',
+                    ];
+                } else {
+                    $specs = [
+                        'Marca' => ['Samsung', 'Apple', 'Sony', 'LG', 'Logitech'][rand(0, 4)],
+                        'Garantía' => '1 año',
+                        'Color' => ['Negro', 'Blanco', 'Gris', 'Azul'][rand(0, 3)],
+                    ];
+                }
+                break;
+
+            case 'Electrodomésticos':
+                $specs = [
+                    'Capacidad' => rand(10, 50) . ' litros',
+                    'Potencia' => rand(800, 2000) . 'W',
+                    'Voltaje' => '110-220V',
+                    'Dimensiones' => rand(40, 80) . ' x ' . rand(40, 60) . ' x ' . rand(30, 50) . ' cm',
+                    'Peso' => rand(5, 25) . ' kg',
+                    'Garantía' => '1 año',
+                    'Color' => ['Blanco', 'Acero Inoxidable', 'Negro'][rand(0, 2)],
+                ];
+                break;
+
+            case 'Hogar y Muebles':
+                $specs = [
+                    'Material' => ['Madera', 'Metal', 'Tela', 'Cuero sintético'][rand(0, 3)],
+                    'Dimensiones' => rand(100, 200) . ' x ' . rand(40, 100) . ' x ' . rand(40, 90) . ' cm',
+                    'Peso' => rand(5, 30) . ' kg',
+                    'Color' => ['Blanco', 'Negro', 'Gris', 'Beige', 'Café'][rand(0, 4)],
+                    'Estilo' => ['Moderno', 'Minimalista', 'Industrial', 'Clásico'][rand(0, 3)],
+                ];
+                break;
+
+            case 'Moda':
+                $specs = [
+                    'Material' => ['100% Algodón', 'Poliéster', 'Cuero', 'Mezclilla'][rand(0, 3)],
+                    'Tallas Disponibles' => 'XS, S, M, L, XL, XXL',
+                    'Género' => ['Unisex', 'Hombre', 'Mujer'][rand(0, 2)],
+                    'Cuidados' => 'Lavar a máquina en frío',
+                    'Origen' => ['México', 'USA', 'China', 'Vietnam'][rand(0, 3)],
+                ];
+                break;
+
+            case 'Deportes y Fitness':
+                $specs = [
+                    'Material' => ['Acero', 'Aluminio', 'Fibra de Carbono', 'Goma'][rand(0, 3)],
+                    'Peso' => rand(1, 20) . ' kg',
+                    'Dimensiones' => rand(20, 150) . ' x ' . rand(10, 80) . ' x ' . rand(5, 40) . ' cm',
+                    'Uso' => ['Profesional', 'Amateur', 'Principiante'][rand(0, 2)],
+                    'Color' => ['Negro', 'Azul', 'Rojo', 'Verde'][rand(0, 3)],
+                ];
+                break;
+
+            case 'Juguetes y Bebés':
+                $specs = [
+                    'Edad Recomendada' => rand(0, 12) . '+ años',
+                    'Material' => ['Plástico ABS', 'Madera', 'Tela', 'Silicona'][rand(0, 3)],
+                    'Dimensiones' => rand(10, 60) . ' x ' . rand(10, 40) . ' x ' . rand(5, 30) . ' cm',
+                    'Peso' => rand(100, 3000) / 100 . ' kg',
+                    'Seguridad' => 'Certificado libre de BPA',
+                ];
+                break;
+
+            case 'Belleza y Cuidado Personal':
+                $specs = [
+                    'Contenido' => rand(50, 500) . 'ml',
+                    'Tipo de Piel' => ['Todo tipo', 'Grasa', 'Seca', 'Mixta'][rand(0, 3)],
+                    'Ingredientes' => 'Ingredientes naturales',
+                    'Uso' => 'Uso diario',
+                    'Libre de' => 'Parabenos, Sulfatos',
+                ];
+                break;
+
+            case 'Herramientas':
+                $specs = [
+                    'Tipo' => ['Manual', 'Eléctrica', 'Inalámbrica'][rand(0, 2)],
+                    'Potencia' => rand(500, 2000) . 'W',
+                    'Voltaje' => '110-220V',
+                    'Peso' => rand(1, 8) . ' kg',
+                    'Material' => ['Acero Inoxidable', 'Acero al Carbono', 'Aluminio'][rand(0, 2)],
+                ];
+                break;
+
+            case 'Libros y Entretenimiento':
+                $specs = [
+                    'Formato' => ['Físico', 'Digital', 'Blu-ray', 'DVD'][rand(0, 3)],
+                    'Idioma' => ['Español', 'Inglés', 'Subtitulado'][rand(0, 2)],
+                    'Duración/Páginas' => rand(100, 500),
+                    'Clasificación' => ['A', 'B', 'C', 'D'][rand(0, 3)],
+                ];
+                break;
+
+            case 'Automotriz':
+                $specs = [
+                    'Material' => ['Plástico ABS', 'Metal', 'Aluminio'][rand(0, 2)],
+                    'Compatible con' => 'Vehículos universales',
+                    'Garantía' => '6 meses',
+                    'Instalación' => 'Fácil instalación',
+                ];
+                break;
+
+            case 'Jardín y Exterior':
+                $specs = [
+                    'Material' => ['Plástico', 'Metal', 'Madera'][rand(0, 2)],
+                    'Dimensiones' => rand(30, 120) . ' x ' . rand(30, 80) . ' x ' . rand(20, 100) . ' cm',
+                    'Resistente al Agua' => 'Sí',
+                    'Uso' => 'Interior/Exterior',
+                ];
+                break;
+
+            case 'Alimentos y Bebidas':
+                $specs = [
+                    'Contenido Neto' => rand(100, 1000) . 'g',
+                    'Presentación' => ['Frasco', 'Bolsa', 'Lata', 'Botella'][rand(0, 3)],
+                    'Caducidad' => rand(6, 24) . ' meses',
+                    'Almacenamiento' => 'Lugar fresco y seco',
+                ];
+                break;
+
+            default:
+                $specs = [
+                    'Material' => 'Material de calidad',
+                    'Garantía' => '6 meses',
+                    'Color' => ['Negro', 'Blanco', 'Gris'][rand(0, 2)],
+                ];
+        }
+
+        return $specs;
+    }
+
+    private function getCorrectSubcategory($parentCategory, $productName)
+    {
+        $productNameLower = strtolower($productName);
+        
+        // Mapeo de palabras clave a subcategorías
+        $mappings = [
+            'Tecnología' => [
+                'Celulares y Smartphones' => ['iphone', 'galaxy', 'smartphone', 'celular', 'móvil', 'phone'],
+                'Computadoras y Laptops' => ['laptop', 'macbook', 'computadora', 'pc', 'notebook', 'dell', 'hp', 'lenovo'],
+                'Tablets' => ['tablet', 'ipad'],
+                'Accesorios Tecnológicos' => ['auricular', 'mouse', 'teclado', 'cargador', 'cable', 'funda', 'protector'],
+                'Cámaras y Fotografía' => ['cámara', 'canon', 'nikon', 'gopro', 'fotografía'],
+                'Audio y Video' => ['bocina', 'parlante', 'speaker', 'soundbar', 'proyector'],
+            ],
+            'Electrodomésticos' => [
+                'Refrigeración' => ['refrigerador', 'heladera', 'nevera', 'congelador'],
+                'Lavado y Secado' => ['lavadora', 'secadora', 'lavarropas'],
+                'Cocina' => ['microondas', 'horno', 'estufa', 'licuadora', 'batidora', 'tostador', 'cafetera'],
+                'Climatización' => ['aire acondicionado', 'ventilador', 'calefactor', 'climatizador'],
+                'Pequeños Electrodomésticos' => ['plancha', 'aspiradora', 'procesador'],
+            ],
+            'Hogar y Muebles' => [
+                'Muebles de Sala' => ['sofá', 'sillón', 'sala', 'mesa de centro'],
+                'Muebles de Dormitorio' => ['cama', 'colchón', 'buró', 'closet', 'recámara'],
+                'Muebles de Comedor' => ['comedor', 'silla', 'mesa comedor'],
+                'Decoración' => ['lámpara', 'espejo', 'cuadro', 'florero', 'jarrón'],
+                'Textiles para el Hogar' => ['cortina', 'almohada', 'sábana', 'edredón', 'cobija'],
+                'Organización' => ['estante', 'organizador', 'caja', 'contenedor'],
+            ],
+            'Moda' => [
+                'Ropa de Hombre' => ['camisa hombre', 'pantalón hombre', 'traje', 'corbata'],
+                'Ropa de Mujer' => ['blusa', 'vestido', 'falda', 'pantalón mujer'],
+                'Ropa de Niños' => ['niño', 'niña', 'infantil', 'bebé ropa'],
+                'Calzado' => ['zapato', 'tenis', 'sandalia', 'bota', 'zapatilla'],
+                'Accesorios y Joyería' => ['bolsa', 'cartera', 'collar', 'pulsera', 'anillo', 'aretes'],
+                'Relojes' => ['reloj'],
+            ],
+            'Deportes y Fitness' => [
+                'Fitness y Gimnasio' => ['pesa', 'mancuerna', 'barra', 'gimnasio', 'caminadora', 'bicicleta estática'],
+                'Deportes al Aire Libre' => ['pelota', 'balón', 'fútbol', 'basketball', 'camping', 'tienda campaña'],
+                'Bicicletas y Ciclismo' => ['bicicleta', 'casco ciclismo'],
+                'Deportes Acuáticos' => ['natación', 'traje baño', 'goggles', 'flotador'],
+                'Ropa Deportiva' => ['pants', 'short deportivo', 'jersey', 'playera deportiva'],
+            ],
+            'Juguetes y Bebés' => [
+                'Juguetes para Bebés' => ['sonajero', 'móvil', 'gimnasio bebé'],
+                'Juguetes Educativos' => ['rompecabezas', 'bloques', 'educativo'],
+                'Muñecas y Accesorios' => ['muñeca', 'barbie', 'casa muñecas'],
+                'Vehículos y Pistas' => ['carro juguete', 'pista', 'hot wheels'],
+                'Artículos para Bebés' => ['pañalera', 'biberón', 'carriola', 'cuna', 'andadera'],
+            ],
+            'Belleza y Cuidado Personal' => [
+                'Fragancias' => ['perfume', 'fragancia', 'colonia'],
+                'Maquillaje' => ['labial', 'máscara', 'base', 'maquillaje', 'sombra'],
+                'Cuidado de la Piel' => ['crema facial', 'serum', 'limpiador', 'exfoliante', 'bloqueador'],
+                'Cuidado del Cabello' => ['shampoo', 'acondicionador', 'tinte', 'tratamiento capilar'],
+                'Cuidado Personal' => ['cepillo dental', 'rasuradora', 'secadora cabello', 'plancha pelo'],
+            ],
+            'Herramientas' => [
+                'Herramientas Manuales' => ['martillo', 'destornillador', 'llave', 'alicate', 'pinza'],
+                'Herramientas Eléctricas' => ['taladro', 'sierra eléctrica', 'lijadora', 'esmeril'],
+                'Herramientas de Jardín' => ['podadora', 'rastrillo', 'pala', 'manguera'],
+                'Equipamiento Industrial' => ['compresor', 'soldadora', 'generador'],
+            ],
+            'Libros y Entretenimiento' => [
+                'Libros' => ['libro', 'novela', 'enciclopedia'],
+                'Música' => ['cd', 'vinilo', 'álbum musical'],
+                'Películas y Series' => ['dvd', 'blu-ray', 'película'],
+                'Videojuegos' => ['videojuego', 'playstation', 'xbox', 'nintendo', 'switch'],
+                'Instrumentos Musicales' => ['guitarra', 'piano', 'batería', 'violín'],
+            ],
+            'Automotriz' => [
+                'Accesorios para Auto' => ['tapete', 'funda asiento', 'organizador auto'],
+                'Repuestos' => ['filtro', 'aceite', 'bujía', 'balata'],
+                'Herramientas Automotrices' => ['gato hidráulico', 'llave torque', 'compresor'],
+                'Audio y Video para Auto' => ['stereo', 'bocina auto', 'cámara reversa'],
+            ],
+            'Jardín y Exterior' => [
+                'Plantas y Semillas' => ['planta', 'semilla', 'árbol', 'flor'],
+                'Herramientas de Jardín' => ['podadora', 'tijera jardinería', 'regadera'],
+                'Muebles de Exterior' => ['mesa jardín', 'silla exterior', 'hamaca'],
+                'Decoración de Jardín' => ['maceta', 'fuente', 'gnomo', 'estatua'],
+            ],
+            'Alimentos y Bebidas' => [
+                'Alimentos Frescos' => ['fruta', 'verdura', 'carne', 'pescado'],
+                'Bebidas' => ['refresco', 'jugo', 'agua', 'cerveza', 'vino'],
+                'Snacks y Dulces' => ['chocolate', 'galleta', 'dulce', 'papas', 'chips'],
+                'Productos Gourmet' => ['gourmet', 'orgánico', 'premium', 'importado'],
+            ],
+        ];
+
+        // Buscar la subcategoría correcta
+        if (isset($mappings[$parentCategory->name])) {
+            foreach ($mappings[$parentCategory->name] as $subcategoryName => $keywords) {
+                foreach ($keywords as $keyword) {
+                    if (str_contains($productNameLower, $keyword)) {
+                        $subcategory = Category::where('parent_id', $parentCategory->id)
+                            ->where('name', $subcategoryName)
+                            ->first();
+                        
+                        if ($subcategory) {
+                            return $subcategory->id;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Si no se encuentra una subcategoría específica, usar la primera disponible o la categoría principal
+        $firstSubcategory = Category::where('parent_id', $parentCategory->id)->first();
+        return $firstSubcategory ? $firstSubcategory->id : $parentCategory->id;
+    }
 }
+
 
