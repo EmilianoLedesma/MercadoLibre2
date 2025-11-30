@@ -54,18 +54,18 @@ class ProductSeeder extends Seeder
             $sellers = collect([$seller]);
         }
         
-        // Productos de Tecnología (10 productos) - Precios en MXN
+        // Productos de Tecnología (10 productos) - Precios en MXN - URLs ORIGINALES que funcionaban
         $techProducts = [
-            ['name' => 'Samsung Galaxy A54 5G 128GB', 'price' => 7899.00, 'stock_quantity' => 45, 'description' => 'Smartphone Samsung Galaxy A54 con pantalla AMOLED de 6.4", cámara triple de 50MP, batería de 5000mAh y carga rápida de 25W'],
-            ['name' => 'iPhone 13 128GB', 'price' => 15999.00, 'stock_quantity' => 20, 'description' => 'Apple iPhone 13 con chip A15 Bionic, sistema de cámara dual de 12MP, pantalla Super Retina XDR de 6.1" y resistencia al agua IP68'],
-            ['name' => 'Laptop Lenovo IdeaPad 3 15.6"', 'price' => 9899.00, 'stock_quantity' => 30, 'description' => 'Laptop con procesador Intel Core i5 de 11va generación, 8GB RAM DDR4, SSD 256GB NVMe, Windows 11 Home y pantalla FHD'],
-            ['name' => 'Audífonos Sony WH-1000XM4', 'price' => 5499.00, 'stock_quantity' => 60, 'description' => 'Audífonos inalámbricos con cancelación de ruido activa líder en la industria, hasta 30 horas de batería, Bluetooth multipoint y audio Hi-Res'],
-            ['name' => 'Tablet Samsung Galaxy Tab A8', 'price' => 3899.00, 'stock_quantity' => 35, 'description' => 'Tablet de 10.5" con procesador octa-core, 4GB RAM, 64GB almacenamiento expandible, batería de 7040mAh y sonido Dolby Atmos'],
-            ['name' => 'Smart TV LG 50" 4K UHD', 'price' => 8999.00, 'stock_quantity' => 25, 'description' => 'Smart TV LED 50 pulgadas con resolución 4K Real, sistema operativo WebOS 22, HDR10, procesador α5 Gen5 AI y Magic Remote incluido'],
-            ['name' => 'MacBook Air M2 256GB', 'price' => 24999.00, 'stock_quantity' => 12, 'description' => 'MacBook Air con chip M2 de Apple, pantalla Liquid Retina de 13.6", 8GB memoria unificada, SSD de 256GB, hasta 18 horas de batería'],
-            ['name' => 'Mouse Logitech MX Master 3', 'price' => 1899.00, 'stock_quantity' => 80, 'description' => 'Mouse inalámbrico ergonómico con sensor de alta precisión de 4000 DPI, 7 botones personalizables, rueda electromagnética y hasta 70 días de batería'],
-            ['name' => 'Teclado Mecánico Razer BlackWidow V3', 'price' => 2599.00, 'stock_quantity' => 40, 'description' => 'Teclado mecánico gaming con switches mecánicos Razer Green, iluminación RGB Chroma personalizable, reposamuñecas ergonómico y teclas programables'],
-            ['name' => 'Webcam Logitech C920 HD Pro', 'price' => 1499.00, 'stock_quantity' => 55, 'description' => 'Cámara web Full HD 1080p a 30fps, enfoque automático HD, corrección de iluminación automática, micrófono estéreo integrado, compatible con Windows y Mac'],
+            ['name' => 'Samsung Galaxy A54 5G 128GB', 'price' => 7899.00, 'stock_quantity' => 45, 'description' => 'Smartphone Samsung Galaxy A54 con pantalla AMOLED de 6.4", cámara triple de 50MP, batería de 5000mAh y carga rápida de 25W', 'images' => ['https://m.media-amazon.com/images/I/61F5Z1vyH6L._AC_SX679_.jpg']],
+            ['name' => 'iPhone 13 128GB', 'price' => 15999.00, 'stock_quantity' => 20, 'description' => 'Apple iPhone 13 con chip A15 Bionic, sistema de cámara dual de 12MP, pantalla Super Retina XDR de 6.1" y resistencia al agua IP68', 'images' => ['https://m.media-amazon.com/images/I/61wVdpwmktL._AC_SX466_.jpg']],
+            ['name' => 'Laptop Lenovo IdeaPad 3 15.6"', 'price' => 9899.00, 'stock_quantity' => 30, 'description' => 'Laptop con procesador Intel Core i5 de 11va generación, 8GB RAM DDR4, SSD 256GB NVMe, Windows 11 Home y pantalla FHD', 'images' => ['https://m.media-amazon.com/images/I/71C3eQton9L._AC_SX466_.jpg']],
+            ['name' => 'Audífonos Sony WH-1000XM4', 'price' => 5499.00, 'stock_quantity' => 60, 'description' => 'Audífonos inalámbricos con cancelación de ruido activa líder en la industria, hasta 30 horas de batería, Bluetooth multipoint y audio Hi-Res', 'images' => ['https://m.media-amazon.com/images/I/41VEMU8feUL._AC_SX466_.jpg']],
+            ['name' => 'Tablet Samsung Galaxy Tab A8', 'price' => 3899.00, 'stock_quantity' => 35, 'description' => 'Tablet de 10.5" con procesador octa-core, 4GB RAM, 64GB almacenamiento expandible, batería de 7040mAh y sonido Dolby Atmos', 'images' => ['https://m.media-amazon.com/images/I/41f0apAL67L._AC_SX679_.jpg']],
+            ['name' => 'Smart TV LG 50" 4K UHD', 'price' => 8999.00, 'stock_quantity' => 25, 'description' => 'Smart TV LED 50 pulgadas con resolución 4K Real, sistema operativo WebOS 22, HDR10, procesador α5 Gen5 AI y Magic Remote incluido', 'images' => ['https://m.media-amazon.com/images/I/711K+vjXWFL._AC_SX679_.jpg']],
+            ['name' => 'MacBook Air M2 256GB', 'price' => 24999.00, 'stock_quantity' => 12, 'description' => 'MacBook Air con chip M2 de Apple, pantalla Liquid Retina de 13.6", 8GB memoria unificada, SSD de 256GB, hasta 18 horas de batería', 'images' => ['https://m.media-amazon.com/images/I/71zbUS9KpQL._AC_SX466_.jpg']],
+            ['name' => 'Mouse Logitech MX Master 3', 'price' => 1899.00, 'stock_quantity' => 80, 'description' => 'Mouse inalámbrico ergonómico con sensor de alta precisión de 4000 DPI, 7 botones personalizables, rueda electromagnética y hasta 70 días de batería', 'images' => ['https://m.media-amazon.com/images/I/61iiZ-gDYEL._AC_SX466_.jpg']],
+            ['name' => 'Teclado Mecánico Razer BlackWidow V3', 'price' => 2599.00, 'stock_quantity' => 40, 'description' => 'Teclado mecánico gaming con switches mecánicos Razer Green, iluminación RGB Chroma personalizable, reposamuñecas ergonómico y teclas programables', 'images' => ['https://m.media-amazon.com/images/I/81y14ID9oHL._AC_SX466_.jpg']],
+            ['name' => 'Webcam Logitech C920 HD Pro', 'price' => 1499.00, 'stock_quantity' => 55, 'description' => 'Cámara web Full HD 1080p a 30fps, enfoque automático HD, corrección de iluminación automática, micrófono estéreo integrado, compatible con Windows y Mac', 'images' => ['https://m.media-amazon.com/images/I/71eGb1FcyiL._AC_SX466_.jpg']],
         ];
 
         // Productos de Electrodomésticos (10 productos) - Precios en MXN
@@ -283,7 +283,7 @@ class ProductSeeder extends Seeder
                     'stock_quantity' => $productData['stock_quantity'],
                     'category_id' => $assignedCategoryId,
                     'user_id' => $sellers->random()->id, // Asignar solo a vendedores
-                    'images' => json_encode(['images/placeholder-product.svg']),
+                    'images' => isset($productData['images']) ? $productData['images'] : ['images/placeholder-product.svg'],
                     'is_active' => true,
                     'is_featured' => rand(1, 100) <= 20, // 20% de productos destacados
                 ]);

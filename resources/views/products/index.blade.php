@@ -77,20 +77,25 @@
                                     <td style="padding: 20px;">
                                         <div style="width: 60px; height: 60px; border-radius: 6px; overflow: hidden; background: #F8F9FA;">
                                             @php
-                                                $images = is_string($product->images) ? json_decode($product->images, true) : $product->images;
-                                                $images = $images ?? [];
+                                                $images = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
                                                 $imagePath = !empty($images) ? $images[0] : null;
 
                                                 if ($imagePath) {
-                                                    $storageFile = public_path('storage/' . $imagePath);
-                                                    $publicFile = public_path($imagePath);
-
-                                                    if (file_exists($storageFile)) {
-                                                        $imageUrl = asset('storage/' . $imagePath);
-                                                    } elseif (file_exists($publicFile)) {
-                                                        $imageUrl = asset($imagePath);
+                                                    // Si es URL externa, usarla directamente
+                                                    if (filter_var($imagePath, FILTER_VALIDATE_URL)) {
+                                                        $imageUrl = $imagePath;
                                                     } else {
-                                                        $imageUrl = asset('images/placeholder-product.svg');
+                                                        // Si es ruta local, verificar dónde existe
+                                                        $storageFile = public_path('storage/' . $imagePath);
+                                                        $publicFile = public_path($imagePath);
+
+                                                        if (file_exists($storageFile)) {
+                                                            $imageUrl = asset('storage/' . $imagePath);
+                                                        } elseif (file_exists($publicFile)) {
+                                                            $imageUrl = asset($imagePath);
+                                                        } else {
+                                                            $imageUrl = asset('images/placeholder-product.svg');
+                                                        }
                                                     }
                                                 } else {
                                                     $imageUrl = asset('images/placeholder-product.svg');
