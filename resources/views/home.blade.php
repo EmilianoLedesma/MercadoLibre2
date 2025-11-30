@@ -158,7 +158,7 @@
         <div>
         <!-- Hero Banner -->
         <div style="margin-bottom: 60px;">
-            <div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px; height: 450px;">
+            <div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px; height: 550px;">
                 <!-- Main Slider -->
                 <div style="position: relative; overflow: hidden; border-radius: 16px;">
                     <div class="swiper heroSwiper" style="height: 100%;">
@@ -241,7 +241,7 @@
                 <!-- Side Banners -->
                 <div style="display: flex; flex-direction: column; gap: 20px;">
                     <!-- Top Banner -->
-                    <a href="{{ route('shop.index', ['category' => 2]) }}" style="position: relative; display: block; height: 215px; background: linear-gradient(135deg, #FFE8E8 0%, #FFD4D4 100%); border-radius: 12px; overflow: hidden; text-decoration: none; transition: all 0.3s;"
+                    <a href="{{ route('shop.index', ['category' => 2]) }}" style="position: relative; display: block; height: 265px; background: linear-gradient(135deg, #FFE8E8 0%, #FFD4D4 100%); border-radius: 12px; overflow: hidden; text-decoration: none; transition: all 0.3s;"
                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.12)';"
                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         <div style="position: absolute; top: 20px; left: 20px; z-index: 2;">
@@ -255,11 +255,11 @@
                                 Ver más →
                             </span>
                         </div>
-                        <div style="position: absolute; bottom: -10px; right: -10px; width: 140px; height: 140px; background: url('https://images.unsplash.com/photo-1626806819282-2c1dc01a5e0c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=200&h=200&fit=crop') center/cover; border-radius: 50%; opacity: 0.9;"></div>
+                        <div style="position: absolute; bottom: -10px; right: -10px; width: 160px; height: 160px; background: url('https://images.unsplash.com/photo-1626806819282-2c1dc01a5e0c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=200&h=200&fit=crop') center/cover; border-radius: 50%; opacity: 0.9;"></div>
                     </a>
 
                     <!-- Bottom Banner -->
-                    <a href="{{ route('shop.index', ['category' => 1]) }}" style="position: relative; display: block; height: 215px; background: linear-gradient(135deg, #E8F2FF 0%, #D4E6FF 100%); border-radius: 12px; overflow: hidden; text-decoration: none; transition: all 0.3s;"
+                    <a href="{{ route('shop.index', ['category' => 1]) }}" style="position: relative; display: block; height: 265px; background: linear-gradient(135deg, #E8F2FF 0%, #D4E6FF 100%); border-radius: 12px; overflow: hidden; text-decoration: none; transition: all 0.3s;"
                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.12)';"
                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         <div style="position: absolute; top: 20px; left: 20px; z-index: 2;">
@@ -273,7 +273,7 @@
                                 Descubrir →
                             </span>
                         </div>
-                        <div style="position: absolute; bottom: -10px; right: -10px; width: 140px; height: 140px; background: url('https://images.unsplash.com/photo-1498049794561-7780e7231661?w=200&h=200&fit=crop') center/cover; border-radius: 50%; opacity: 0.9;"></div>
+                        <div style="position: absolute; bottom: -10px; right: -10px; width: 160px; height: 160px; background: url('https://images.unsplash.com/photo-1498049794561-7780e7231661?w=200&h=200&fit=crop') center/cover; border-radius: 50%; opacity: 0.9;"></div>
                     </a>
                 </div>
             </div>
@@ -695,8 +695,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 @endpush
 
-<!-- ========== FOOTER ========== -->
-@include('layouts.footer')
 
 <!-- Search Modal -->
 @include('components.search-modal')

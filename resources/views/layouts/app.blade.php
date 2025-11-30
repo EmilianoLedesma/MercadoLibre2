@@ -35,7 +35,7 @@
         }
 
         .categories-dropdown .dropdown-menu {
-            position: absolute;
+            position: absolute !important;
             top: 100%;
             left: 50%;
             transform: translateX(-50%);
@@ -44,6 +44,8 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             padding: 20px;
             min-width: 280px;
+            max-height: 400px;
+            overflow-y: auto;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
@@ -93,22 +95,31 @@
     @stack('styles')
     
     <style>
-        html {
+        * {
             margin: 0;
             padding: 0;
-            height: 100%;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            margin: 0;
+            padding: 0;
             background-color: white;
         }
+        
         body {
-            margin: 0 !important;
-            padding: 0 !important;
-            background-color: white;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
         
-        body > * {
+        /* El contenido principal toma todo el espacio */
+        main {
+            flex: 1 0 auto;
+        }
+        
+        /* Footer se ajusta a su contenido */
+        .site-footer {
             flex-shrink: 0;
         }
         
@@ -262,8 +273,13 @@
     {{-- Toast Notifications --}}
     <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
 
-    {{-- Contenido principal --}}
-    @yield('content')
+    {{-- Contenido principal con wrapper para flex layout --}}
+    <main style="flex: 1 0 auto;">
+        @yield('content')
+    </main>
+
+    {{-- Footer --}}
+    @include('layouts.footer')
 
     {{-- Scripts --}}
     @stack('scripts')
