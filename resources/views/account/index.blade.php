@@ -422,7 +422,6 @@
     </div>
 </section>
 
-@include('layouts.footer')
 
 @include('components.delete-account-modal')
 

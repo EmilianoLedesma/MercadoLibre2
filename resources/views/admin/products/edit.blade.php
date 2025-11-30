@@ -254,7 +254,6 @@
     </div>
 </main>
 
-@include('layouts.footer')
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

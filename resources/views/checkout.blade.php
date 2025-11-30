@@ -665,7 +665,6 @@
     </form>
 </div>
 
-@include('layouts.footer')
 
 @push('scripts')
 <script>

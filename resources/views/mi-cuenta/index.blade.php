@@ -180,7 +180,6 @@
     </div>
 </section>
 
-@include('layouts.footer')
 
 @push('scripts')
 <script>
