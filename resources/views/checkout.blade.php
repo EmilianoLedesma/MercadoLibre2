@@ -237,16 +237,20 @@
     .summary-item-image {
         width: 60px;
         height: 75px;
-        background-color: #F5F6F2;
+        background-color: #F8F9FA;
         border-radius: 4px;
         overflow: hidden;
         flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px;
     }
 
     .summary-item-image img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
     }
 
     .summary-item-details {
@@ -609,7 +613,7 @@
                         @endphp
                         <div class="summary-item">
                             <div class="summary-item-image">
-                                <img src="{{ (isset($item['image']) && (str_starts_with($item['image'], 'http://') || str_starts_with($item['image'], 'https://'))) ? $item['image'] : asset('images/product-placeholder.png') }}" alt="{{ $item['name'] }}">
+                                <img src="{{ $item['image'] ?? asset('images/placeholder-product.svg') }}" alt="{{ $item['name'] }}">
                             </div>
                             <div class="summary-item-details">
                                 <div class="summary-item-name">{{ $item['name'] }}</div>

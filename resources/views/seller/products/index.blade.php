@@ -87,8 +87,20 @@
                                     @foreach($products as $product)
                                         <tr style="border-bottom: 1px solid #F5F5F5;">
                                             <td style="padding: 16px;">
-                                                <div style="font-weight: 500; color: #212529; margin-bottom: 4px;">{{ $product->name }}</div>
-                                                <div style="font-size: 12px; color: #999;">SKU: {{ $product->sku }}</div>
+                                                <div style="display: flex; align-items: center; gap: 12px;">
+                                                    @php
+                                                        $productImages = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
+                                                        $firstImage = is_array($productImages) && count($productImages) > 0 ? $productImages[0] : null;
+                                                        $imageUrl = $firstImage ? (filter_var($firstImage, FILTER_VALIDATE_URL) ? $firstImage : asset('storage/' . $firstImage)) : asset('images/placeholder-product.svg');
+                                                    @endphp
+                                                    <div style="width: 60px; height: 60px; background-color: #F8F9FA; border-radius: 6px; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 6px;">
+                                                        <img src="{{ $imageUrl }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: contain;">
+                                                    </div>
+                                                    <div>
+                                                        <div style="font-weight: 500; color: #212529; margin-bottom: 4px;">{{ $product->name }}</div>
+                                                        <div style="font-size: 12px; color: #999;">SKU: {{ $product->sku }}</div>
+                                                    </div>
+                                                </div>
                                             </td>
                                             <td style="padding: 16px; color: #666;">{{ $product->category->name ?? 'N/A' }}</td>
                                             <td style="padding: 16px;">

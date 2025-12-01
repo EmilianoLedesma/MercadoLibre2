@@ -54,11 +54,21 @@ class CartController extends Controller
             // Use sale_price when available, otherwise price (assume stored as decimal units)
             $price = (float) ($product->sale_price ?? $product->price);
 
+            // Determine image URL - check if it's already a full URL
+            $imageUrl = 'https://via.placeholder.com/60x75';
+            if ($firstImage) {
+                if (filter_var($firstImage, FILTER_VALIDATE_URL)) {
+                    $imageUrl = $firstImage;
+                } else {
+                    $imageUrl = asset('storage/' . $firstImage);
+                }
+            }
+
             $cart[$productId] = [
                 'name' => $product->name,
                 'price' => round($price, 2),
                 'quantity' => $quantity,
-                'image' => $firstImage ? asset('storage/' . $firstImage) : 'https://via.placeholder.com/60x75',
+                'image' => $imageUrl,
                 'stock' => $product->stock_quantity,
             ];
         }

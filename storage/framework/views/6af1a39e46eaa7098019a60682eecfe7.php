@@ -35,7 +35,7 @@
         }
 
         .categories-dropdown .dropdown-menu {
-            position: absolute;
+            position: absolute !important;
             top: 100%;
             left: 50%;
             transform: translateX(-50%);
@@ -44,6 +44,8 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             padding: 20px;
             min-width: 280px;
+            max-height: 400px;
+            overflow-y: auto;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
@@ -93,22 +95,31 @@
     <?php echo $__env->yieldPushContent('styles'); ?>
     
     <style>
-        html {
+        * {
             margin: 0;
             padding: 0;
-            height: 100%;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            margin: 0;
+            padding: 0;
             background-color: white;
         }
+        
         body {
-            margin: 0 !important;
-            padding: 0 !important;
-            background-color: white;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
         
-        body > * {
+        /* El contenido principal toma todo el espacio */
+        main {
+            flex: 1 0 auto;
+        }
+        
+        /* Footer se ajusta a su contenido */
+        .site-footer {
             flex-shrink: 0;
         }
         
@@ -263,7 +274,12 @@
     <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
 
     
-    <?php echo $__env->yieldContent('content'); ?>
+    <main style="flex: 1 0 auto;">
+        <?php echo $__env->yieldContent('content'); ?>
+    </main>
+
+    
+    <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     
     <?php echo $__env->yieldPushContent('scripts'); ?>

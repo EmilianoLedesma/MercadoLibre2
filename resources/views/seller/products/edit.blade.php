@@ -146,8 +146,11 @@
                     
                     <div style="display: flex; flex-wrap: wrap; gap: 12px;">
                         @foreach($currentImages as $index => $image)
-                        <div style="position: relative; width: 120px; height: 120px; border: 1px solid #D7D9D2; border-radius: 4px; overflow: hidden;">
-                            <img src="{{ asset('storage/' . $image) }}" alt="Imagen del producto" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: relative; width: 120px; height: 120px; border: 1px solid #D7D9D2; border-radius: 4px; overflow: hidden; background-color: #F8F9FA; display: flex; align-items: center; justify-content: center; padding: 8px;">
+                            @php
+                                $imageUrl = filter_var($image, FILTER_VALIDATE_URL) ? $image : asset('storage/' . $image);
+                            @endphp
+                            <img src="{{ $imageUrl }}" alt="Imagen del producto" style="width: 100%; height: 100%; object-fit: contain;">
                             <label style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
                                 <input type="checkbox" name="delete_images[]" value="{{ $index }}" style="cursor: pointer; accent-color: #EE403D;">
                                 Eliminar

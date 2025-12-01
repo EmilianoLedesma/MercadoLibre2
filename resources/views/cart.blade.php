@@ -72,16 +72,20 @@
     .item-image {
         width: 80px;
         height: 100px;
-        background-color: #F5F6F2;
+        background-color: #F8F9FA;
         border-radius: 4px;
         overflow: hidden;
         flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
     }
 
     .item-image img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
     }
 
     .item-details h4 {
@@ -440,9 +444,7 @@
                     <div class="cart-item" data-id="{{ $id }}">
                         <div class="item-product">
                             <div class="item-image">
-                                {{-- Current image value: {{ $item['image'] ?? 'NO IMAGE' }} --}}
-                                {{-- Condition result: {{ isset($item['image']) && (str_starts_with($item['image'], 'http://') || str_starts_with($item['image'], 'https://')) ? 'USE DIRECT' : 'USE FALLBACK' }} --}}
-                                <img src="{{ (isset($item['image']) && (str_starts_with($item['image'], 'http://') || str_starts_with($item['image'], 'https://'))) ? $item['image'] : asset('images/product-placeholder.png') }}" alt="{{ $item['name'] }}" style="border: 2px solid {{ (isset($item['image']) && (str_starts_with($item['image'], 'http://') || str_starts_with($item['image'], 'https://'))) ? 'green' : 'red' }};">
+                                <img src="{{ $item['image'] ?? asset('images/placeholder-product.svg') }}" alt="{{ $item['name'] }}">
                             </div>
                             <div class="item-details">
                                 <h4>{{ $item['name'] }}</h4>

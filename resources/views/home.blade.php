@@ -412,49 +412,55 @@
                 @foreach($featuredProducts as $product)
                 <!-- Product Card -->
                 <div class="swiper-slide">
-                    <div style="background-color: white; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; height: 100%;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';" onclick="window.location.href='{{ route('shop.show', $product->slug) }}'">
-                        <div style="position: relative; width: 100%; height: 350px; overflow: hidden;">
+                    <div style="background-color: white; border-radius: 12px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08); cursor: pointer; height: 100%; display: flex; flex-direction: column;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 16px 32px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';" onclick="window.location.href='{{ route('shop.show', $product->slug) }}'">
+                        <div style="position: relative; width: 100%; height: 320px; overflow: hidden; background-color: #F8F9FA; display: flex; align-items: center; justify-content: center; padding: 20px;">
                             @php
                                 $badgeTop = 12;
                             @endphp
                             
                             @if($product->hasDiscount())
-                                <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #E32020; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">-{{ $product->discount_percentage }}%</span>
-                                @php $badgeTop += 33; @endphp
+                                <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #E32020; color: white; padding: 8px 14px; font-size: 12px; font-weight: 700; border-radius: 6px; z-index: 10; box-shadow: 0 2px 8px rgba(227, 32, 32, 0.3);">-{{ $product->discount_percentage }}%</span>
+                                @php $badgeTop += 38; @endphp
                             @endif
                             
                             @if($product->isNew())
-                                <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #28A745; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">NEW</span>
-                                @php $badgeTop += 33; @endphp
+                                <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #28A745; color: white; padding: 8px 14px; font-size: 12px; font-weight: 700; border-radius: 6px; z-index: 10; box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);">NEW</span>
+                                @php $badgeTop += 38; @endphp
                             @endif
                             
                             @if($product->is_featured)
-                                <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #EE403D; color: white; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 3px; z-index: 10;">HOT</span>
+                                <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #EE403D; color: white; padding: 8px 14px; font-size: 12px; font-weight: 700; border-radius: 6px; z-index: 10; box-shadow: 0 2px 8px rgba(238, 64, 61, 0.3);">HOT</span>
                             @endif
                             
                             @if($product->images && is_array($product->images) && count($product->images) > 0)
-                                <img src="{{ asset('storage/' . $product->images[0]) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                @php
+                                    $imageUrl = $product->images[0];
+                                    if (!filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+                                        $imageUrl = asset('storage/' . $imageUrl);
+                                    }
+                                @endphp
+                                <img src="{{ $imageUrl }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';" loading="lazy">
                             @else
-                                <img src="{{ asset('images/placeholder-product.svg') }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                <img src="{{ asset('images/placeholder-product.svg') }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: contain;" loading="lazy">
                             @endif
                         </div>
-                        <div style="padding: 20px;">
-                            <h4 style="font-size: 16px; font-weight: 500; color: #212529; margin: 0 0 12px 0;">{{ Str::limit($product->name, 40) }}</h4>
+                        <div style="padding: 24px; flex: 1; display: flex; flex-direction: column;">
+                            <h4 style="font-size: 15px; font-weight: 600; color: #212529; margin: 0 0 10px 0; line-height: 1.4; min-height: 42px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{ $product->name }}</h4>
                             
                             @if($product->hasDiscount())
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
-                                    <span style="font-size: 14px; color: #999; text-decoration: line-through;">${{ number_format($product->price, 2) }}</span>
-                                    <span style="font-size: 20px; font-weight: 700; color: #E32020;">${{ number_format($product->sale_price, 2) }}</span>
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+                                    <span style="font-size: 13px; color: #999; text-decoration: line-through; font-weight: 500;">${{ number_format($product->price, 2) }}</span>
+                                    <span style="font-size: 22px; font-weight: 700; color: #E32020;">${{ number_format($product->sale_price, 2) }}</span>
                                 </div>
                             @else
-                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-                                    <span style="font-size: 20px; font-weight: 700; color: #404040;">${{ number_format($product->price, 2) }}</span>
+                                <div style="margin-bottom: 18px;">
+                                    <span style="font-size: 22px; font-weight: 700; color: #212529;">${{ number_format($product->price, 2) }}</span>
                                 </div>
                             @endif
                             
-                            <form action="{{ route('cart.add', $product->id) }}" method="POST" onclick="event.stopPropagation();">
+                            <form action="{{ route('cart.add', $product->id) }}" method="POST" onclick="event.stopPropagation();" style="margin-top: auto;">
                                 @csrf
-                                <button type="submit" style="width: 100%; background-color: transparent; color: #212529; border: 2px solid #212529; padding: 12px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: all 0.25s;">
+                                <button type="submit" style="width: 100%; background-color: #212529; color: white; border: none; padding: 14px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#EE403D'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(238, 64, 61, 0.3)';" onmouseout="this.style.backgroundColor='#212529'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                                     Agregar al Carrito
                                 </button>
                             </form>
