@@ -121,4 +121,15 @@ class Product extends Model
     {
         return $this->sale_price && $this->sale_price < $this->price;
     }
+
+    /**
+     * Obtener la primera imagen del producto.
+     */
+    public function getImageAttribute()
+    {
+        if (is_array($this->images) && count($this->images) > 0) {
+            return $this->images[0];
+        }
+        return 'images/placeholder-product.svg';
+    }
 }

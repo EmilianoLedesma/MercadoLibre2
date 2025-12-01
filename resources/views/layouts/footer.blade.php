@@ -27,29 +27,34 @@
         <div class="footer-column links">
             <h4>Sobre Nosotros</h4>
             <p class="muted">Descubre las últimas tendencias en moda y accesorios. Envíos a todo el país.</p>
-            <a href="#" class="btn-ghost">CONTÁCTANOS →</a>
+            <a href="{{ route('contact') }}" class="btn-ghost">CONTÁCTANOS →</a>
         </div>
 
         <div class="footer-column navs">
             <div>
                 <h4>Información</h4>
                 <ul>
-                    <li><a href="#">Nosotros</a></li>
-                    <li><a href="#">Preguntas Frecuentes</a></li>
-                    <li><a href="#">Envíos</a></li>
-                    <li><a href="#">Devoluciones</a></li>
-                    <li><a href="#">Contacto</a></li>
+                    <li><a href="{{ route('about') }}">Nosotros</a></li>
+                    <li><a href="{{ route('faq') }}">Preguntas Frecuentes</a></li>
+                    <li><a href="{{ route('track.order') }}">Rastrear Pedido</a></li>
+                    <li><a href="{{ route('returns') }}">Devoluciones</a></li>
+                    <li><a href="{{ route('contact') }}">Contacto</a></li>
                 </ul>
             </div>
 
             <div>
                 <h4>Mi Cuenta</h4>
                 <ul>
-                    <li><a href="#">Mis Pedidos</a></li>
-                    <li><a href="#">Lista de Deseos</a></li>
-                    <li><a href="#">Carrito</a></li>
-                    <li><a href="#">Mi Perfil</a></li>
-                    <li><a href="#">Tienda</a></li>
+                    @auth
+                        <li><a href="{{ route('account') }}">Mi Perfil</a></li>
+                        <li><a href="{{ route('account') }}#orders">Mis Pedidos</a></li>
+                    @else
+                        <li><a href="{{ route('login') }}">Iniciar Sesión</a></li>
+                        <li><a href="{{ route('register') }}">Registrarse</a></li>
+                    @endauth
+                    <li><a href="{{ route('wishlist.index') }}">Lista de Deseos</a></li>
+                    <li><a href="{{ route('cart') }}">Carrito</a></li>
+                    <li><a href="{{ route('shop.index') }}">Tienda</a></li>
                 </ul>
             </div>
         </div>

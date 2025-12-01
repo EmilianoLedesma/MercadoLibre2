@@ -27,29 +27,34 @@
         <div class="footer-column links">
             <h4>Sobre Nosotros</h4>
             <p class="muted">Descubre las últimas tendencias en moda y accesorios. Envíos a todo el país.</p>
-            <a href="#" class="btn-ghost">CONTÁCTANOS →</a>
+            <a href="<?php echo e(route('contact')); ?>" class="btn-ghost">CONTÁCTANOS →</a>
         </div>
 
         <div class="footer-column navs">
             <div>
                 <h4>Información</h4>
                 <ul>
-                    <li><a href="#">Nosotros</a></li>
-                    <li><a href="#">Preguntas Frecuentes</a></li>
-                    <li><a href="#">Envíos</a></li>
-                    <li><a href="#">Devoluciones</a></li>
-                    <li><a href="#">Contacto</a></li>
+                    <li><a href="<?php echo e(route('about')); ?>">Nosotros</a></li>
+                    <li><a href="<?php echo e(route('faq')); ?>">Preguntas Frecuentes</a></li>
+                    <li><a href="<?php echo e(route('track.order')); ?>">Rastrear Pedido</a></li>
+                    <li><a href="<?php echo e(route('returns')); ?>">Devoluciones</a></li>
+                    <li><a href="<?php echo e(route('contact')); ?>">Contacto</a></li>
                 </ul>
             </div>
 
             <div>
                 <h4>Mi Cuenta</h4>
                 <ul>
-                    <li><a href="#">Mis Pedidos</a></li>
-                    <li><a href="#">Lista de Deseos</a></li>
-                    <li><a href="#">Carrito</a></li>
-                    <li><a href="#">Mi Perfil</a></li>
-                    <li><a href="#">Tienda</a></li>
+                    <?php if(auth()->guard()->check()): ?>
+                        <li><a href="<?php echo e(route('account')); ?>">Mi Perfil</a></li>
+                        <li><a href="<?php echo e(route('account')); ?>#orders">Mis Pedidos</a></li>
+                    <?php else: ?>
+                        <li><a href="<?php echo e(route('login')); ?>">Iniciar Sesión</a></li>
+                        <li><a href="<?php echo e(route('register')); ?>">Registrarse</a></li>
+                    <?php endif; ?>
+                    <li><a href="<?php echo e(route('wishlist.index')); ?>">Lista de Deseos</a></li>
+                    <li><a href="<?php echo e(route('cart')); ?>">Carrito</a></li>
+                    <li><a href="<?php echo e(route('shop.index')); ?>">Tienda</a></li>
                 </ul>
             </div>
         </div>

@@ -483,6 +483,8 @@
 
     .product-info {
         padding: 20px;
+        display: flex;
+        flex-direction: column;
     }
 
     .product-category {
@@ -1024,6 +1026,16 @@
                             <span class="price-current">${{ number_format($product->price, 2) }}</span>
                         @endif
                     </div>
+
+                    <!-- Add to Cart Button -->
+                    <form action="{{ route('cart.add', $product->id) }}" method="POST" onclick="event.stopPropagation();" style="margin-top: 12px;">
+                        @csrf
+                        <button type="submit" style="width: 100%; background-color: #212529; color: white; border: none; padding: 12px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s; font-family: 'Jost', sans-serif;" 
+                            onmouseover="this.style.backgroundColor='#EE403D'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(238, 64, 61, 0.3)';" 
+                            onmouseout="this.style.backgroundColor='#212529'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            Agregar al Carrito
+                        </button>
+                    </form>
                 </div>
             </div>
             @empty

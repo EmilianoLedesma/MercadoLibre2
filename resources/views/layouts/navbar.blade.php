@@ -69,6 +69,8 @@
                 </div>
             </div>
             
+            <a href="{{ route('deals') }}" style="color: {{ request()->routeIs('deals') ? '#EE403D' : '#212529' }}; font-weight: 500; text-decoration: none; transition: color 0.25s;">Ofertas</a>
+            
             <a href="{{ route('contact') }}" style="color: {{ request()->routeIs('contact') ? '#EE403D' : '#212529' }}; font-weight: 500; text-decoration: none; transition: color 0.25s;">Contacto</a>
         </nav>
 

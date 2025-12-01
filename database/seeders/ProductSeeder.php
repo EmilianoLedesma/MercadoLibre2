@@ -272,6 +272,16 @@ class ProductSeeder extends Seeder
                 // Asignar a la subcategoría correcta basándose en el nombre del producto
                 $assignedCategoryId = $this->getCorrectSubcategory($category, $productData['name']);
 
+                // 30% de probabilidad de tener descuento
+                $hasDiscount = rand(1, 100) <= 30;
+                $salePrice = null;
+                
+                if ($hasDiscount) {
+                    // Descuento entre 10% y 50%
+                    $discountPercent = rand(10, 50);
+                    $salePrice = round($price * (1 - $discountPercent / 100), 2);
+                }
+
                 Product::create([
                     'name' => $productData['name'],
                     'slug' => $slug,
@@ -280,6 +290,7 @@ class ProductSeeder extends Seeder
                     'specifications' => $specifications,
                     'sku' => $sku,
                     'price' => round($price, 2),
+                    'sale_price' => $salePrice,
                     'stock_quantity' => $productData['stock_quantity'],
                     'category_id' => $assignedCategoryId,
                     'user_id' => $sellers->random()->id, // Asignar solo a vendedores

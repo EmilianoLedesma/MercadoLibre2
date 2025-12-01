@@ -62,27 +62,23 @@
                     }
                 @endphp
 
-                <div style="width: 100%; padding-top: 100%; position: relative; background-color: #F5F6F2; border-radius: 12px; overflow: hidden; margin-bottom: 20px;">
-                    <img src="{{ $mainUrl }}" alt="{{ $product->name }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" id="mainImage">
+                <div id="imageZoomContainer" style="width: 100%; padding-top: 100%; position: relative; background-color: #F8F9FA; border-radius: 12px; margin-bottom: 20px;">
+                    @php
+                        $imageUrl = filter_var($mainImage ?? '', FILTER_VALIDATE_URL) ? $mainImage : (isset($mainImage) ? asset('storage/' . $mainImage) : asset('images/placeholder-product.svg'));
+                    @endphp
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; border-radius: 12px; cursor: zoom-in;">
+                        <img src="{{ $imageUrl }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: contain; padding: 20px; transition: transform 0.3s ease;" id="mainImage">
+                    </div>
                 </div>
 
                 @if(count($images) > 1)
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
                     @foreach($images as $index => $image)
                         @php
-                            $storagePath = public_path('storage/' . $image);
-                            $publicPath = public_path($image);
-
-                            if (file_exists($storagePath)) {
-                                $thumbUrl = asset('storage/' . $image);
-                            } elseif (file_exists($publicPath)) {
-                                $thumbUrl = asset($image);
-                            } else {
-                                $thumbUrl = asset('images/placeholder-product.svg');
-                            }
+                            $thumbUrl = filter_var($image, FILTER_VALIDATE_URL) ? $image : asset('storage/' . $image);
                         @endphp
-                        <div onclick="changeImage('{{ $thumbUrl }}')" style="padding-top: 100%; position: relative; background-color: #F5F6F2; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid {{ $index === 0 ? '#EE403D' : 'transparent' }}; transition: border-color 0.3s;" class="thumbnail" onmouseover="this.style.borderColor='#EE403D'" onmouseout="if(!this.classList.contains('active')) this.style.borderColor='transparent'">
-                            <img src="{{ $thumbUrl }}" alt="{{ $product->name }} - {{ $index + 1 }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                        <div onclick="changeImage('{{ $thumbUrl }}')" style="padding-top: 100%; position: relative; background-color: #F8F9FA; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid {{ $index === 0 ? '#EE403D' : 'transparent' }}; transition: border-color 0.3s; display: flex; align-items: center; justify-content: center; padding: 8px;" class="thumbnail" onmouseover="this.style.borderColor='#EE403D'" onmouseout="if(!this.classList.contains('active')) this.style.borderColor='transparent'">
+                            <img src="{{ $thumbUrl }}" alt="{{ $product->name }} - {{ $index + 1 }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; padding: 8px;">
                         </div>
                     @endforeach
                 </div>
@@ -382,6 +378,28 @@
 
 @push('scripts')
 <script>
+// Image zoom functionality
+const imageContainer = document.getElementById('imageZoomContainer');
+const mainImage = document.getElementById('mainImage');
+
+if (imageContainer && mainImage) {
+    const zoomWrapper = imageContainer.querySelector('div');
+    
+    zoomWrapper.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        
+        mainImage.style.transformOrigin = `${x}% ${y}%`;
+        mainImage.style.transform = 'scale(2.5)';
+    });
+    
+    zoomWrapper.addEventListener('mouseleave', function() {
+        mainImage.style.transform = 'scale(1)';
+        mainImage.style.transformOrigin = 'center';
+    });
+}
+
 function changeImage(url) {
     document.getElementById('mainImage').src = url;
 

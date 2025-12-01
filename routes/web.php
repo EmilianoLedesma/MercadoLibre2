@@ -62,8 +62,28 @@ Route::get('/', function () {
         ->take(8)
         ->get();
 
-    return view('home', compact('categories', 'allCategories', 'featuredProducts'));
+    // Obtener productos más vendidos (simulado con productos activos aleatorios)
+    // En producción, esto debería basarse en ventas reales
+    $bestSellers = Product::where('is_active', true)
+        ->with('category')
+        ->inRandomOrder()
+        ->take(8)
+        ->get();
+
+    return view('home', compact('categories', 'allCategories', 'featuredProducts', 'bestSellers'));
 })->name('home');
+
+// Ruta de ofertas/deals
+Route::get('/deals', function () {
+    $products = \App\Models\Product::where('is_active', true)
+        ->whereNotNull('sale_price')
+        ->where('sale_price', '>', 0)
+        ->with('category')
+        ->orderBy('created_at', 'desc')
+        ->get();
+    
+    return view('deals', compact('products'));
+})->name('deals');
 
 // Rutas de autenticación
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -127,6 +147,52 @@ Route::get('/about', function () {
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
+
+// FAQ
+Route::get('/faq', function () {
+    return view('faq');
+})->name('faq');
+
+// Returns/Devoluciones
+Route::get('/returns', function () {
+    $orders = collect();
+    if (auth()->check()) {
+        $orders = App\Models\Order::where('user_id', auth()->id())
+            ->whereNotIn('status', ['returned'])
+            ->with('items.product')
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+    return view('returns', compact('orders'));
+})->name('returns');
+
+Route::post('/returns/submit', function (Illuminate\Http\Request $request) {
+    $request->validate([
+        'order_id' => 'required|exists:orders,id',
+        'reason' => 'required|string',
+        'description' => 'nullable|string|max:1000',
+    ]);
+
+    // Obtener el pedido y cambiar el estado a 'returned'
+    $order = \App\Models\Order::findOrFail($request->order_id);
+    
+    // Verificar que el pedido pertenece al usuario autenticado
+    if ($order->user_id !== auth()->id()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'No tienes permiso para devolver este pedido.'
+        ], 403);
+    }
+    
+    // Cambiar el estado del pedido a 'returned'
+    $order->status = 'returned';
+    $order->save();
+    
+    return response()->json([
+        'success' => true,
+        'message' => '¡Tu solicitud de devolución ha sido procesada!'
+    ]);
+})->middleware('auth')->name('returns.submit');
 
 // Rastrear Pedido
 Route::get('/track-order', function () {

@@ -191,10 +191,10 @@
     }
 
     .item-image {
-        width: 60px;
-        height: 75px;
+        width: 80px;
+        height: 80px;
         background-color: #F5F6F2;
-        border-radius: 4px;
+        border-radius: 8px;
         overflow: hidden;
         flex-shrink: 0;
     }
@@ -202,7 +202,8 @@
     .item-image img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
+        padding: 4px;
     }
 
     .item-details {
@@ -451,15 +452,7 @@
                 @foreach($order->items as $item)
                     <div class="order-item">
                         <div class="item-image">
-                            @php
-                                $images = is_string($item->product->images) ? json_decode($item->product->images, true) : $item->product->images;
-                                $firstImage = is_array($images) && count($images) > 0 ? $images[0] : null;
-                            @endphp
-                            @if($firstImage)
-                                <img src="{{ asset('storage/' . $firstImage) }}" alt="{{ $item->product->name }}">
-                            @else
-                                <img src="https://via.placeholder.com/60x75" alt="{{ $item->product->name }}">
-                            @endif
+                            <img src="{{ $item->product->image }}" alt="{{ $item->product->name }}">
                         </div>
                         <div class="item-details">
                             <div class="item-name">{{ $item->product->name }}</div>

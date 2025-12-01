@@ -339,12 +339,6 @@
         font-size: 120px;
         color: #E5E5E5;
         margin-bottom: 24px;
-        animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
     }
 
     .not-found-title {

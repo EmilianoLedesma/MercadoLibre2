@@ -74,6 +74,8 @@
                 </div>
             </div>
             
+            <a href="{{ route('deals') }}" style="color: #212529; font-weight: 500; text-decoration: none; transition: color 0.25s;">Ofertas</a>
+            
             <a href="{{ route('contact') }}" style="color: #212529; font-weight: 500; text-decoration: none; transition: color 0.25s;">Contacto</a>
         </nav>
 
@@ -397,9 +399,263 @@
     </div>
 </section>
 
+<!-- ========== COLLECTIONS SECTION ========== -->
+<section style="padding: 80px 0; background-color: white;">
+    <div style="max-width: 100%; margin: 0 auto; padding: 0 80px;">
+        <div style="text-align: center; margin-bottom: 50px;">
+            <span style="display: inline-block; background-color: #F5F6F2; padding: 8px 20px; border-radius: 4px; font-size: 14px; font-weight: 600; color: #777; margin-bottom: 10px;">Colecciones</span>
+            <h3 style="font-size: 36px; font-weight: 700; color: #212529; margin: 0;">COMPRA POR ESTILO</h3>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+            <!-- Collection 1: Tech Essentials -->
+            <a href="{{ route('shop.index', ['category' => 1]) }}" style="position: relative; display: block; height: 400px; background: linear-gradient(135deg, #E8F4F8 0%, #D4E9F2 100%); border-radius: 12px; overflow: hidden; text-decoration: none; transition: all 0.3s;"
+               onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 28px rgba(0,0,0,0.15)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <div style="position: absolute; top: 30px; left: 30px; z-index: 2;">
+                    <div style="color: #2196F3; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;">
+                        Colección
+                    </div>
+                    <h3 style="font-size: 28px; font-weight: 700; color: #212529; margin: 0 0 12px 0; line-height: 1.2;">
+                        Tech<br>Essentials
+                    </h3>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Lo último en tecnología</p>
+                    <span style="color: #2196F3; font-size: 14px; font-weight: 600;">
+                        Explorar →
+                    </span>
+                </div>
+                <div style="position: absolute; bottom: -20px; right: -20px; width: 280px; height: 280px; background: url('https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=400&fit=crop') center/cover; border-radius: 50%; opacity: 0.9;"></div>
+            </a>
+
+            <!-- Collection 2: Home Style -->
+            <a href="{{ route('shop.index', ['category' => 14]) }}" style="position: relative; display: block; height: 400px; background: linear-gradient(135deg, #FFF5F5 0%, #FFE8E8 100%); border-radius: 12px; overflow: hidden; text-decoration: none; transition: all 0.3s;"
+               onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 28px rgba(0,0,0,0.15)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <div style="position: absolute; top: 30px; left: 30px; z-index: 2;">
+                    <div style="color: #EE403D; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;">
+                        Colección
+                    </div>
+                    <h3 style="font-size: 28px; font-weight: 700; color: #212529; margin: 0 0 12px 0; line-height: 1.2;">
+                        Home<br>Style
+                    </h3>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Renueva tu hogar</p>
+                    <span style="color: #EE403D; font-size: 14px; font-weight: 600;">
+                        Explorar →
+                    </span>
+                </div>
+                <div style="position: absolute; bottom: -20px; right: -20px; width: 280px; height: 280px; background: url('https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=400&h=400&fit=crop') center/cover; border-radius: 50%; opacity: 0.9;"></div>
+            </a>
+
+            <!-- Collection 3: Active Life -->
+            <a href="{{ route('shop.index', ['category' => 28]) }}" style="position: relative; display: block; height: 400px; background: linear-gradient(135deg, #F5FFF9 0%, #E8FFE8 100%); border-radius: 12px; overflow: hidden; text-decoration: none; transition: all 0.3s;"
+               onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 28px rgba(0,0,0,0.15)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <div style="position: absolute; top: 30px; left: 30px; z-index: 2;">
+                    <div style="color: #4CAF50; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;">
+                        Colección
+                    </div>
+                    <h3 style="font-size: 28px; font-weight: 700; color: #212529; margin: 0 0 12px 0; line-height: 1.2;">
+                        Active<br>Life
+                    </h3>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Para tu estilo de vida</p>
+                    <span style="color: #4CAF50; font-size: 14px; font-weight: 600;">
+                        Explorar →
+                    </span>
+                </div>
+                <div style="position: absolute; bottom: -20px; right: -20px; width: 280px; height: 280px; background: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=400&fit=crop') center/cover; border-radius: 50%; opacity: 0.9;"></div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FASHION LOOKBOOK SECTION ========== -->
+<section style="padding: 80px 0; background-color: #F8F8F8;">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 40px;">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 50px;">
+            <span style="display: inline-block; background-color: white; padding: 8px 20px; border-radius: 4px; font-size: 14px; font-weight: 600; color: #777; margin-bottom: 10px;">Fashion</span>
+            <h3 style="font-size: 36px; font-weight: 700; color: #212529; margin: 0;">TENDENCIAS DE LA TEMPORADA</h3>
+        </div>
+
+        <!-- Grid de 2 banners grandes -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+            <!-- Banner 1: Mujer con Vestido - Ropa Mujer -->
+            <a href="{{ route('shop.index', ['category' => 23]) }}" style="position: relative; display: block; height: 600px; background-color: #F5F5F0; border-radius: 8px; overflow: hidden; text-decoration: none; transition: all 0.3s;"
+               onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 28px rgba(0,0,0,0.15)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <!-- Imagen de modelo -->
+                <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=1200&fit=crop') center bottom/cover; background-position: center 20%;"></div>
+                
+                <!-- Overlay gradient -->
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 50%);"></div>
+                
+                <!-- Content -->
+                <div style="position: absolute; top: 40px; left: 40px; z-index: 2;">
+                    <div style="background-color: white; padding: 6px 16px; border-radius: 20px; display: inline-block; margin-bottom: 16px;">
+                        <span style="font-size: 12px; font-weight: 700; color: #212529; text-transform: uppercase; letter-spacing: 1px;">Nueva Colección</span>
+                    </div>
+                    <h4 style="font-size: 32px; font-weight: 700; color: white; margin: 0 0 12px 0; line-height: 1.2; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                        Elegancia<br>Urbana
+                    </h4>
+                    <p style="font-size: 15px; color: white; margin: 0 0 20px 0; text-shadow: 0 2px 6px rgba(0,0,0,0.4);">Descubre la nueva moda</p>
+                    <div style="display: inline-flex; align-items: center; gap: 8px; background-color: white; color: #212529; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 14px; transition: all 0.3s;">
+                        Comprar Ahora
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Banner 2: Hombre con Ropa Casual - Ropa Hombre -->
+            <a href="{{ route('shop.index', ['category' => 22]) }}" style="position: relative; display: block; height: 600px; background-color: #E8E8E3; border-radius: 8px; overflow: hidden; text-decoration: none; transition: all 0.3s;"
+               onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 28px rgba(0,0,0,0.15)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <!-- Imagen de modelo -->
+                <div style="position: absolute; bottom: 0; right: 0; width: 100%; height: 100%; background: url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800&h=1200&fit=crop') center bottom/cover; background-position: center 30%;"></div>
+                
+                <!-- Overlay gradient -->
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 50%);"></div>
+                
+                <!-- Content -->
+                <div style="position: absolute; top: 40px; right: 40px; z-index: 2; text-align: right;">
+                    <div style="background-color: #212529; padding: 6px 16px; border-radius: 20px; display: inline-block; margin-bottom: 16px;">
+                        <span style="font-size: 12px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 1px;">Estilo Moderno</span>
+                    </div>
+                    <h4 style="font-size: 32px; font-weight: 700; color: white; margin: 0 0 12px 0; line-height: 1.2; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                        Casual<br>Premium
+                    </h4>
+                    <p style="font-size: 15px; color: white; margin: 0 0 20px 0; text-shadow: 0 2px 6px rgba(0,0,0,0.4);">Lo mejor para ti</p>
+                    <div style="display: inline-flex; align-items: center; gap: 8px; background-color: #EE403D; color: white; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 14px; transition: all 0.3s;">
+                        Ver Colección
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Grid de 3 banners pequeños -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+            <!-- Mini Banner 1: Accesorios -->
+            <a href="{{ route('shop.index', ['category' => 26]) }}" style="position: relative; display: block; height: 350px; background-color: #FFF; border-radius: 8px; overflow: hidden; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s;"
+               onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.12)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)';">
+                <div style="width: 100%; height: 70%; background: url('https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=400&fit=crop') center/cover;"></div>
+                <div style="padding: 20px; text-align: center;">
+                    <h5 style="font-size: 18px; font-weight: 700; color: #212529; margin: 0 0 8px 0;">Accesorios</h5>
+                    <p style="font-size: 13px; color: #666; margin: 0;">Complementa tu estilo</p>
+                </div>
+            </a>
+
+            <!-- Mini Banner 2: Zapatos -->
+            <a href="{{ route('shop.index', ['category' => 25]) }}" style="position: relative; display: block; height: 350px; background-color: #FFF; border-radius: 8px; overflow: hidden; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s;"
+               onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.12)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)';">
+                <div style="width: 100%; height: 70%; background: url('https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&h=400&fit=crop') center/cover;"></div>
+                <div style="padding: 20px; text-align: center;">
+                    <h5 style="font-size: 18px; font-weight: 700; color: #212529; margin: 0 0 8px 0;">Calzado</h5>
+                    <p style="font-size: 13px; color: #666; margin: 0;">Desde casual hasta formal</p>
+                </div>
+            </a>
+
+            <!-- Mini Banner 3: Bolsos -->
+            <a href="{{ route('shop.index', ['category' => 26]) }}" style="position: relative; display: block; height: 350px; background-color: #FFF; border-radius: 8px; overflow: hidden; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s;"
+               onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.12)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)';">
+                <div style="width: 100%; height: 70%; background: url('https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&h=400&fit=crop') center/cover;"></div>
+                <div style="padding: 20px; text-align: center;">
+                    <h5 style="font-size: 18px; font-weight: 700; color: #212529; margin: 0 0 8px 0;">Bolsos</h5>
+                    <p style="font-size: 13px; color: #666; margin: 0;">Elegancia y funcionalidad</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ========== BEST SELLERS SECTION ========== -->
+<section style="padding: 80px 0; background-color: white;">
+    <div style="max-width: 100%; margin: 0 auto; padding: 0 80px;">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 50px;">
+            <span style="display: inline-block; background-color: #F5F6F2; padding: 8px 20px; border-radius: 4px; font-size: 14px; font-weight: 600; color: #777; margin-bottom: 10px;">Best Sellers</span>
+            <h3 style="font-size: 36px; font-weight: 700; color: #212529; margin: 0;">LOS MÁS VENDIDOS</h3>
+        </div>
+
+        <!-- Products Carousel -->
+        <div class="swiper bestSellersSwiper" style="padding: 20px 0;">
+            <div class="swiper-wrapper">
+                @foreach($bestSellers as $product)
+                <!-- Product Card -->
+                <div class="swiper-slide">
+                    <div style="background-color: white; border-radius: 12px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08); cursor: pointer; display: flex; flex-direction: column; height: 100%;" 
+                         onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 16px 32px rgba(0,0,0,0.12)';" 
+                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';" 
+                         onclick="window.location.href='{{ route('shop.show', $product->slug) }}'">
+                        
+                        <div style="position: relative; width: 100%; height: 320px; overflow: hidden; background-color: #F8F9FA; display: flex; align-items: center; justify-content: center; padding: 20px;">
+                            @php
+                                $badgeTop = 12;
+                            @endphp
+                            
+                            @if($product->hasDiscount())
+                                <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #E32020; color: white; padding: 8px 14px; font-size: 12px; font-weight: 700; border-radius: 6px; z-index: 10; box-shadow: 0 2px 8px rgba(227, 32, 32, 0.3);">-{{ $product->discount_percentage }}%</span>
+                                @php $badgeTop += 38; @endphp
+                            @endif
+                            
+                            @if($product->isNew())
+                                <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #28A745; color: white; padding: 8px 14px; font-size: 12px; font-weight: 700; border-radius: 6px; z-index: 10; box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);">NEW</span>
+                                @php $badgeTop += 38; @endphp
+                            @endif
+                            
+                            <!-- Best Seller Badge -->
+                            <span style="position: absolute; top: {{ $badgeTop }}px; right: 12px; background-color: #FFB800; color: white; padding: 8px 14px; font-size: 12px; font-weight: 700; border-radius: 6px; z-index: 10; box-shadow: 0 2px 8px rgba(255, 184, 0, 0.3);">⭐ TOP</span>
+                            
+                            @php
+                                $images = is_array($product->images) ? $product->images : (is_string($product->images) ? json_decode($product->images, true) : []);
+                                $firstImage = is_array($images) && count($images) > 0 ? $images[0] : null;
+                                $imageUrl = $firstImage ? (filter_var($firstImage, FILTER_VALIDATE_URL) ? $firstImage : asset('storage/' . $firstImage)) : asset('images/placeholder-product.svg');
+                            @endphp
+                            <img src="{{ $imageUrl }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';" loading="lazy">
+                        </div>
+                        
+                        <div style="padding: 24px; flex: 1; display: flex; flex-direction: column;">
+                            <h4 style="font-size: 15px; font-weight: 600; color: #212529; margin: 0 0 10px 0; line-height: 1.4; min-height: 42px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{ $product->name }}</h4>
+                            
+                            @if($product->hasDiscount())
+                                <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 18px;">
+                                    <span style="font-size: 13px; color: #999; text-decoration: line-through; font-weight: 500;">${{ number_format($product->price, 2) }}</span>
+                                    <span style="font-size: 22px; font-weight: 700; color: #E32020;">${{ number_format($product->sale_price, 2) }}</span>
+                                </div>
+                            @else
+                                <div style="margin-bottom: 18px;">
+                                    <span style="font-size: 22px; font-weight: 700; color: #212529;">${{ number_format($product->price, 2) }}</span>
+                                </div>
+                            @endif
+                            
+                            <form action="{{ route('cart.add', $product->id) }}" method="POST" onclick="event.stopPropagation();" style="margin-top: auto;">
+                                @csrf
+                                <button type="submit" style="width: 100%; background-color: #212529; color: white; border: none; padding: 14px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s;" 
+                                    onmouseover="this.style.backgroundColor='#EE403D'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(238, 64, 61, 0.3)';" 
+                                    onmouseout="this.style.backgroundColor='#212529'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                    Agregar al Carrito
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            
+            <!-- Pagination -->
+            <div class="swiper-pagination" style="margin-top: 30px;"></div>
+        </div>
+    </div>
+</section>
+
 <!-- ========== FEATURED PRODUCTS SECTION ========== -->
 <section style="padding: 100px 0 120px; background-color: #F8F8F8;">
->
     <div style="max-width: 100%; margin: 0 auto; padding: 0 40px;">
         <div style="text-align: center; margin-bottom: 50px;">
             <span style="display: inline-block; background-color: #F5F6F2; padding: 8px 20px; border-radius: 4px; font-size: 14px; font-weight: 600; color: #777; margin-bottom: 10px;">Featured</span>
@@ -482,7 +738,9 @@
 .categoriesSwiper .swiper-button-next,
 .categoriesSwiper .swiper-button-prev,
 .productsSwiper .swiper-button-next,
-.productsSwiper .swiper-button-prev {
+.productsSwiper .swiper-button-prev,
+.bestSellersSwiper .swiper-button-next,
+.bestSellersSwiper .swiper-button-prev {
     display: none !important;
 }
 
@@ -527,6 +785,21 @@
     background-color: #EE403D;
     opacity: 1;
     width: 28px;
+    border-radius: 5px;
+}
+
+/* Best Sellers pagination custom style */
+.swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background-color: #999;
+    opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: #EE403D;
+    opacity: 1;
+    width: 24px;
     border-radius: 5px;
 }
 
@@ -597,6 +870,37 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         pagination: {
             el: '.categoriesSwiper .swiper-pagination',
+            clickable: true,
+            dynamicBullets: true,
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+            },
+            768: {
+                slidesPerView: 3,
+                spaceBetween: 24,
+            },
+            1024: {
+                slidesPerView: 4,
+                spaceBetween: 24,
+            },
+        },
+    });
+
+    // Swiper para Best Sellers
+    const bestSellersSwiper = new Swiper('.bestSellersSwiper', {
+        slidesPerView: 1,
+        spaceBetween: 24,
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+        },
+        pagination: {
+            el: '.bestSellersSwiper .swiper-pagination',
             clickable: true,
             dynamicBullets: true,
         },

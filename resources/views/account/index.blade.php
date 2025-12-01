@@ -170,6 +170,8 @@
                                                 <span style="display: inline-block; padding: 6px 12px; background: #D1FAE5; color: #059669; border-radius: 6px; font-size: 13px; font-weight: 500;">Completado</span>
                                             @elseif($order->status === 'cancelled')
                                                 <span style="display: inline-block; padding: 6px 12px; background: #FEE2E2; color: #DC2626; border-radius: 6px; font-size: 13px; font-weight: 500;">Cancelado</span>
+                                            @elseif($order->status === 'returned')
+                                                <span style="display: inline-block; padding: 6px 12px; background: #F3E8FF; color: #9333EA; border-radius: 6px; font-size: 13px; font-weight: 500;">Devuelto</span>
                                             @else
                                                 <span style="display: inline-block; padding: 6px 12px; background: #F3F4F6; color: #6B7280; border-radius: 6px; font-size: 13px; font-weight: 500;">{{ ucfirst($order->status) }}</span>
                                             @endif
